@@ -18,6 +18,7 @@ lazy val microservice = Project(appName, file("."))
       "uk.gov.hmrc.hmrcfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
     ),
+    PlayKeys.playDefaultPort := 9838,
     // ***************
     // Use the silencer plugin to suppress warnings
     // You may turn it on for `views` too to suppress warnings from unused imports in compiled twirl templates, but this will hide other warnings.
