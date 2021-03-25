@@ -1,0 +1,3 @@
+service.name = maintain-trust-details-frontend
+service.homePageUrl = /maintain-trust-details-frontend
+service.text = This is your new service
