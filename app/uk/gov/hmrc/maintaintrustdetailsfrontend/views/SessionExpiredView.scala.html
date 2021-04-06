@@ -17,18 +17,24 @@
 @import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
 
 @this(
-    govuk_wrapper: GovukWrapper,
+    main_template: MainTemplate,
     appConfig: AppConfig
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
-@contentHeader = {
-    <h1>@heading</h1>
+@main_template(
+    title = messages("session_expired.title"),
+    canSignOut = false
+) {
+
+    @components.heading("session_expired.heading")
+
+    <p>@messages("session_expired.guidance")</p>
+    <p>@messages("session_expired.guidance.2")</p>
+
+    @components.button_link(
+        messageKey = messages("site.sign_in"),
+        href = appConfig.loginUrl
+    )
 }
-
-@mainContent = {
-    <p>@message</p>
-}
-
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)

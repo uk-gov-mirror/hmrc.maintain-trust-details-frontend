@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.maintaintrustdetailsfrontend.config
+package uk.gov.hmrc.maintaintrustdetailsfrontend.controllers
+
+import play.api.mvc._
+import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.MessagesApi
-import play.api.mvc.Request
-import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import uk.gov.hmrc.maintaintrustdetailsfrontend.views.html.ErrorTemplate
-
 @Singleton
-class ErrorHandler @Inject()(errorTemplate: ErrorTemplate, val messagesApi: MessagesApi) extends FrontendErrorHandler {
+class IndexController @Inject()(
+                                 appConfig: AppConfig,
+                                 mcc: MessagesControllerComponents
+                               ) extends FrontendController(mcc) {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    errorTemplate(pageTitle, heading, message)
+  def onPageLoad(identifier: String): Action[AnyContent] = {
+    ???
+  }
+
 }

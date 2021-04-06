@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
+package uk.gov.hmrc.maintaintrustdetailsfrontend.queries
 
-@this(
-    govuk_wrapper: GovukWrapper,
-    appConfig: AppConfig
-)
+import play.api.libs.json.JsPath
+import uk.gov.hmrc.maintaintrustdetailsfrontend.models.UserAnswers
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+import scala.util.{Success, Try}
 
-@contentHeader = {
-    <h1>@heading</h1>
+sealed trait Query {
+  def path: JsPath
 }
 
-@mainContent = {
-    <p>@message</p>
-}
+trait Gettable[A] extends Query
 
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+trait Settable[A] extends Query {
+
+  def cleanup(value: Option[A], userAnswers: UserAnswers): Try[UserAnswers] =
+    Success(userAnswers)
+}

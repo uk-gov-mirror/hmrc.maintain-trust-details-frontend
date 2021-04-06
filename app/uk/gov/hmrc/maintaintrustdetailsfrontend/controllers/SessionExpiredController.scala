@@ -16,26 +16,19 @@
 
 package uk.gov.hmrc.maintaintrustdetailsfrontend.controllers
 
-import javax.inject.{Inject, Singleton}
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.maintaintrustdetailsfrontend.views.html.SessionExpiredView
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
-import uk.gov.hmrc.maintaintrustdetailsfrontend.views.html.HelloWorldPage
+import javax.inject.Inject
 
-import scala.concurrent.Future
+class SessionExpiredController @Inject()(
+                                          val controllerComponents: MessagesControllerComponents,
+                                          view: SessionExpiredView
+                                        ) extends FrontendBaseController with I18nSupport {
 
-@Singleton
-class HelloWorldController @Inject()(
-  appConfig: AppConfig,
-  mcc: MessagesControllerComponents,
-  helloWorldPage: HelloWorldPage)
-    extends FrontendController(mcc) {
-
-  implicit val config: AppConfig = appConfig
-
-  val helloWorld: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(helloWorldPage()))
+  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Ok(view())
   }
-
 }

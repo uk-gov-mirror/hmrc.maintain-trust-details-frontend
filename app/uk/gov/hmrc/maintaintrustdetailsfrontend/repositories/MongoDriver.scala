@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.maintaintrustdetailsfrontend.config
+package uk.gov.hmrc.maintaintrustdetailsfrontend.repositories
+
+import play.modules.reactivemongo.ReactiveMongoApi
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.i18n.MessagesApi
-import play.api.mvc.Request
-import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import uk.gov.hmrc.maintaintrustdetailsfrontend.views.html.ErrorTemplate
-
 @Singleton
-class ErrorHandler @Inject()(errorTemplate: ErrorTemplate, val messagesApi: MessagesApi) extends FrontendErrorHandler {
+class TrustsMongoDriver @Inject()(val api: ReactiveMongoApi) extends MongoDriver
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    errorTemplate(pageTitle, heading, message)
+sealed trait MongoDriver {
+  val api: ReactiveMongoApi
 }

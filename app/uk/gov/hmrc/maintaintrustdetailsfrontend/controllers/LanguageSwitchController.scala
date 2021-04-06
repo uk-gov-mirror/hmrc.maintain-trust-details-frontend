@@ -17,31 +17,20 @@
 package uk.gov.hmrc.maintaintrustdetailsfrontend.controllers
 
 import com.google.inject.Inject
-import play.api.i18n.Lang
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
 
-import javax.inject.Singleton
-
-@Singleton
 class LanguageSwitchController @Inject()(
                                           appConfig: AppConfig,
+                                          override implicit val messagesApi: MessagesApi,
                                           languageUtils: LanguageUtils,
-                                          cc: ControllerComponents
+                                          cc: MessagesControllerComponents
                                         ) extends LanguageController(languageUtils, cc) {
-  import appConfig._
 
-  override def fallbackURL: String =
-    "https://www.gov.uk/government/organisations/hm-revenue-customs"
+  override def fallbackURL: String = appConfig.loginContinueUrl
 
-  override protected def languageMap: Map[String, Lang] = {
-    if (appConfig.welshLanguageSupportEnabled) {
-      Map(en -> Lang(en), cy -> Lang(cy))
-    }
-    else {
-      Map(en -> Lang(en))
-    }
-  }
+  override def languageMap: Map[String, Lang] = appConfig.languageMap
 
 }

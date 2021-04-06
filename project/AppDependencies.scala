@@ -1,24 +1,35 @@
 import play.core.PlayVersion
-import play.sbt.PlayImport._
-import sbt.Keys.libraryDependencies
 import sbt._
 
 object AppDependencies {
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"             %% "bootstrap-frontend-play-27" % "4.1.0",
-    "uk.gov.hmrc"             %% "play-frontend-hmrc"         % "0.54.0-play-27",
-    "uk.gov.hmrc"             %% "play-frontend-govuk"        % "0.67.0-play-27",
-    "uk.gov.hmrc"             %% "play-language"              % "4.12.0-play-27"
+    "uk.gov.hmrc"             %% "play-language"              % "4.12.0-play-27",
+    "org.reactivemongo"       %% "play2-reactivemongo"        % "0.20.13-play27",
+    "uk.gov.hmrc"             %% "govuk-template"             % "5.65.0-play-27",
+    "uk.gov.hmrc"             %% "play-ui"                    % "9.0.0-play-27"
   )
 
-  val test = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-test-play-27"   % "4.1.0"  % Test,
-    
-    "org.scalatest"           %% "scalatest"                % "3.2.5"  % Test,
-    "org.jsoup"               %  "jsoup"                    % "1.13.1" % Test,
-    "com.typesafe.play"       %% "play-test"                % PlayVersion.current  % Test,
-    "com.vladsch.flexmark"    %  "flexmark-all"             % "0.36.8" % "test, it",
-    "org.scalatestplus.play"  %% "scalatestplus-play"       % "4.0.3"  % "test, it"
+  val test: Seq[ModuleID] = Seq(
+    "org.scalatest"           %% "scalatest"                % "3.0.8",
+    "org.pegdown"             %  "pegdown"                  % "1.6.0",
+    "org.jsoup"               %  "jsoup"                    % "1.13.1",
+    "com.typesafe.play"       %% "play-test"                % PlayVersion.current,
+    "org.scalatestplus.play"  %% "scalatestplus-play"       % "4.0.3",
+    "org.mockito"             %  "mockito-all"              % "1.10.19"
+  ).map(_ % Test)
+
+  private val akkaVersion = "2.6.12"
+  private val akkaHttpVersion = "10.2.3"
+
+  val overrides = Seq(
+    "com.typesafe.akka" %% "akka-stream_2.12" % akkaVersion,
+    "com.typesafe.akka" %% "akka-protobuf_2.12" % akkaVersion,
+    "com.typesafe.akka" %% "akka-slf4j_2.12" % akkaVersion,
+    "com.typesafe.akka" %% "akka-actor_2.12" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-core_2.12" % akkaHttpVersion,
+    "commons-codec" % "commons-codec" % "1.12"
   )
+
 }

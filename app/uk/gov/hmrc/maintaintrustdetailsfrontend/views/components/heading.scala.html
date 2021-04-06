@@ -14,21 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
+@(headingKey: String, msgParam: Option[String] = None, headingSize: String = "heading-large")(implicit messages: Messages)
 
-@this(
-    govuk_wrapper: GovukWrapper,
-    appConfig: AppConfig
-)
-
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
-
-@contentHeader = {
-    <h1>@heading</h1>
-}
-
-@mainContent = {
-    <p>@message</p>
-}
-
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+<h1 class="@headingSize">@messages(headingKey, msgParam.getOrElse(""))</h1>

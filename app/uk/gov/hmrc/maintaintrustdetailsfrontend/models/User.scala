@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.routes.LanguageSwitchController._
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcLanguageSelect
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.LanguageSelect
+package uk.gov.hmrc.maintaintrustdetailsfrontend.models
 
-@this(hmrcLanguageSelect: HmrcLanguageSelect)
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
-@()(implicit messages: Messages, appConfig: AppConfig)
-@hmrcLanguageSelect(LanguageSelect(
-    if (messages.lang.code == "cy") Cy else En,
-    (En, switchToLanguage("en").url),
-    (Cy, switchToLanguage("cy").url)
-))
+sealed trait User {
+  val internalId: String
+  val affinityGroup: AffinityGroup
+  val enrolments: Enrolments
+}
 
+case class AgentUser(internalId: String, enrolments: Enrolments, agentReferenceNumber: String) extends User {
+  override val affinityGroup: AffinityGroup = AffinityGroup.Agent
+}
+
+case class OrganisationUser(internalId: String, enrolments: Enrolments) extends User {
+  override val affinityGroup: AffinityGroup = AffinityGroup.Organisation
+}

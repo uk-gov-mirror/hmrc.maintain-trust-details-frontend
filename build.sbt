@@ -1,4 +1,5 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
+import uk.gov.hmrc.SbtArtifactory
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "maintain-trust-details-frontend"
@@ -6,23 +7,24 @@ val appName = "maintain-trust-details-frontend"
 val silencerVersion = "1.7.0"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
   .settings(
     majorVersion                     := 0,
     scalaVersion                     := "2.12.12",
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
     TwirlKeys.templateImports ++= Seq(
-      "uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig",
-      "uk.gov.hmrc.govukfrontend.views.html.components._",
-      "uk.gov.hmrc.govukfrontend.views.html.helpers._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
+      "play.twirl.api.HtmlFormat",
+      "play.twirl.api.HtmlFormat._",
+      "uk.gov.hmrc.play.views.html.helpers._",
+      "uk.gov.hmrc.play.views.html.layouts._",
+      "uk.gov.hmrc.maintaintrustdetailsfrontend.views.ViewUtils._",
+      "uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 9838,
     // ***************
     // Use the silencer plugin to suppress warnings
     // You may turn it on for `views` too to suppress warnings from unused imports in compiled twirl templates, but this will hide other warnings.
-    scalacOptions += "-P:silencer:pathFilters=routes",
+    scalacOptions += "-P:silencer:pathFilters=routes;views",
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full

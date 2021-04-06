@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
+package uk.gov.hmrc.maintaintrustdetailsfrontend.views
 
-@this(
-    govuk_wrapper: GovukWrapper,
-    appConfig: AppConfig
-)
+import play.api.data.Form
+import play.api.i18n.Messages
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+object ViewUtils {
 
-@contentHeader = {
-    <h1>@heading</h1>
+  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
+    if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")} " else ""
+  }
+
+  def breadcrumbTitle(title: String)(implicit messages: Messages): String = {
+    s"$title - ${messages("site.service_section")} - ${messages("site.service_name")} - GOV.UK"
+  }
 }
-
-@mainContent = {
-    <p>@message</p>
-}
-
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)

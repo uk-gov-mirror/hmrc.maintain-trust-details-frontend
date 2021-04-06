@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
+package uk.gov.hmrc.maintaintrustdetailsfrontend.models.requests
 
-@this(layout: Layout)
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.maintaintrustdetailsfrontend.models.{User, UserAnswers}
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
-
-@layout(pageTitle = Some("maintain-trust-details-frontend")) {
-    <h1 class="govuk-heading-xl">maintain-trust-details-frontend</h1>
-    <p class="govuk-body">@{messages("service.text")}</p>
-}
+case class DataRequest[A](request: Request[A],
+                          userAnswers: UserAnswers,
+                          user: User) extends WrappedRequest[A](request)

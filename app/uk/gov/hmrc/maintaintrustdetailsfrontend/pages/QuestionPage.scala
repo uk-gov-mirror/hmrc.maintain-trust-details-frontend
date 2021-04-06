@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
+package uk.gov.hmrc.maintaintrustdetailsfrontend.pages
 
-@this(
-    govuk_wrapper: GovukWrapper,
-    appConfig: AppConfig
-)
+import uk.gov.hmrc.maintaintrustdetailsfrontend.queries.{Gettable, Settable}
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
-
-@contentHeader = {
-    <h1>@heading</h1>
-}
-
-@mainContent = {
-    <p>@message</p>
-}
-
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+trait QuestionPage[A] extends Page with Gettable[A] with Settable[A]
