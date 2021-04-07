@@ -48,7 +48,7 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
 
         initial mustBe true
 
-        repository.get(internalId).futureValue.value.utr mustBe "utr"
+        repository.get(internalId).futureValue.value.identifier mustBe "utr"
     }
 
     "must override an existing session for an internalId" in assertMongoTest(application) {
@@ -62,7 +62,7 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
 
         repository.set(session).futureValue
 
-        repository.get(internalId).futureValue.value.utr mustBe "utr"
+        repository.get(internalId).futureValue.value.identifier mustBe "utr"
         repository.get(internalId).futureValue.value.internalId mustBe internalId
 
         // update
@@ -71,7 +71,7 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
 
         repository.set(session2).futureValue
 
-        repository.get(internalId).futureValue.value.utr mustBe "utr2"
+        repository.get(internalId).futureValue.value.identifier mustBe "utr2"
         repository.get(internalId).futureValue.value.internalId mustBe internalId
     }
   }

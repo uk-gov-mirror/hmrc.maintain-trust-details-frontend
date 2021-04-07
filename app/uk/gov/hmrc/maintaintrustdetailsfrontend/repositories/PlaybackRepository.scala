@@ -18,6 +18,7 @@ package uk.gov.hmrc.maintaintrustdetailsfrontend.repositories
 
 import play.api.Configuration
 import play.api.libs.json._
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONSerializationPack
@@ -32,10 +33,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PlaybackRepositoryImpl @Inject()(
-                                        mongo: MongoDriver,
-                                        config: Configuration
-                                      )(implicit ec: ExecutionContext)
-  extends IndexesManager(mongo, config) with PlaybackRepository {
+                                        override val mongo: ReactiveMongoApi,
+                                        override val config: Configuration
+                                      )(override implicit val ec: ExecutionContext)
+  extends IndexesManager with PlaybackRepository {
 
   override val collectionName: String = "user-answers"
 

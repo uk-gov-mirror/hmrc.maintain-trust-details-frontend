@@ -18,6 +18,7 @@ package uk.gov.hmrc.maintaintrustdetailsfrontend.repositories
 
 import play.api.libs.json.{JsObject, Json, Reads}
 import play.api.{Configuration, Logging}
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONSerializationPack
@@ -28,13 +29,15 @@ import reactivemongo.play.json.collection.JSONCollection
 import uk.gov.hmrc.maintaintrustdetailsfrontend.models.MongoDateTimeFormats
 
 import java.time.LocalDateTime
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class IndexesManager @Inject()(
-                                         mongo: MongoDriver,
-                                         config: Configuration
-                                       )(implicit ec: ExecutionContext) extends Logging {
+trait IndexesManager extends Logging {
+
+  val mongo: ReactiveMongoApi
+
+  val config: Configuration
+
+  implicit val ec: ExecutionContext
 
   val collectionName: String
 
@@ -47,7 +50,7 @@ abstract class IndexesManager @Inject()(
   def collection: Future[JSONCollection] =
     for {
       _ <- ensureIndexes
-      res <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+      res <- mongo.database.map(_.collection[JSONCollection](collectionName))
     } yield res
 
   private def ensureIndexes: Future[Boolean] = {
@@ -78,7 +81,7 @@ abstract class IndexesManager @Inject()(
     )
 
     for {
-      collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+      collection              <- mongo.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
       createdIdIndex          <- collection.indexesManager.ensure(idIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
@@ -116,7 +119,7 @@ abstract class IndexesManager @Inject()(
 
     def logIndexes: Future[Unit] = {
       for {
-        collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+        collection <- mongo.database.map(_.collection[JSONCollection](collectionName))
         indexes <- collection.indexesManager.list()
       } yield {
         logger.info(s"[IndexesManager] indexes found on mongo collection $collectionName: $indexes")
@@ -128,7 +131,7 @@ abstract class IndexesManager @Inject()(
       _ <- logIndexes
       _ <- if (dropIndexesFeatureEnabled) {
         for {
-          collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+          collection <- mongo.database.map(_.collection[JSONCollection](collectionName))
           _ <- collection.indexesManager.dropAll()
           _ <- Future.successful(logger.info(s"[IndexesManager] dropped indexes on collection $collectionName"))
           _ <- logIndexes

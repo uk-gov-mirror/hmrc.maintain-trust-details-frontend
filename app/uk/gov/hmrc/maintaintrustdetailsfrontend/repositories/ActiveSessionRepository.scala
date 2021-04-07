@@ -19,6 +19,7 @@ package uk.gov.hmrc.maintaintrustdetailsfrontend.repositories
 import com.google.inject.ImplementedBy
 import play.api.Configuration
 import play.api.libs.json._
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONSerializationPack
 import reactivemongo.api.indexes.Index.Aux
@@ -32,10 +33,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ActiveSessionRepositoryImpl @Inject()(
-                                             mongo: MongoDriver,
-                                             config: Configuration
-                                           )(implicit ec: ExecutionContext)
-  extends IndexesManager(mongo, config) with ActiveSessionRepository {
+                                             override val mongo: ReactiveMongoApi,
+                                             override val config: Configuration
+                                           )(override implicit val ec: ExecutionContext)
+  extends IndexesManager with ActiveSessionRepository {
 
   override val collectionName: String = "session"
 

@@ -41,7 +41,7 @@ class DataRetrievalActionImpl @Inject()(
 
     activeSessionRepository.get(request.user.internalId) flatMap {
       case Some(session) =>
-        playbackRepository.get(request.user.internalId, session.utr) map {
+        playbackRepository.get(request.user.internalId, session.identifier) map {
           case None =>
             createdOptionalDataRequest(request, None)
           case Some(userAnswers) =>
