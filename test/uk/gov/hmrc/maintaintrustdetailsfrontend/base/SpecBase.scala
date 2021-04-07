@@ -30,10 +30,11 @@ import uk.gov.hmrc.maintaintrustdetailsfrontend.repositories._
 trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeApp {
   this: TestSuite =>
 
+  val internalId: String = "internalId"
   val identifier: String = "identifier"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
-    internalId = "internalId",
+    internalId = internalId,
     identifier = identifier
   )
 

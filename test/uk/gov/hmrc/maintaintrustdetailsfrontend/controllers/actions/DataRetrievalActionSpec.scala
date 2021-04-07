@@ -41,11 +41,12 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
         val playbackRepository = mock[PlaybackRepository]
 
-        when(mockSessionRepository.get("id")).thenReturn(Future.successful(None))
+        when(mockSessionRepository.get(internalId))
+          .thenReturn(Future.successful(None))
 
         val action = new Harness(playbackRepository)
 
-        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser(internalId, Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isEmpty mustBe true
@@ -60,12 +61,15 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
         val playbackRepository = mock[PlaybackRepository]
 
-        when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(ActiveSession("id", "utr"))))
-        when(playbackRepository.get("id", "utr")) thenReturn Future(None)
+        when(mockSessionRepository.get(internalId))
+          .thenReturn(Future.successful(Some(ActiveSession(internalId, identifier))))
+
+        when(playbackRepository.get(internalId, identifier))
+          .thenReturn(Future(None))
 
         val action = new Harness(playbackRepository)
 
-        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser(internalId, Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isEmpty mustBe true
@@ -79,12 +83,15 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
         val playbackRepository = mock[PlaybackRepository]
 
-        when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(ActiveSession("id", "utr"))))
-        when(playbackRepository.get("id", "utr")) thenReturn Future(Some(emptyUserAnswers))
+        when(mockSessionRepository.get(internalId))
+          .thenReturn(Future.successful(Some(ActiveSession(internalId, identifier))))
+
+        when(playbackRepository.get(internalId, identifier))
+          .thenReturn(Future(Some(emptyUserAnswers)))
 
         val action = new Harness(playbackRepository)
 
-        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser(internalId, Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isDefined mustBe true

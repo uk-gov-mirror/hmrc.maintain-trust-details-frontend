@@ -35,20 +35,20 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
         repository.get(internalId).futureValue mustBe None
     }
 
-    "must return a UtrSession when one exists" in assertMongoTest(application) {
+    "must return a ActiveSession when one exists" in assertMongoTest(application) {
       (app, _) =>
 
         val internalId = "Int-328969d0-557e-2559-96ba-074d0597107e"
 
         val repository = app.injector.instanceOf[ActiveSessionRepository]
 
-        val session = ActiveSession(internalId, "utr")
+        val session = ActiveSession(internalId, "identifier")
 
         val initial = repository.set(session).futureValue
 
         initial mustBe true
 
-        repository.get(internalId).futureValue.value.identifier mustBe "utr"
+        repository.get(internalId).futureValue.value.identifier mustBe "identifier"
     }
 
     "must override an existing session for an internalId" in assertMongoTest(application) {
@@ -58,20 +58,20 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
 
         val repository = app.injector.instanceOf[ActiveSessionRepository]
 
-        val session = ActiveSession(internalId, "utr")
+        val session = ActiveSession(internalId, "identifier")
 
         repository.set(session).futureValue
 
-        repository.get(internalId).futureValue.value.identifier mustBe "utr"
+        repository.get(internalId).futureValue.value.identifier mustBe "identifier"
         repository.get(internalId).futureValue.value.internalId mustBe internalId
 
         // update
 
-        val session2 = ActiveSession(internalId, "utr2")
+        val session2 = ActiveSession(internalId, "identifier2")
 
         repository.set(session2).futureValue
 
-        repository.get(internalId).futureValue.value.identifier mustBe "utr2"
+        repository.get(internalId).futureValue.value.identifier mustBe "identifier2"
         repository.get(internalId).futureValue.value.internalId mustBe internalId
     }
   }

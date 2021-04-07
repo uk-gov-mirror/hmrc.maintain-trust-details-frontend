@@ -45,8 +45,8 @@ class ActiveSessionRepositoryImpl @Inject()(
   override val lastUpdatedIndexName: String = "session-updated-at-index"
 
   override def idIndex: Aux[BSONSerializationPack.type] = Index.apply(BSONSerializationPack)(
-    key = Seq("utr" -> IndexType.Ascending),
-    name = Some("utr-index"),
+    key = Seq("identifier" -> IndexType.Ascending),
+    name = Some("identifier-index"),
     expireAfterSeconds = None,
     options = BSONDocument.empty,
     unique = false,

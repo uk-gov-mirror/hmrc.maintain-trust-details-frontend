@@ -52,7 +52,7 @@ class LogoutController @Inject()(
           "event" -> "signout",
           "service" -> "maintain-trust-details-frontend",
           "userGroup" -> request.user.affinityGroup.toString,
-          "utr" -> request.userAnswers.identifier
+          "identifier" -> request.userAnswers.identifier
         )
 
         auditConnector.sendExplicitAudit(

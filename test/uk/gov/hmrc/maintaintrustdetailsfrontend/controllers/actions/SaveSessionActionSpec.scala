@@ -30,7 +30,7 @@ import scala.concurrent.Future
 
 class SaveSessionActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
-  class Harness(utr: String) extends SaveActiveSessionImpl(utr, mockSessionRepository) {
+  class Harness(identifier: String) extends SaveActiveSessionImpl(identifier, mockSessionRepository) {
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = filter(request)
   }
 
@@ -40,12 +40,12 @@ class SaveSessionActionSpec extends SpecBase with MockitoSugar with ScalaFutures
 
       "continue the request and not block the request" in {
 
-        when(mockSessionRepository.get("id")).thenReturn(Future.successful(None))
+        when(mockSessionRepository.get(internalId)).thenReturn(Future.successful(None))
         when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-        val action = new Harness("utr")
+        val action = new Harness(identifier)
 
-        val futureResult = action.callFilter(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
+        val futureResult = action.callFilter(IdentifierRequest(fakeRequest, OrganisationUser(internalId, Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
           result mustBe None
