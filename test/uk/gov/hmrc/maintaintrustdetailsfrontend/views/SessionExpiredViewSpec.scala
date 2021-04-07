@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.maintaintrustdetailsfrontend.forms.mappings
+package uk.gov.hmrc.maintaintrustdetailsfrontend.views
 
-import play.api.data.FieldMapping
-import play.api.data.Forms.of
+import uk.gov.hmrc.maintaintrustdetailsfrontend.views.behaviours.ViewBehaviours
+import uk.gov.hmrc.maintaintrustdetailsfrontend.views.html.SessionExpiredView
 
-trait Mappings extends Formatters with Constraints {
+class SessionExpiredViewSpec extends ViewBehaviours {
 
-  protected def text(errorKey: String = "error.required"): FieldMapping[String] =
-    of(stringFormatter(errorKey))
+  "Session Expired view" must {
 
-  protected def boolean(requiredKey: String = "error.required",
-                        invalidKey: String = "error.boolean"): FieldMapping[Boolean] =
-    of(booleanFormatter(requiredKey, invalidKey))
+    val application = applicationBuilder().build()
 
+    val view = application.injector.instanceOf[SessionExpiredView]
+
+    val applyView = view.apply()(fakeRequest, messages)
+
+    behave like normalPage(applyView, "session_expired", "guidance")
+  }
 }

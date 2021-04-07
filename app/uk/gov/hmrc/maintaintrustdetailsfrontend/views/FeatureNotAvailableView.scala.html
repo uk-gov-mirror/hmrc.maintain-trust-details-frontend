@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.maintaintrustdetailsfrontend.forms.mappings
+@import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
 
-import play.api.data.FieldMapping
-import play.api.data.Forms.of
+@this(
+    main_template: MainTemplate,
+    appConfig: AppConfig
+)
 
-trait Mappings extends Formatters with Constraints {
+@()(implicit request: Request[_], messages: Messages)
 
-  protected def text(errorKey: String = "error.required"): FieldMapping[String] =
-    of(stringFormatter(errorKey))
+@main_template(
+    title = messages("featureNotAvailable.title")
+) {
 
-  protected def boolean(requiredKey: String = "error.required",
-                        invalidKey: String = "error.boolean"): FieldMapping[Boolean] =
-    of(booleanFormatter(requiredKey, invalidKey))
+    @components.back_link()
+
+    @components.heading("featureNotAvailable.heading")
+
+    <p>@messages("featureNotAvailable.p1") <a href="@appConfig.helplineUrl" target="_blank">@messages("featureNotAvailable.link")</a></p>
+
+    <p>@messages("featureNotAvailable.p2")</p>
 
 }

@@ -13,4 +13,6 @@ GET        /timeout                             uk.gov.hmrc.maintaintrustdetails
 
 GET        /logout                              uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.LogoutController.logout()
 
+GET        /feature-not-available               uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.FeatureNotAvailableController.onPageLoad()
+
 GET        /:identifier                         uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.IndexController.onPageLoad(identifier: String)

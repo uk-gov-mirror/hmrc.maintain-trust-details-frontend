@@ -30,9 +30,11 @@ import uk.gov.hmrc.maintaintrustdetailsfrontend.repositories._
 trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeApp {
   this: TestSuite =>
 
+  val identifier: String = "identifier"
+
   def emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = "internalId",
-    identifier = "identifier"
+    identifier = identifier
   )
 
   val bodyParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]
@@ -40,7 +42,6 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
                                    affinityGroup: AffinityGroup = AffinityGroup.Organisation): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
-      .configure("metrics.enabled" -> false)
       .overrides(
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, affinityGroup)),
         bind[PlaybackIdentifierAction].toInstance(new FakePlaybackIdentifierAction()),

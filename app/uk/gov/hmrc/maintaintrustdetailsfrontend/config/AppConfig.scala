@@ -17,7 +17,7 @@
 package uk.gov.hmrc.maintaintrustdetailsfrontend.config
 
 import play.api.Configuration
-import play.api.i18n.Lang
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{Call, Request}
 import uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -47,11 +47,13 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val loginUrl: String = config.get[String]("urls.login")
   lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = config.get[String]("urls.logout")
+  lazy val maintainATrustOverviewUrl: String = config.get[String]("urls.maintainATrustOverview")
+
   lazy val logoutAudit: Boolean = config.get[Boolean]("features.auditing.logout")
 
   lazy val trustsAuthUrl: String = servicesConfig.baseUrl("trusts-auth")
 
-  private lazy val contactHost: String = config.get[String]("contact-frontend.host")
+  private lazy val contactHost: String = config.get[String]("microservice.services.contact-frontend.host")
   private lazy val contactFormServiceIdentifier: String = "trusts"
 
   lazy val betaFeedbackUrl: String = s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
@@ -70,5 +72,14 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   lazy val countdownLength: String = config.get[String]("timeout.countdown")
   lazy val timeoutLength: String = config.get[String]("timeout.length")
+
+  def helplineUrl(implicit messages: Messages): String = {
+    val path = messages.lang.code match {
+      case `cy` => "urls.welshHelpline"
+      case _ => "urls.trustsHelpline"
+    }
+
+    config.get[String](path)
+  }
 
 }

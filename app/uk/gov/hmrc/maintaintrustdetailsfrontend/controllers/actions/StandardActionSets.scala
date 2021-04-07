@@ -31,6 +31,8 @@ class StandardActionSets @Inject()(identify: IdentifierAction,
 
   def authWithSession: ActionBuilder[OptionalDataRequest, AnyContent] = auth andThen getData
 
+  def authWithSavedSession(identifier: String): ActionBuilder[OptionalDataRequest, AnyContent] = auth andThen saveSession(identifier) andThen getData
+
   def identifiedUserWithData: ActionBuilder[DataRequest, AnyContent] = authWithSession andThen requireData
 
   def verifiedForIdentifier: ActionBuilder[DataRequest, AnyContent] = identifiedUserWithData andThen playbackIdentifier
