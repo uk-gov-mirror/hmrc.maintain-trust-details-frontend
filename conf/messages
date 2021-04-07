@@ -1,6 +1,7 @@
 site.service_name = Register and Maintain a Trust
 site.sign_out = Sign out
 site.error = Error:
+site.continue = Continue
 
 session_expired.title = For your security, we signed you out
 session_expired.heading = For your security, we signed you out
@@ -19,3 +20,27 @@ featureNotAvailable.heading = This part of the online service is not available y
 featureNotAvailable.p1 = If you need to make any changes to the trust you can
 featureNotAvailable.link = contact our trusts helpline (opens in a new window or tab)
 featureNotAvailable.p2 = You will be able to update these details online in the future.
+
+beforeYouContinue.title = Before you continue
+beforeYouContinue.heading = Before you continue
+beforeYouContinue.subheading = Before you close the trust, we need you to tell us the most up to date information about the trust.
+beforeYouContinue.paragraph1 = You need to tell us if you need to add, remove, or change the details of any following:
+beforeYouContinue.bullet1 = beneficiaries
+beforeYouContinue.bullet2 = protector
+beforeYouContinue.bullet3 = settlors
+beforeYouContinue.bullet4 = trustees
+beforeYouContinue.bullet5 = other individuals
+beforeYouContinue.paragraph2 = You will also need to tell us if the trust has ownerships or a controlling interest in a Non-EEA company before closing.
+beforeYouContinue.paragraph3 = At this point we’ll only ask you which details you need to update. Once we know which details you need to update, we’ll then ask you to provide those details.
+
+updateBeforeYouContinue.title = Information you need about trust details
+updateBeforeYouContinue.heading = Information you need about trust details
+updateBeforeYouContinue.subheading = To update the trust details, you need to tell us:
+updateBeforeYouContinue.bullet1 = if the trust owns land or property in the UK
+updateBeforeYouContinue.bullet2 = if the trust is listed on a European Economic Area (EEA) register
+updateBeforeYouContinue.bullet3 = if the trust has a business relationship in the UK
+
+updateDetailsYesNo.title = Do you need to update details about the trust before closing the trust?
+updateDetailsYesNo.heading = Do you need to update details about the trust before closing the trust?
+updateDetailsYesNo.hint = Tell us if you need to update the details of the trust.
+updateDetailsYesNo.error.required = Select yes if you need to update details for the trust

@@ -1,18 +1,22 @@
 # microservice specific routes
 
-GET        /language/:lang                      uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /language/:lang                      controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
 GET        /assets/*file                        controllers.Assets.versioned(path = "/public", file: Asset)
 
-GET        /this-service-has-been-reset         uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.SessionExpiredController.onPageLoad
+GET        /this-service-has-been-reset         controllers.SessionExpiredController.onPageLoad
 
-GET        /unauthorised                        uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.UnauthorisedController.onPageLoad
+GET        /unauthorised                        controllers.UnauthorisedController.onPageLoad
 
-GET        /keep-alive                          uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.SessionTimeoutController.keepAlive
-GET        /timeout                             uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.SessionTimeoutController.timeout
+GET        /keep-alive                          controllers.SessionTimeoutController.keepAlive
+GET        /timeout                             controllers.SessionTimeoutController.timeout
 
-GET        /logout                              uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.LogoutController.logout()
+GET        /logout                              controllers.LogoutController.logout()
 
-GET        /feature-not-available               uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.FeatureNotAvailableController.onPageLoad()
+GET        /feature-not-available               controllers.FeatureNotAvailableController.onPageLoad()
 
-GET        /:identifier                         uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.IndexController.onPageLoad(identifier: String)
+GET        /before-you-continue                 controllers.close.BeforeYouContinueController.onPageLoad()
+
+GET        /before-you-update                   controllers.maintain.UpdateBeforeYouContinueController.onPageLoad()
+
+GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

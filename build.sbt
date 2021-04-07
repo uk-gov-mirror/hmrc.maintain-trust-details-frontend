@@ -19,8 +19,8 @@ lazy val microservice = Project(appName, file("."))
       "play.twirl.api.HtmlFormat._",
       "uk.gov.hmrc.play.views.html.helpers._",
       "uk.gov.hmrc.play.views.html.layouts._",
-      "uk.gov.hmrc.maintaintrustdetailsfrontend.views.ViewUtils._",
-      "uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.routes._"
+      "views.ViewUtils._",
+      "controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 9838,
     // ***************
