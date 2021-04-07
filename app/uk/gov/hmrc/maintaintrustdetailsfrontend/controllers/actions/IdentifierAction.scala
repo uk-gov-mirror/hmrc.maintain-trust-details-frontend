@@ -17,7 +17,6 @@
 package uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.actions
 
 import com.google.inject.Inject
-import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -29,7 +28,7 @@ import uk.gov.hmrc.maintaintrustdetailsfrontend.controllers.routes
 import uk.gov.hmrc.maintaintrustdetailsfrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.maintaintrustdetailsfrontend.models.{AgentUser, OrganisationUser}
 import uk.gov.hmrc.maintaintrustdetailsfrontend.services.AuthenticationService
-import uk.gov.hmrc.maintaintrustdetailsfrontend.utils.Session
+import uk.gov.hmrc.maintaintrustdetailsfrontend.utils.SessionLogging
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +39,7 @@ class AuthenticatedIdentifierAction @Inject()(
                                                trustsAuthFunctions: TrustsAuthorisedFunctions,
                                                val parser: BodyParsers.Default,
                                                authenticationService: AuthenticationService
-                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction with Logging {
+                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction with SessionLogging {
 
   private def authoriseAgent[A](internalId: String,
                                 enrolments: Enrolments,
@@ -67,10 +66,10 @@ class AuthenticatedIdentifierAction @Inject()(
       case Some(internalId) ~ Some(Organisation) ~ enrolments =>
         block(IdentifierRequest(request, OrganisationUser(internalId, enrolments)))
       case Some(_) ~ _ ~ _ =>
-        logger.info(s"[Authentication][Session ID: ${Session.id}] Unauthorised due to affinityGroup being Individual")
+        infoLog("Unauthorised due to affinityGroup being Individual")
         Future.successful(Redirect(routes.UnauthorisedController.onPageLoad()))
       case _ =>
-        logger.warn(s"[Authentication][Session ID: ${Session.id}]] Unable to retrieve internal id")
+        warnLog("Unable to retrieve internal id")
         throw new UnauthorizedException("Unable to retrieve internal Id")
     } recover trustsAuthFunctions.recoverFromAuthorisation
   }

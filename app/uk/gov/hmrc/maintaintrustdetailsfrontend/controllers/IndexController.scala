@@ -56,7 +56,7 @@ class IndexController @Inject()(
         if (is5mldEnabled) {
           Redirect(routes.FeatureNotAvailableController.onPageLoad())
         } else {
-          warnLog(identifier, "Service is not in 5MLD mode. Redirecting to task list.")
+          warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))
           Redirect(appConfig.maintainATrustOverviewUrl)
         }
       }

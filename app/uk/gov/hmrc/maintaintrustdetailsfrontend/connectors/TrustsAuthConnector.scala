@@ -17,12 +17,11 @@
 package uk.gov.hmrc.maintaintrustdetailsfrontend.connectors
 
 import com.google.inject.ImplementedBy
-import play.api.Logging
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.maintaintrustdetailsfrontend.config.AppConfig
 import uk.gov.hmrc.maintaintrustdetailsfrontend.models.http.{TrustsAuthInternalServerError, TrustsAuthResponse}
-import uk.gov.hmrc.maintaintrustdetailsfrontend.utils.Session
+import uk.gov.hmrc.maintaintrustdetailsfrontend.utils.SessionLogging
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +33,7 @@ trait TrustsAuthConnector {
 }
 
 class TrustsAuthConnectorImpl @Inject()(http: HttpClient, config: AppConfig)
-  extends TrustsAuthConnector with Logging {
+  extends TrustsAuthConnector with SessionLogging {
 
   private val baseUrl: String = config.trustsAuthUrl + "/trusts-auth"
 
@@ -42,7 +41,7 @@ class TrustsAuthConnectorImpl @Inject()(http: HttpClient, config: AppConfig)
                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsAuthResponse] = {
     http.GET[TrustsAuthResponse](s"$baseUrl/agent-authorised").recoverWith {
       case e =>
-        logger.warn(s"[Session ID: ${Session.id}] unable to authenticate agent due to an exception ${e.getMessage}")
+        warnLog(s"unable to authenticate agent due to an exception ${e.getMessage}")
         Future.successful(TrustsAuthInternalServerError)
     }
   }
@@ -51,7 +50,7 @@ class TrustsAuthConnectorImpl @Inject()(http: HttpClient, config: AppConfig)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsAuthResponse] = {
     http.GET[TrustsAuthResponse](s"$baseUrl/authorised/$identifier").recoverWith {
       case e =>
-        logger.warn(s"[Session ID: ${Session.id}] unable to authenticate organisation for $identifier due to an exception ${e.getMessage}")
+        warnLog(s"unable to authenticate organisation for $identifier due to an exception ${e.getMessage}", Some(identifier))
         Future.successful(TrustsAuthInternalServerError)
     }
   }
