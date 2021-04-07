@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustsStoreConnector @Inject()(http: HttpClient, config: AppConfig) {
 
   def setTaskComplete(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"${config.trustsStoreUrl}/trusts-store/maintain/tasks/beneficiaries/$identifier"
+    val url: String = s"${config.trustsStoreUrl}/trusts-store/maintain/tasks/trust-details/$identifier"
     http.POSTEmpty[HttpResponse](url)
   }
 

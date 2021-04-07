@@ -51,7 +51,7 @@ class LogoutController @Inject()(
           val auditData = Map(
             "sessionId" -> Session.id(hc),
             "event" -> "signout",
-            "service" -> "maintain-beneficiaries-frontend",
+            "service" -> "maintain-trust-details-frontend",
             "userGroup" -> request.user.affinityGroup.toString,
             "utr" -> request.userAnswers.identifier
           )
