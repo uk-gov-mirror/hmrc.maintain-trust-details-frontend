@@ -17,13 +17,17 @@
 package controllers.actions
 
 import base.SpecBase
-import config.AppConfig
+import org.mockito.Matchers.any
+import org.mockito.Mockito._
+import play.api.Play.materializer
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.Helpers._
-import services.{AuthenticationService, FakeAuthenticationService}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
+import config.AppConfig
+import controllers.routes
+import services.{AuthenticationService, FakeAuthenticationService}
 
 import scala.concurrent.Future
 

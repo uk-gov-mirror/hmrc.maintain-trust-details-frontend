@@ -21,14 +21,14 @@ main_template: MainTemplate
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = s"${messages("updateBeforeYouContinue.title")}"
-) {
+title = messages("updateBeforeYouContinue.title")
+){
 
     @components.back_link()
 
     @components.heading("updateBeforeYouContinue")
 
- <h2>@messages("updateBeforeYouContinue.subheading")</h2>
+     <h2>@messages("updateBeforeYouContinue.subheading")</h2>
 
     @components.bullet_list(
     "updateBeforeYouContinue",
@@ -38,7 +38,5 @@ title = s"${messages("updateBeforeYouContinue.title")}"
         "bullet3"
         )
     )
-
-    @components.button_link(messages("site.continue"), SetUpAfterSettlorDiedController.onPageLoad(draftId).url)
     
-    }
+  }

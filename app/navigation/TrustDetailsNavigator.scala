@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package navigation
 
-import com.google.inject.Inject
-import play.api.mvc.Result
-import models.requests.DataRequest
+import javax.inject.Inject
+import models.UserAnswers
+import pages.Page
+import play.api.mvc.Call
 
-import scala.concurrent.{ExecutionContext, Future}
+class TrustDetailsNavigator @Inject()() extends Navigator {
 
-class FakePlaybackIdentifierAction @Inject()(
-        implicit val executionContext: ExecutionContext
-        ) extends PlaybackIdentifierAction {
+  override def nextPage(page: Page, userAnswers: UserAnswers): Call =
+    routes()(page)(userAnswers)
 
-        override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = Future.successful(Right(request))
+  private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = ???
 
-        }
+  private def yesNoNavigation(): PartialFunction[Page, UserAnswers => Call] = ???
+
+  def routes(): PartialFunction[Page, UserAnswers => Call] =
+    simpleNavigation() orElse
+      yesNoNavigation()
+
+}
+

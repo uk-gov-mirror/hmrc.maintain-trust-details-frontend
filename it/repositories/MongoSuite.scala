@@ -67,11 +67,11 @@ trait MongoSuite extends ScalaFutures {
     ).build()
 
   def assertMongoTest(application: Application)(block: (Application, MongoConnection) => Assertion): Future[Assertion] =
-    running(application) {
-      for {
-        connection <- getConnection(application)
-        _ <- dropTheDatabase(connection)
-      } yield block(application, connection)
+    for {
+      connection <- getConnection(application)
+      _ <- dropTheDatabase(connection)
+    } yield running(application) {
+      block(application, connection)
     }
 
 }

@@ -18,6 +18,8 @@ package controllers
 
 import base.SpecBase
 import controllers.Assets.SEE_OTHER
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

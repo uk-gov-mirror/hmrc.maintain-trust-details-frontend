@@ -16,7 +16,7 @@
 
 package base
 
-import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, IdentifierAction, PlaybackIdentifierAction}
+import controllers.actions._
 import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
@@ -24,16 +24,17 @@ import org.scalatestplus.play.guice._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.BodyParsers
-import repositories.{ActiveSessionRepository, PlaybackRepository}
+import repositories._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
 trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeApp {
   this: TestSuite =>
 
+  val internalId: String = "internalId"
   val identifier: String = "identifier"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
-    internalId = "internalId",
+    internalId = internalId,
     identifier = identifier
   )
 

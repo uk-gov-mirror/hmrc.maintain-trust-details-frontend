@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import controllers.close.routes._
+
 @this(
 main_template: MainTemplate
 )
@@ -21,14 +23,14 @@ main_template: MainTemplate
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = s"${messages("beforeYouContinue.title")}"
+    title = messages("beforeYouContinue.title")
 ) {
 
     @components.back_link()
 
     @components.heading("beforeYouContinue")
 
- <h2>@messages("beforeYouContinue.subheading")</h2>
+<h2>@messages("beforeYouContinue.subheading")</h2>
 
  <p>@messages("beforeYouContinue.paragraph1")</p>
 
@@ -46,6 +48,6 @@ title = s"${messages("beforeYouContinue.title")}"
 
  <p>@messages("beforeYouContinue.paragraph3")</p>
 
-    @components.button_link(messages("site.continue"), SetUpAfterSettlorDiedController.onPageLoad(draftId).url)
+    @components.button_link(messages("site.continue"), UpdateDetailsYesNoController.onPageLoad().url)
     
     }

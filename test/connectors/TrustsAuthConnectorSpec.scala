@@ -17,7 +17,9 @@
 package connectors
 
 import base.WireMockHelper
-import models.http.{TrustsAuthAgentAllowed, TrustsAuthAllowed, TrustsAuthDenied, TrustsAuthInternalServerError}
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
+import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import org.scalatest.{AsyncFreeSpec, MustMatchers}
 import play.api.Application
 import play.api.http.Status
@@ -25,13 +27,14 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.DefaultAwaitTimeout
 import uk.gov.hmrc.http.HeaderCarrier
+import models.http._
 
 class TrustsAuthConnectorSpec extends AsyncFreeSpec with MustMatchers with WireMockHelper with DefaultAwaitTimeout{
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private val authorisedUrl: String = s"/trusts-auth/agent-authorised"
-  private def authorisedUrlFor(utr: String): String = s"/trusts-auth/authorised/$utr"
+  private def authorisedUrlFor(identifier: String): String = s"/trusts-auth/authorised/$identifier"
 
   private def responseFromJson(json: JsValue): ResponseDefinitionBuilder = {
     aResponse().withStatus(Status.OK).withBody(json.toString())

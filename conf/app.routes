@@ -17,6 +17,9 @@ GET        /feature-not-available               controllers.FeatureNotAvailableC
 
 GET        /before-you-continue                 controllers.close.BeforeYouContinueController.onPageLoad()
 
+GET        /update-details-yes-no               controllers.close.UpdateDetailsYesNoController.onPageLoad()
+POST       /update-details-yes-no               controllers.close.UpdateDetailsYesNoController.onSubmit()
+
 GET        /before-you-update                   controllers.maintain.UpdateBeforeYouContinueController.onPageLoad()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

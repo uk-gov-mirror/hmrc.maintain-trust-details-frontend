@@ -17,10 +17,10 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import models.{AgentUser, OrganisationUser}
-import models.requests.IdentifierRequest
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
+import models.{AgentUser, OrganisationUser}
+import models.requests.IdentifierRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 

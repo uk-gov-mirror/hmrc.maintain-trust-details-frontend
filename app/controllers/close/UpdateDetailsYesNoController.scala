@@ -16,60 +16,55 @@
 
 package controllers.close
 
+import controllers.actions.StandardActionSets
+import forms.YesNoFormProvider
 import javax.inject.Inject
+import navigation.Navigator
+import pages.UpdateDetailsYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
-import forms.YesNoFormProvider
-import pages.UpdateDetailsYesNoPage
 import repositories.PlaybackRepository
-import views.html.close.UpdateDetailsYesNoView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.close.UpdateDetailsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateDetailsYesNoController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               repository: PlaybackRepository,
-                                              identify: IdentifierAction,
-                                              getData: DataRetrievalAction,
-                                              requireData: DataRetrievalAction,
                                               yesNoFormProvider: YesNoFormProvider,
+                                              navigator: Navigator,
+                                              actions: StandardActionSets,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: UpdateDetailsYesNoView
                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateDetailsYesNo")
 
-  private def actions(draftId: String) =
-    identify andThen
-      getData(draftId) andThen
-      requireData
-
-  def onPageLoad(draftId: String): Action[AnyContent] = actions(draftId) {
+  def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(UpdateDetailsYesNoPage()) match {
+      val preparedForm = request.userAnswers.get(UpdateDetailsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, draftId))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit(draftId : String): Action[AnyContent] = actions(draftId).async {
+  def onSubmit(): Action[AnyContent] = actions.identifiedUserWithData.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, draftId))),
+          Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(UpdateDetailsYesNoPage(), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(UpdateDetailsYesNoPage, value))
             _              <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(UpdateDetailsYesNoPage(), draftId)(updatedAnswers))
+          } yield Redirect(navigator.nextPage(UpdateDetailsYesNoPage,updatedAnswers))
         }
       )
   }

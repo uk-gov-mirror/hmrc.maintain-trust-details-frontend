@@ -17,12 +17,11 @@
 package navigation
 
 import base.SpecBase
-import models.UserAnswers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  val navigator = new trustDetailsNavigator
+  val navigator = new TrustDetailsNavigator
 
   "maintain trust details" when {
 

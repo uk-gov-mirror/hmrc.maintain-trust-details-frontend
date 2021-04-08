@@ -16,6 +16,8 @@
 
 package base
 
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 

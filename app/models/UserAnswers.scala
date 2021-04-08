@@ -80,7 +80,7 @@ object UserAnswers {
 
   implicit lazy val reads: Reads[UserAnswers] = (
     (__ \ "internalId").read[String] and
-      ((__ \ "utr").read[String] or (__ \ "identifier").read[String]) and
+      (__ \ "identifier").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
     )(UserAnswers.apply _)

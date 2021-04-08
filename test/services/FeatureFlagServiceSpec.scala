@@ -17,9 +17,12 @@
 package services
 
 import base.SpecBase
-import connectors.TrustsStoreConnector
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures.whenReady
 import uk.gov.hmrc.http.HeaderCarrier
+import connectors.TrustsStoreConnector
+import models.http.FeatureResponse
 
 import scala.concurrent.Future
 
@@ -39,9 +42,9 @@ class FeatureFlagServiceSpec extends SpecBase {
 
       val result = featureFlagService.is5mldEnabled()
 
-      whenReady(result) { res =>
-        res mustEqual true
-      }
+       whenReady(result) { res =>
+         res mustEqual true
+       }
     }
 
     "return false when 5mld is disabled" in {

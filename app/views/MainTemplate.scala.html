@@ -16,6 +16,7 @@
 
 @import config.AppConfig
 @import views.ViewUtils._
+@import controllers.routes.SessionTimeoutController
 
 @this(
     appConfig: AppConfig,
@@ -34,6 +35,8 @@
     timeoutEnabled: Boolean = true,
     canSignOut: Boolean = true
 )(mainContent: Html)(implicit request: Request[_], messages: Messages)
+
+@import uk.gov.hmrc.play.views.html.layouts
 
 @serviceInfoContent = {}
 

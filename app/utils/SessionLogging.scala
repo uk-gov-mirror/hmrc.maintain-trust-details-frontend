@@ -21,16 +21,17 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 trait SessionLogging extends Logging {
 
-  private def logInfo(identifier: String)(implicit hc: HeaderCarrier): String =
-    s"[Session ID: ${Session.id}][Identifier: $identifier]"
+  private def logInfo(identifier: Option[String])(implicit hc: HeaderCarrier): String = {
+    s"[Session ID: ${Session.id}]" + identifier.fold("")(x => s"[Identifier: $x]")
+  }
 
-  def infoLog(identifier: String, message: String)(implicit hc: HeaderCarrier): Unit =
+  def infoLog(message: String, identifier: Option[String] = None)(implicit hc: HeaderCarrier): Unit =
     logger.info(s"${logInfo(identifier)} $message")
 
-  def warnLog(identifier: String, message: String)(implicit hc: HeaderCarrier): Unit =
+  def warnLog(message: String, identifier: Option[String] = None)(implicit hc: HeaderCarrier): Unit =
     logger.warn(s"${logInfo(identifier)} $message")
 
-  def errorLog(identifier: String, message: String)(implicit hc: HeaderCarrier): Unit =
+  def errorLog(message: String, identifier: Option[String] = None)(implicit hc: HeaderCarrier): Unit =
     logger.error(s"${logInfo(identifier)} $message")
 
 }

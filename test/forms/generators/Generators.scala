@@ -16,6 +16,10 @@
 
 package forms.generators
 
+import org.scalacheck.Arbitrary._
+import org.scalacheck.Gen._
+import org.scalacheck.{Gen, Shrink}
+
 trait Generators extends PageGenerators with ModelGenerators {
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny

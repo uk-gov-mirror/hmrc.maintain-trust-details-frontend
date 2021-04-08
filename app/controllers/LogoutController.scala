@@ -43,7 +43,7 @@ class LogoutController @Inject()(
 
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-      infoLog(request.userAnswers.identifier, "user signed out from the service, asking for feedback")
+      infoLog("user signed out from the service, asking for feedback", Some(request.userAnswers.identifier))
 
       if(appConfig.logoutAudit) {
 
@@ -52,7 +52,7 @@ class LogoutController @Inject()(
           "event" -> "signout",
           "service" -> "maintain-trust-details-frontend",
           "userGroup" -> request.user.affinityGroup.toString,
-          "utr" -> request.userAnswers.identifier
+          "identifier" -> request.userAnswers.identifier
         )
 
         auditConnector.sendExplicitAudit(

@@ -16,9 +16,13 @@
 
 package forms.behaviours
 
+import org.scalacheck.Gen
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.{Form, FormError}
 import play.api.test.Helpers.baseApplicationBuilder.injector
+import config.AppConfig
+import forms.FormSpec
+import forms.generators.Generators
 
 trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 

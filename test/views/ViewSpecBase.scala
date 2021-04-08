@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.scalatest.Assertion
 import play.twirl.api.Html
+import models.UserAnswers
 
 import scala.reflect.ClassTag
 

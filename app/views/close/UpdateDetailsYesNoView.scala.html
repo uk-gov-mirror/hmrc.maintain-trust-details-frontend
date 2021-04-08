@@ -14,30 +14,31 @@
  * limitations under the License.
  *@
 
-@import controllers.routes._
+@import controllers.close.routes._
 
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], draftId: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("updateBeforeYouContinue.title")}"
+    title = s"${errorPrefix(form)} ${messages("updateDetailsYesNo.title")}"
 ) {
 
-    @formHelper(action = UpdateBeforeYouContinueController.onSubmit(index, draftId), 'autoComplete -> "off") {
+    @formHelper(action = UpdateDetailsYesNoController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
         @components.error_summary(form.errors)
 
+        @components.heading("updateDetailsYesNo.heading")
+
         @components.input_yes_no(
             field = form("value"),
-            label = messages("updateBeforeYouContinue.heading"),
-            legendClass = Some("heading-large"),
-            legendAsHeading = true
+            legend = messages("updateDetailsYesNo.heading"),
+            headingIsLegend = true
         )
 
         @components.submit_button()

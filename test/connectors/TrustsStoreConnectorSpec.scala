@@ -17,10 +17,12 @@
 package connectors
 
 import base.{SpecBase, WireMockHelper}
+import com.github.tomakehurst.wiremock.client.WireMock.{okJson, urlEqualTo, _}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
+import models.http.FeatureResponse
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

@@ -17,7 +17,7 @@
 package forms
 
 import play.api.data.{Form, FormError}
-import views.behaviours.BooleanFieldBehaviours
+import forms.behaviours.BooleanFieldBehaviours
 
 class YesNoFormProviderSpec extends BooleanFieldBehaviours {
 
