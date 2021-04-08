@@ -4,10 +4,11 @@ import sbt._
 object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
+    play.sbt.PlayImport.ws,
     "uk.gov.hmrc"             %% "bootstrap-frontend-play-27" % "4.1.0",
     "uk.gov.hmrc"             %% "play-language"              % "4.12.0-play-27",
     "org.reactivemongo"       %% "play2-reactivemongo"        % "0.20.13-play27",
-    "uk.gov.hmrc"             %% "govuk-template"             % "5.65.0-play-27",
+    "uk.gov.hmrc"             %% "govuk-template"             % "5.63.0-play-27",
     "uk.gov.hmrc"             %% "play-ui"                    % "9.0.0-play-27"
   )
 

@@ -1,6 +1,10 @@
 site.service_name = Register and Maintain a Trust
 site.sign_out = Sign out
 site.error = Error:
+site.back = Back
+site.yes = Yes
+site.no = No
+site.continue = Continue
 
 session_expired.title = For your security, we signed you out
 session_expired.heading = For your security, we signed you out
