@@ -1,5 +1,6 @@
 site.service_name = Register and Maintain a Trust
 site.sign_out = Sign out
+site.sign_in = Sign in
 site.error = Error:
 site.back = Back
 site.yes = Yes
