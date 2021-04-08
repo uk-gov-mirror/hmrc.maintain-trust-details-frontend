@@ -18,8 +18,7 @@ package repositories
 
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
-import uk.gov.hmrc.maintaintrustdetailsfrontend.models.ActiveSession
-import uk.gov.hmrc.maintaintrustdetailsfrontend.repositories.ActiveSessionRepository
+import models.ActiveSession
 
 class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
   with ScalaFutures with OptionValues with MongoSuite {

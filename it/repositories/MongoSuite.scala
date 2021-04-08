@@ -25,7 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.running
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.{DefaultDB, MongoConnection}
-import uk.gov.hmrc.maintaintrustdetailsfrontend.repositories.{ActiveSessionRepository, ActiveSessionRepositoryImpl}
+import repositories.{ActiveSessionRepository, ActiveSessionRepositoryImpl}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,11 +67,11 @@ trait MongoSuite extends ScalaFutures {
     ).build()
 
   def assertMongoTest(application: Application)(block: (Application, MongoConnection) => Assertion): Future[Assertion] =
-    running(application) {
-      for {
-        connection <- getConnection(application)
-        _ <- dropTheDatabase(connection)
-      } yield block(application, connection)
+    for {
+      connection <- getConnection(application)
+      _ <- dropTheDatabase(connection)
+    } yield running(application) {
+      block(application, connection)
     }
 
 }
