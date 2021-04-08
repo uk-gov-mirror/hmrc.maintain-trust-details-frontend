@@ -17,7 +17,7 @@ GET        /feature-not-available               controllers.FeatureNotAvailableC
 
 GET        /before-you-continue                 controllers.maintain.BeforeYouContinueController.onPageLoad()
 
-GET        /update-details-yes-no               controllers.maintain.UpdateDetailsYesNoController.onPageLoad()
-POST       /update-details-yes-no               controllers.maintain.UpdateDetailsYesNoController.onSubmit()
+GET        /land-or-property                    controllers.maintain.TrustOwnUKLandOrPropertyController.onPageLoad()
+POST       /land-or-property                    controllers.maintain.TrustOwnUKLandOrPropertyController.onSubmit()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

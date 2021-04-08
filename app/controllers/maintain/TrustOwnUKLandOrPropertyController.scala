@@ -20,32 +20,32 @@ import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.UpdateDetailsYesNoPage
+import pages.TrustOwnUKLandOrPropertyPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.UpdateDetailsYesNoView
+import views.html.maintain.TrustOwnUKLandOrPropertyView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UpdateDetailsYesNoController @Inject()(
+class TrustOwnUKLandOrPropertyController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               repository: PlaybackRepository,
                                               yesNoFormProvider: YesNoFormProvider,
                                               navigator: Navigator,
                                               actions: StandardActionSets,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: UpdateDetailsYesNoView
+                                              view: TrustOwnUKLandOrPropertyView
                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateDetailsYesNo")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("trustOwnUKLandOrProperty")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(UpdateDetailsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(TrustOwnUKLandOrPropertyPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,9 +62,9 @@ class UpdateDetailsYesNoController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(UpdateDetailsYesNoPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(TrustOwnUKLandOrPropertyPage, value))
             _              <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(UpdateDetailsYesNoPage,updatedAnswers))
+          } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage,updatedAnswers))
         }
       )
   }
