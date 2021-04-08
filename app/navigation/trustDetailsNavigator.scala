@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package pages
+package navigation
 
-import play.api.libs.json.JsPath
+import javax.inject.Inject
+import models.UserAnswers
+import pages.Page
+import play.api.mvc.Call
 
-case object UpdateDetailsYesNoPage extends QuestionPage[Boolean] {
+class trustDetailsNavigator @Inject()() extends Navigator {
 
-  override def path: JsPath = JsPath \ toString
+  override def nextPage(page: Page, userAnswers: UserAnswers): Call =
+    routes()(page)(userAnswers)
 
-  override def toString: String = "updateDetailsYesNo"
+  private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = ???
+
+  private def yesNoNavigation(): PartialFunction[Page, UserAnswers => Call] = ???
+
+  def routes(): PartialFunction[Page, UserAnswers => Call] =
+    simpleNavigation() orElse
+      yesNoNavigation()
 
 }
+

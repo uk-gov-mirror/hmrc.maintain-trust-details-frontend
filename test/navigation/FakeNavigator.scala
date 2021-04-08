@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package pages
+package navigation
 
-import play.api.libs.json.JsPath
+import models.UserAnswers
+import pages._
+import play.api.mvc.Call
 
-case object UpdateDetailsYesNoPage extends QuestionPage[Boolean] {
+class FakeNavigator(val desiredRoute: Call = Call("GET", "/foo")) extends Navigator {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "updateDetailsYesNo"
+  override def nextPage(page: Page, userAnswers: UserAnswers): Call =
+    desiredRoute
 
 }

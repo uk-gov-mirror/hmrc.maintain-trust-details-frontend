@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package pages
+package navigation
 
-import play.api.libs.json.JsPath
+import base.SpecBase
+import models.UserAnswers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-case object UpdateDetailsYesNoPage extends QuestionPage[Boolean] {
+class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  override def path: JsPath = JsPath \ toString
+  val navigator = new trustDetailsNavigator
 
-  override def toString: String = "updateDetailsYesNo"
+  "maintain trust details" when {
+
+    "" must {
+
+      "" in {
+
+      }
+    }
+  }
 
 }

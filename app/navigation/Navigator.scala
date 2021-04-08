@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package pages
+package navigation
 
-import play.api.libs.json.JsPath
+import models._
+import pages._
+import play.api.mvc.Call
 
-case object UpdateDetailsYesNoPage extends QuestionPage[Boolean] {
+trait Navigator {
 
-  override def path: JsPath = JsPath \ toString
+  def nextPage(page: Page, userAnswers: UserAnswers): Call
 
-  override def toString: String = "updateDetailsYesNo"
+  def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
+    ua.get(fromPage)
+      .map(if (_) yesCall else noCall)
+      .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
+  }
 
 }
