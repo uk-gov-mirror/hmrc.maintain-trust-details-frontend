@@ -16,7 +16,7 @@
 
 package base
 
-import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, IdentifierAction, PlaybackIdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, IdentifierAction, PlaybackIdentifierAction}
 import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec

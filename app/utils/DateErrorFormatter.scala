@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package utils
 
-import com.google.inject.Inject
-import play.api.mvc.Result
-import models.requests.DataRequest
+import play.api.i18n.Messages
 
-import scala.concurrent.{ExecutionContext, Future}
+object DateErrorFormatter {
 
-class FakePlaybackIdentifierAction @Inject()(
-        implicit val executionContext: ExecutionContext
-        ) extends PlaybackIdentifierAction {
+  def formatArgs(args: Seq[Any])(implicit messages: Messages): Seq[String] = {
+    args.map(arg => messages(s"date.$arg").toLowerCase)
+  }
 
-        override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = Future.successful(Right(request))
-
-        }
+}
