@@ -1,3 +1,26 @@
-service.name = maintain-trust-details-frontend
-service.homePageUrl = /maintain-trust-details-frontend
-service.text = This is your new service
+site.service_name = Register and Maintain a Trust
+site.sign_out = Sign out
+site.sign_in = Sign in
+site.error = Error:
+site.back = Back
+site.yes = Yes
+site.no = No
+site.continue = Continue
+
+session_expired.title = For your security, we signed you out
+session_expired.heading = For your security, we signed you out
+session_expired.guidance = This is because you have been inactive on the service for 15 minutes.
+session_expired.guidance.2 = You will need to sign in to continue maintaining the trust.
+
+unauthorised.title = You can’t access this service with this account
+unauthorised.heading = You can’t access this service with this account
+
+timeout.title = Your application will time out soon
+timeout.message = We will sign you out if you do not respond in
+timeout.keep-alive-button = Continue application
+
+featureNotAvailable.title = This part of the online service is not available yet
+featureNotAvailable.heading = This part of the online service is not available yet
+featureNotAvailable.p1 = If you need to make any changes to the trust you can
+featureNotAvailable.link = contact our trusts helpline (opens in a new window or tab)
+featureNotAvailable.p2 = You will be able to update these details online in the future.
