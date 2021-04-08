@@ -37,3 +37,11 @@ trustOwnUKLandOrProperty.title = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.heading = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.hint = Land or property refers to plots of land, or brick and mortar buildings in the UK.
 trustOwnUKLandOrProperty.error.required = Select yes if the trust owns UK land or property
+
+trustEEAYesNo.title = Is the trust also listed on another countries' trust register within the European Economic Area (EEA)?
+trustEEAYesNo.heading = Is the trust also listed on another countries' trust register within the European Economic Area (EEA)?
+trustEEAYesNo.paragraph1 = The EEA includes:
+trustEEAYesNo.bullet1 = All countries within the European Union (EU)
+trustEEAYesNo.bullet2 = Iceland
+trustEEAYesNo.bullet3 = Lichtenstein
+trustEEAYesNo.bullet4 = Norway

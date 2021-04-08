@@ -20,4 +20,7 @@ GET        /before-you-continue                 controllers.maintain.BeforeYouCo
 GET        /land-or-property                    controllers.maintain.TrustOwnUKLandOrPropertyController.onPageLoad()
 POST       /land-or-property                    controllers.maintain.TrustOwnUKLandOrPropertyController.onSubmit()
 
+GET        /eea-yes-no                          controllers.maintain.TrustEEAYesNoController.onPageLoad()
+POST       /eea-yes-no                          controllers.maintain.TrustEEAYesNoController.onSubmit()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)
