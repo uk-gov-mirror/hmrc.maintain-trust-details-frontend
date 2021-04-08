@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.maintain
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
-import views.html.close.BeforeYouContinueView
+import views.html.maintain.BeforeYouContinueView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 class BeforeYouContinueController @Inject()(

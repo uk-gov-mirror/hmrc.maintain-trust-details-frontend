@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
@@ -26,7 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.close.UpdateDetailsYesNoView
+import views.html.maintain.UpdateDetailsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 

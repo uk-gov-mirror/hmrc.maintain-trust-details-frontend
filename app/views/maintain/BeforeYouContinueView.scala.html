@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.close.routes._
+@import controllers.maintain.routes._
 
 @this(
 main_template: MainTemplate
@@ -23,31 +23,24 @@ main_template: MainTemplate
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("beforeYouContinue.title")
-) {
+title = messages("updateBeforeYouContinue.title")
+){
 
     @components.back_link()
 
-    @components.heading("beforeYouContinue")
+    @components.heading("updateBeforeYouContinue")
 
-<h2>@messages("beforeYouContinue.subheading")</h2>
-
- <p>@messages("beforeYouContinue.paragraph1")</p>
+     <h2>@messages("updateBeforeYouContinue.subheading")</h2>
 
     @components.bullet_list(
-    "beforeYouContinue",
+    "updateBeforeYouContinue",
       List(
         "bullet1",
         "bullet2",
-        "bullet3",
-        "bullet4",
-        "bullet5"
+        "bullet3"
         )
     )
- <p>@messages("beforeYouContinue.paragraph2")</p>
-
- <p>@messages("beforeYouContinue.paragraph3")</p>
 
     @components.button_link(messages("site.continue"), UpdateDetailsYesNoController.onPageLoad().url)
-    
-    }
+
+  }

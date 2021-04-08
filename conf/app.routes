@@ -15,11 +15,9 @@ GET        /logout                              controllers.LogoutController.log
 
 GET        /feature-not-available               controllers.FeatureNotAvailableController.onPageLoad()
 
-GET        /before-you-continue                 controllers.close.BeforeYouContinueController.onPageLoad()
+GET        /before-you-continue                 controllers.maintain.BeforeYouContinueController.onPageLoad()
 
-GET        /update-details-yes-no               controllers.close.UpdateDetailsYesNoController.onPageLoad()
-POST       /update-details-yes-no               controllers.close.UpdateDetailsYesNoController.onSubmit()
-
-GET        /before-you-update                   controllers.maintain.UpdateBeforeYouContinueController.onPageLoad()
+GET        /update-details-yes-no               controllers.maintain.UpdateDetailsYesNoController.onPageLoad()
+POST       /update-details-yes-no               controllers.maintain.UpdateDetailsYesNoController.onSubmit()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)
