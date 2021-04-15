@@ -16,12 +16,11 @@
 
 package controllers.maintain
 
-import connectors.TrustConnector
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.TrustEEAYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,9 +33,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustEEAYesNoController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               yesNoFormProvider: YesNoFormProvider,
+                                              repository: PlaybackRepository,
                                               navigator: Navigator,
                                               actions: StandardActionSets,
-                                              connector: TrustConnector,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: TrustEEAYesNoView
                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
@@ -63,8 +62,9 @@ class TrustEEAYesNoController @Inject()(
 
         value => {
           for {
-            _ <- connector.trustEEAYesNo(request.userAnswers.identifier, value)
-          } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage, request.userAnswers))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(TrustEEAYesNoPage, value))
+            _              <- repository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(TrustEEAYesNoPage,updatedAnswers))
         }
       )
   }

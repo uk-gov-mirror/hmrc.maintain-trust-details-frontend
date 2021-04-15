@@ -34,6 +34,8 @@ class TrustConnector @Inject()(http: HttpClient, config : AppConfig) {
   def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] =
     http.GET[TrustDetails](getTrustDetailsUrl(identifier))
 
+
+
   private def amendPropertyOrLandUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details/uk-property"
 
   def amendPropertyOrLand(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] =

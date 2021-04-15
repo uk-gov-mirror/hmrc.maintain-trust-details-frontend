@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package forms.generators
+package generators
 
-trait PageGenerators {
-
+trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 }

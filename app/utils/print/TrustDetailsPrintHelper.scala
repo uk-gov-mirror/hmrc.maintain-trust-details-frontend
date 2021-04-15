@@ -19,7 +19,7 @@ package utils.print
 import com.google.inject.Inject
 import controllers.maintain.routes._
 import models.UserAnswers
-import pages.{TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
 
@@ -31,7 +31,8 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
 
     lazy val add: Seq[AnswerRow] = Seq(
       bound.yesNoQuestion(TrustEEAYesNoPage, "trustEEAYesNo", TrustEEAYesNoController.onPageLoad().url),
-      bound.yesNoQuestion(TrustOwnUKLandOrPropertyPage, "trustEEAYesNo", TrustOwnUKLandOrPropertyController.onPageLoad().url)
+      bound.yesNoQuestion(TrustOwnUKLandOrPropertyPage, "trustOwnUKLandOrProperty", TrustOwnUKLandOrPropertyController.onPageLoad().url),
+      bound.yesNoQuestion(BusinessRelationshipYesNoPage, "businessRelationshipYesNo", BusinessRelationshipYesNoController.onPageLoad().url)
     ).flatten
 
     AnswerSection(

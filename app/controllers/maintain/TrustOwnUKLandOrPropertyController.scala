@@ -16,7 +16,6 @@
 
 package controllers.maintain
 
-import connectors.TrustConnector
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
@@ -34,11 +33,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustOwnUKLandOrPropertyController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               yesNoFormProvider: YesNoFormProvider,
+                                              repository: PlaybackRepository,
                                               navigator: Navigator,
                                               actions: StandardActionSets,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: TrustOwnUKLandOrPropertyView,
-                                              connector: TrustConnector
+                                              view: TrustOwnUKLandOrPropertyView
                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("trustOwnUKLandOrProperty")
@@ -63,8 +62,9 @@ class TrustOwnUKLandOrPropertyController @Inject()(
 
         value => {
           for {
-            _ <- connector.amendPropertyOrLand(request.userAnswers.identifier, value)
-          } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage, request.userAnswers))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(TrustOwnUKLandOrPropertyPage, value))
+            _              <- repository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage,updatedAnswers))
         }
       )
   }

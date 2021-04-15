@@ -17,7 +17,6 @@
 package controllers.maintain
 
 import base.SpecBase
-import connectors.TrustConnector
 import forms.YesNoFormProvider
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TrustOwnUKLandOrPropertyPage
@@ -25,13 +24,6 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.TrustOwnUKLandOrPropertyView
-import play.api.inject.bind
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import play.api.http.Status
-import uk.gov.hmrc.http.HttpResponse
-
-import scala.concurrent.Future
 
 class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar {
 
@@ -84,16 +76,7 @@ class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar 
 
     "redirect to the next page when valid data is submitted  is submitted" in {
 
-      val mockTrustConnector = mock[TrustConnector]
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[TrustConnector].toInstance(mockTrustConnector)
-          )
-          .build()
-
-      when(mockTrustConnector.amendPropertyOrLand(any(),any())(any(),any())).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
         FakeRequest(POST, trustOwnUKLandOrPropertyControllerRoute)
@@ -103,7 +86,7 @@ class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar 
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.maintain.routes.TrustEEAYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
 
       application.stop()
     }

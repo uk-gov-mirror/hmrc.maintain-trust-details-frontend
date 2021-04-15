@@ -17,21 +17,13 @@
 package controllers.maintain
 
 import base.SpecBase
-import connectors.TrustConnector
 import forms.YesNoFormProvider
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TrustEEAYesNoPage
-import play.api.http.Status
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
 import views.html.maintain.TrustEEAYesNoView
-
-import scala.concurrent.Future
 
 class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
 
@@ -84,16 +76,9 @@ class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted  is submitted" in {
 
-      val mockTrustConnector = mock[TrustConnector]
+      val userAnswers = emptyUserAnswers.set(TrustEEAYesNoPage, true).success.value
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[TrustConnector].toInstance(mockTrustConnector)
-          )
-          .build()
-
-      when(mockTrustConnector.trustEEAYesNo(any(),any())(any(),any())).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, trustEEAYesNoControllerRoute)

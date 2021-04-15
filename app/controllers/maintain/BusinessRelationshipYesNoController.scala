@@ -16,18 +16,17 @@
 
 package controllers.maintain
 
-import connectors.TrustConnector
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{BusinessRelationshipYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.BusinessRelationshipYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.{BusinessRelationshipYesNoView, TrustOwnUKLandOrPropertyView}
+import views.html.maintain.BusinessRelationshipYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,7 +36,6 @@ class BusinessRelationshipYesNoController @Inject()(
                                               yesNoFormProvider: YesNoFormProvider,
                                               navigator: Navigator,
                                               actions: StandardActionSets,
-                                              connector: TrustConnector,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: BusinessRelationshipYesNoView
                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
@@ -64,8 +62,9 @@ class BusinessRelationshipYesNoController @Inject()(
 
         value => {
           for {
-            _ <- connector.amendBusinessRelationshipYesNo(request.userAnswers.identifier, value)
-          } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage, request.userAnswers))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(BusinessRelationshipYesNoPage, value))
+            _              <- repository.set(updatedAnswers)
+          } yield Redirect(navigator.nextPage(BusinessRelationshipYesNoPage,updatedAnswers))
         }
       )
   }
