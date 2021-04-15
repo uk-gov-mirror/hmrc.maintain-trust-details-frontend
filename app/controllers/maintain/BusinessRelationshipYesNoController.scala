@@ -21,32 +21,33 @@ import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.{TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.{BusinessRelationshipYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.TrustEEAYesNoView
+import views.html.maintain.{BusinessRelationshipYesNoView, TrustOwnUKLandOrPropertyView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustEEAYesNoController @Inject()(
+class BusinessRelationshipYesNoController @Inject()(
                                               override val messagesApi: MessagesApi,
+                                              repository: PlaybackRepository,
                                               yesNoFormProvider: YesNoFormProvider,
                                               navigator: Navigator,
                                               actions: StandardActionSets,
                                               connector: TrustConnector,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: TrustEEAYesNoView
+                                              view: BusinessRelationshipYesNoView
                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("trustEEAYesNo")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(TrustEEAYesNoPage) match {
+      val preparedForm = request.userAnswers.get(BusinessRelationshipYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,7 +64,7 @@ class TrustEEAYesNoController @Inject()(
 
         value => {
           for {
-            _ <- connector.trustEEAYesNo(request.userAnswers.identifier, value)
+            _ <- connector.amendBusinessRelationshipYesNo(request.userAnswers.identifier, value)
           } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage, request.userAnswers))
         }
       )

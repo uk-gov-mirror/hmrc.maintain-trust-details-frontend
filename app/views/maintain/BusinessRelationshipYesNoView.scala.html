@@ -24,20 +24,33 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("trustOwnUKLandOrProperty.title")}"
+    title = s"${errorPrefix(form)} ${messages("businessRelationshipYesNo.title")}"
 ) {
 
-    @formHelper(action = TrustOwnUKLandOrPropertyController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = BusinessRelationshipYesNoController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
         @components.error_summary(form.errors)
 
-        @components.heading("trustOwnUKLandOrProperty.heading")
+        @components.heading("businessRelationshipYesNo.heading")
+
+     <p>@messages("businessRelationshipYesNo.paragraph1")</p>
+
+        @components.bullet_list(
+        "businessRelationshipYesNo",
+        List(
+        "bullet1",
+        "bullet2",
+        "bullet3"
+            )
+        )
+
+     <p>@messages("businessRelationshipYesNo.paragraph2")</p>
 
         @components.input_yes_no(
             field = form("value"),
-            legend = messages("trustOwnUKLandOrProperty.heading"),
+            legend = messages("businessRelationshipYesNo.heading"),
             headingIsLegend = true
         )
 

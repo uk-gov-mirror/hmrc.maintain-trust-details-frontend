@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import viewmodels.AnswerSection
 @import controllers.maintain.routes._
 
 @this(
@@ -21,25 +22,17 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(answerSection: AnswerSection)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("trustOwnUKLandOrProperty.title")}"
+    title = messages("checkDetails.title")
 ) {
 
-    @formHelper(action = TrustOwnUKLandOrPropertyController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = CheckDetailsController.onPageLoad(), 'autoComplete -> "off") {
 
         @components.back_link()
 
-        @components.error_summary(form.errors)
-
-        @components.heading("trustOwnUKLandOrProperty.heading")
-
-        @components.input_yes_no(
-            field = form("value"),
-            legend = messages("trustOwnUKLandOrProperty.heading"),
-            headingIsLegend = true
-        )
+        @components.heading("checkDetails.heading")
 
         @components.submit_button()
     }

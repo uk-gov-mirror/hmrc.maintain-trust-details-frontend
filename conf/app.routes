@@ -23,4 +23,10 @@ POST       /land-or-property                    controllers.maintain.TrustOwnUKL
 GET        /eea-yes-no                          controllers.maintain.TrustEEAYesNoController.onPageLoad()
 POST       /eea-yes-no                          controllers.maintain.TrustEEAYesNoController.onSubmit()
 
+GET        /business-relationship-yes-no        controllers.maintain.BusinessRelationshipYesNoController.onPageLoad()
+POST       /business-relationship-yes-no        controllers.maintain.BusinessRelationshipYesNoController.onSubmit()
+
+GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
+#POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)
