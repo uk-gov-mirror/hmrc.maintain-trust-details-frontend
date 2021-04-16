@@ -18,8 +18,10 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TrustEEAYesNoPage
+import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -74,21 +76,21 @@ class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted  is submitted" in {
+    "redirect to the next page when valid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers.set(TrustEEAYesNoPage, true).success.value
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[Navigator].toInstance(fakeNavigator))
+          .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request =
-        FakeRequest(POST, trustEEAYesNoControllerRoute)
-          .withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, trustEEAYesNoControllerRoute)
+        .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.maintain.routes.TrustEEAYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
 
       application.stop()
     }

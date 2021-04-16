@@ -18,14 +18,15 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
-import org.scalatestplus.mockito.MockitoSugar
+import navigation.Navigator
 import pages.BusinessRelationshipYesNoPage
+import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.BusinessRelationshipYesNoView
 
-class BusinessRelationshipYesNoControllerSpec extends SpecBase with MockitoSugar {
+class BusinessRelationshipYesNoControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -74,21 +75,21 @@ class BusinessRelationshipYesNoControllerSpec extends SpecBase with MockitoSugar
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted  is submitted" in {
+    "redirect to the next page when valid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers.set(BusinessRelationshipYesNoPage, true).success.value
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[Navigator].toInstance(fakeNavigator))
+          .build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request =
-        FakeRequest(POST, businessRelationshipYesNoControllerRoute)
-          .withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, businessRelationshipYesNoControllerRoute)
+        .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
 
       application.stop()
     }

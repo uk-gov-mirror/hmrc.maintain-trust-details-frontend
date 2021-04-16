@@ -37,9 +37,11 @@ trustOwnUKLandOrProperty.title = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.heading = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.hint = Land or property refers to plots of land, or brick and mortar buildings in the UK.
 trustOwnUKLandOrProperty.error.required = Select yes if the trust owns UK land or property
+trustOwnUKLandOrProperty.checkYourAnswersLabel = Does the trust own UK land or property?
 
 trustEEAYesNo.title = Is the trust also listed on another countries' trust register within the European Economic Area (EEA)?
 trustEEAYesNo.heading = Is the trust also listed on another countries' trust register within the European Economic Area (EEA)?
+trustEEAYesNo.checkYourAnswersLabel = Is the trust also listed on another countries' trust register within the European Economic Area (EEA)?
 trustEEAYesNo.paragraph1 = The EEA includes:
 trustEEAYesNo.bullet1 = All countries within the European Union (EU)
 trustEEAYesNo.bullet2 = Iceland
@@ -48,6 +50,7 @@ trustEEAYesNo.bullet4 = Norway
 
 businessRelationshipYesNo.title = Does the trust have an ongoing business relationship in the UK?
 businessRelationshipYesNo.heading = Does the trust have an ongoing business relationship in the UK?
+businessRelationshipYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
 businessRelationshipYesNo.paragraph1 = The trust will have a business relationship if the trustees managing the trust get any of the following from a UK based organisation on an ongoing basis.
 businessRelationshipYesNo.paragraph2 = Professional advice means the services of a solicitor, accountant, estate agent, bank or building society, or other professional organisation.
 businessRelationshipYesNo.bullet1 = Financial services

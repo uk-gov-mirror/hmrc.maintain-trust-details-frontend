@@ -18,8 +18,10 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TrustOwnUKLandOrPropertyPage
+import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -74,19 +76,21 @@ class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar 
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted  is submitted" in {
+    "redirect to the next page when valid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[Navigator].toInstance(fakeNavigator))
+          .build()
 
-      val request =
-        FakeRequest(POST, trustOwnUKLandOrPropertyControllerRoute)
-          .withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, trustOwnUKLandOrPropertyControllerRoute)
+        .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
+      redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
 
       application.stop()
     }
