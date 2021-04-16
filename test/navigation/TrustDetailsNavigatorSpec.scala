@@ -18,6 +18,7 @@ package navigation
 
 import base.SpecBase
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -25,11 +26,36 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   "maintain trust details" when {
 
-    "" must {
+    "updating" must {
 
-      "" in {
-
+      "TrustOwnUKLandOrProperty Page -> TrustEEAYesNo page" in {
+        navigator.nextPage(TrustOwnUKLandOrPropertyPage, emptyUserAnswers)
+          .mustBe(controllers.maintain.routes.TrustEEAYesNoController.onPageLoad())
       }
+
+      "TrustEEAYesNo Page -> UK Trust -> CYA page" in {
+
+        val answers = emptyUserAnswers
+          .set(???, true).success.value
+
+        navigator.nextPage(TrustEEAYesNoPage, answers)
+          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      }
+
+      "TrustEEAYesNo Page -> none UK Trust -> BusinessRelationshipYesNo page" in {
+
+        val answers = emptyUserAnswers
+          .set(???, false).success.value
+
+        navigator.nextPage(TrustEEAYesNoPage, answers)
+          .mustBe(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad())
+      }
+
+      "BusinessRelationshipYesNo Page -> CYA page" in {
+        navigator.nextPage(BusinessRelationshipYesNoPage, emptyUserAnswers)
+          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      }
+
     }
   }
 

@@ -18,7 +18,7 @@ package navigation
 
 import javax.inject.Inject
 import models.UserAnswers
-import pages.Page
+import pages.{BusinessRelationshipYesNoPage, Page, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.api.mvc.Call
 
 class TrustDetailsNavigator @Inject()() extends Navigator {
@@ -26,13 +26,23 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   override def nextPage(page: Page, userAnswers: UserAnswers): Call =
     routes()(page)(userAnswers)
 
-  private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = ???
+  private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = {
+    case TrustOwnUKLandOrPropertyPage => _ => controllers.maintain.routes.TrustEEAYesNoController.onPageLoad()
+    case TrustEEAYesNoPage => ua => isUk(ua)
+    case BusinessRelationshipYesNoPage => _ => controllers.maintain.routes.CheckDetailsController.onPageLoad()
+  }
 
-  private def yesNoNavigation(): PartialFunction[Page, UserAnswers => Call] = ???
 
   def routes(): PartialFunction[Page, UserAnswers => Call] =
-    simpleNavigation() orElse
-      yesNoNavigation()
+    simpleNavigation()
 
+
+  private def isUk(ua: UserAnswers): Call = {
+    if (???) {
+      controllers.maintain.routes.CheckDetailsController.onPageLoad()
+    } else {
+      controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad()
+    }
+  }
 }
 
