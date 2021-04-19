@@ -30,8 +30,8 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
     val bound = answerRowConverter.bind(userAnswers)
 
     val answerRows: Seq[AnswerRow] = Seq(
-      bound.yesNoQuestion(TrustEEAYesNoPage, "trustEEAYesNo", Some(TrustEEAYesNoController.onPageLoad().url)),
       bound.yesNoQuestion(TrustOwnUKLandOrPropertyPage, "trustOwnUKLandOrProperty", Some(TrustOwnUKLandOrPropertyController.onPageLoad().url)),
+      bound.yesNoQuestion(TrustEEAYesNoPage, "trustEEAYesNo", Some(TrustEEAYesNoController.onPageLoad().url)),
       bound.yesNoQuestion(BusinessRelationshipYesNoPage, "businessRelationshipYesNo", Some(BusinessRelationshipYesNoController.onPageLoad().url))
     ).flatten
 

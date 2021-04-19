@@ -15,27 +15,22 @@
  *@
 
 @import viewmodels.AnswerSection
-@import controllers.maintain.routes._
+@import views.html._
 
-@this(
-    main_template: MainTemplate,
-    formHelper: FormWithCSRF
-)
+@(answerSection: AnswerSection)(implicit messages: Messages)
 
-@(answerSection: AnswerSection)(implicit request: Request[_], messages: Messages)
+@if(answerSection.sectionKey.isDefined){
+    <h2 class="heading-large">@messages(answerSection.sectionKey.get)</h2>
+}
 
-@main_template(
-    title = messages("checkDetails.title")
-) {
+@if(answerSection.headingKey.isDefined){
+    <h3 class="heading-medium">@messages(answerSection.headingKey.get)</h3>
+}
 
-    @formHelper(action = CheckDetailsController.onPageLoad(), 'autoComplete -> "off") {
-
-        @components.back_link()
-
-        @components.heading("checkDetails.heading")
-
-        @components.answer_section(answerSection)
-
-        @components.submit_button()
-    }
+@if(answerSection.rows) {
+    <ul role="list" class="govuk-check-your-answers cya-questions-long section">
+        @for(row <- answerSection.rows){
+            @components.answer_row(row)
+        }
+    </ul>
 }
