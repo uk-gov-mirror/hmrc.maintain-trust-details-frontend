@@ -33,12 +33,11 @@
 package controllers.maintain
 
 import base.SpecBase
-import connectors.TrustsConnector
+import connectors.{TrustsConnector, TrustsStoreConnector}
 import mappers.{MappedTrustDetails, TrustDetailsMapper}
 import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{never, verify, when}
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito.{never, reset, verify, when}
+import org.scalatest.BeforeAndAfterEach
 import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -51,11 +50,19 @@ import views.html.maintain.CheckDetailsView
 
 import scala.concurrent.Future
 
-class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFutures {
+class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   private lazy val checkDetailsRoute = controllers.maintain.routes.CheckDetailsController.onPageLoad().url
   private lazy val submitDetailsRoute = controllers.maintain.routes.CheckDetailsController.onSubmit().url
   private lazy val onwardRoute = frontendAppConfig.maintainATrustOverviewUrl
+
+  private val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
+
+  override def beforeEach(): Unit = {
+    reset(mockTrustsStoreConnector)
+    when(mockTrustsStoreConnector.setTaskComplete(any())(any(), any()))
+      .thenReturn(Future.successful(HttpResponse(OK, "")))
+  }
 
   "CheckDetails Controller" when {
 
@@ -100,7 +107,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
             .overrides(
               bind[TrustsConnector].toInstance(mockTrustConnector),
-              bind[TrustDetailsMapper].toInstance(mockMapper)
+              bind[TrustDetailsMapper].toInstance(mockMapper),
+              bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector)
             ).build()
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
@@ -134,7 +142,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
             .overrides(
               bind[TrustsConnector].toInstance(mockTrustConnector),
-              bind[TrustDetailsMapper].toInstance(mockMapper)
+              bind[TrustDetailsMapper].toInstance(mockMapper),
+              bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector)
             ).build()
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))

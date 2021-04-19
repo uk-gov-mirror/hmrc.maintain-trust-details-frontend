@@ -23,6 +23,10 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
+@content = {
+    <p>@messages("trustOwnUKLandOrProperty.paragraph1")</p>
+}
+
 @main_template(
     title = s"${errorPrefix(form)} ${messages("trustOwnUKLandOrProperty.title")}"
 ) {
@@ -36,7 +40,8 @@
         @components.input_yes_no(
             field = form("value"),
             legend = messages("trustOwnUKLandOrProperty.heading"),
-            headingIsLegend = true
+            headingIsLegend = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button()

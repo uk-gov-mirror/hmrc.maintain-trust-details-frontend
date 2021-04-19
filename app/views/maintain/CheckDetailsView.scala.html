@@ -28,7 +28,7 @@
     title = messages("checkDetails.title")
 ) {
 
-    @formHelper(action = CheckDetailsController.onPageLoad(), 'autoComplete -> "off") {
+    @formHelper(action = CheckDetailsController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 

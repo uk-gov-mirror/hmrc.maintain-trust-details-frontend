@@ -17,7 +17,7 @@
 package controllers.maintain
 
 import config.AppConfig
-import connectors.TrustsConnector
+import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
 import handlers.ErrorHandler
 import mappers.TrustDetailsMapper
@@ -42,7 +42,8 @@ class CheckDetailsController @Inject()(
                                         val appConfig: AppConfig,
                                         printHelper: TrustDetailsPrintHelper,
                                         mapper: TrustDetailsMapper,
-                                        errorHandler: ErrorHandler
+                                        errorHandler: ErrorHandler,
+                                        trustsStoreConnector: TrustsStoreConnector
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
@@ -66,6 +67,7 @@ class CheckDetailsController @Inject()(
               case Some(value) => connector.setUkRelation(identifier, value)
               case None => Future.successful(())
             }
+            _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
           }).recoverWith {

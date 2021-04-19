@@ -23,6 +23,20 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
+@content = {
+    <p>@messages("trustEEAYesNo.paragraph1")</p>
+
+    @components.bullet_list(
+        "trustEEAYesNo",
+        List(
+            "bullet1",
+            "bullet2",
+            "bullet3",
+            "bullet4"
+        )
+    )
+}
+
 @main_template(
     title = s"${errorPrefix(form)} ${messages("trustEEAYesNo.title")}"
 ) {
@@ -33,22 +47,11 @@
 
         @components.error_summary(form.errors)
 
-        <p>@messages("trustEEAYesNo.paragraph1")</p>
-
-        @components.bullet_list(
-            "trustEEAYesNo",
-            List(
-                "bullet1",
-                "bullet2",
-                "bullet3",
-                "bullet4"
-            )
-        )
-
         @components.input_yes_no(
             field = form("value"),
             legend = messages("trustEEAYesNo.heading"),
-            headingIsLegend = true
+            headingIsLegend = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button()

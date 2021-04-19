@@ -23,6 +23,21 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
+@content = {
+    <p>@messages("businessRelationshipYesNo.paragraph1")</p>
+
+    @components.bullet_list(
+        "businessRelationshipYesNo",
+        List(
+            "bullet1",
+            "bullet2",
+            "bullet3"
+        )
+    )
+
+    <p>@messages("businessRelationshipYesNo.paragraph2")</p>
+}
+
 @main_template(
     title = s"${errorPrefix(form)} ${messages("businessRelationshipYesNo.title")}"
 ) {
@@ -33,23 +48,11 @@
 
         @components.error_summary(form.errors)
 
-        <p>@messages("businessRelationshipYesNo.paragraph1")</p>
-
-        @components.bullet_list(
-            "businessRelationshipYesNo",
-            List(
-                "bullet1",
-                "bullet2",
-                "bullet3"
-            )
-        )
-
-        <p>@messages("businessRelationshipYesNo.paragraph2")</p>
-
         @components.input_yes_no(
             field = form("value"),
             legend = messages("businessRelationshipYesNo.heading"),
-            headingIsLegend = true
+            headingIsLegend = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button()
