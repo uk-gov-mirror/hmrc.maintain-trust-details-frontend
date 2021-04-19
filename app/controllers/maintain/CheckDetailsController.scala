@@ -17,7 +17,7 @@
 package controllers.maintain
 
 import config.AppConfig
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import controllers.actions._
 import handlers.ErrorHandler
 import mappers.TrustDetailsMapper
@@ -38,7 +38,7 @@ class CheckDetailsController @Inject()(
                                         standardActionSets: StandardActionSets,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
-                                        connector: TrustConnector,
+                                        connector: TrustsConnector,
                                         val appConfig: AppConfig,
                                         printHelper: TrustDetailsPrintHelper,
                                         mapper: TrustDetailsMapper,

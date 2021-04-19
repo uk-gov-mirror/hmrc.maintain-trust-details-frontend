@@ -29,7 +29,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
 
-class TrustConnectorSpec extends SpecBase with ScalaFutures
+class TrustsConnectorSpec extends SpecBase with ScalaFutures
   with Inside with BeforeAndAfterAll with BeforeAndAfterEach with IntegrationPatience {
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -87,7 +87,7 @@ class TrustConnectorSpec extends SpecBase with ScalaFutures
           ): _*
         ).build()
 
-      val connector = application.injector.instanceOf[TrustConnector]
+      val connector = application.injector.instanceOf[TrustsConnector]
 
       server.stubFor(
         get(urlEqualTo(s"/trusts/trust-details/$identifier/transformed"))
@@ -121,7 +121,7 @@ class TrustConnectorSpec extends SpecBase with ScalaFutures
           ): _*
         ).build()
 
-      val connector = application.injector.instanceOf[TrustConnector]
+      val connector = application.injector.instanceOf[TrustsConnector]
 
       server.stubFor(
         put(urlEqualTo(setUkPropertyUrl(identifier)))
@@ -145,7 +145,7 @@ class TrustConnectorSpec extends SpecBase with ScalaFutures
           ): _*
         ).build()
 
-      val connector = application.injector.instanceOf[TrustConnector]
+      val connector = application.injector.instanceOf[TrustsConnector]
 
       server.stubFor(
         put(urlEqualTo(setTrustRecordedUrl(identifier)))
@@ -169,7 +169,7 @@ class TrustConnectorSpec extends SpecBase with ScalaFutures
           ): _*
         ).build()
 
-      val connector = application.injector.instanceOf[TrustConnector]
+      val connector = application.injector.instanceOf[TrustsConnector]
 
       server.stubFor(
         put(urlEqualTo(setUkRelationUrl(identifier)))

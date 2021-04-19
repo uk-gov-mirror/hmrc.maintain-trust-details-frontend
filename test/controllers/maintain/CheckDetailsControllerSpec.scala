@@ -33,7 +33,7 @@
 package controllers.maintain
 
 import base.SpecBase
-import connectors.TrustConnector
+import connectors.TrustsConnector
 import mappers.{MappedTrustDetails, TrustDetailsMapper}
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, verify, when}
@@ -94,12 +94,12 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
           val userAnswers = emptyUserAnswers
 
-          val mockTrustConnector = mock[TrustConnector]
+          val mockTrustConnector = mock[TrustsConnector]
           val mockMapper = mock[TrustDetailsMapper]
 
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
             .overrides(
-              bind[TrustConnector].toInstance(mockTrustConnector),
+              bind[TrustsConnector].toInstance(mockTrustConnector),
               bind[TrustDetailsMapper].toInstance(mockMapper)
             ).build()
 
@@ -128,12 +128,12 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
           val userAnswers = emptyUserAnswers
 
-          val mockTrustConnector = mock[TrustConnector]
+          val mockTrustConnector = mock[TrustsConnector]
           val mockMapper = mock[TrustDetailsMapper]
 
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
             .overrides(
-              bind[TrustConnector].toInstance(mockTrustConnector),
+              bind[TrustsConnector].toInstance(mockTrustConnector),
               bind[TrustDetailsMapper].toInstance(mockMapper)
             ).build()
 
@@ -164,12 +164,12 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
           val userAnswers = emptyUserAnswers
 
-          val mockTrustConnector = mock[TrustConnector]
+          val mockTrustConnector = mock[TrustsConnector]
           val mockMapper = mock[TrustDetailsMapper]
 
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
             .overrides(
-              bind[TrustConnector].toInstance(mockTrustConnector),
+              bind[TrustsConnector].toInstance(mockTrustConnector),
               bind[TrustDetailsMapper].toInstance(mockMapper)
             ).build()
 
@@ -195,10 +195,10 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
             .set(TrustEEAYesNoPage, true).success.value
             .set(BusinessRelationshipYesNoPage, true).success.value
 
-          val mockTrustConnector = mock[TrustConnector]
+          val mockTrustConnector = mock[TrustsConnector]
 
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .overrides(bind[TrustsConnector].toInstance(mockTrustConnector))
             .build()
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
