@@ -28,7 +28,12 @@
 
     @components.back_link()
 
-    @components.heading("beforeYouContinue.heading")
+    <span class="govuk-caption-xl">@messages("beforeYouContinue.caption")</span>
+
+    @components.heading(
+        headingKey = "beforeYouContinue.heading",
+        headingSize = "heading-xlarge govuk-fieldset__heading"
+    )
 
      <h2>@messages("beforeYouContinue.subheading")</h2>
 

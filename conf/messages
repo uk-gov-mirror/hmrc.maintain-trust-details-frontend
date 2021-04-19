@@ -30,6 +30,7 @@ featureNotAvailable.p2 = You will be able to update these details online in the 
 
 beforeYouContinue.title = Information you need about trust details
 beforeYouContinue.heading = Information you need about trust details
+beforeYouContinue.caption = Trust details
 beforeYouContinue.subheading = To update the trust details, you need to tell us:
 beforeYouContinue.bullet1 = if the trust owns land or property in the UK
 beforeYouContinue.bullet2 = if the trust is listed on a European Economic Area (EEA) register

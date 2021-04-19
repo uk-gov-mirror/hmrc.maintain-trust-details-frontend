@@ -34,7 +34,7 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
     behave like normalPage(
       view = applyView(),
       messageKeyPrefix = messageKeyPrefix,
-      expectedGuidanceKeys = "subheading", "bullet1", "bullet2", "bullet3"
+      expectedGuidanceKeys = "caption", "subheading", "bullet1", "bullet2", "bullet3"
     )
 
     behave like pageWithBackLink(applyView())
