@@ -21,18 +21,16 @@ import java.time.LocalDate
 import play.api.libs.json._
 
 final case class TrustDetailsType(startDate: LocalDate,
-                            lawCountry: Option[String],
-                            administrationCountry: Option[String],
-                            residentialStatus: Option[ResidentialStatusType],
-                            trustUKProperty: Option[Boolean] = None,
-                            trustRecorded: Option[Boolean] = None,
-                            trustUKRelation: Option[Boolean] = None,
-                            trustUKResident: Option[Boolean] = None)
+                                  lawCountry: Option[String],
+                                  administrationCountry: Option[String],
+                                  residentialStatus: Option[ResidentialStatusType],
+                                  trustUKProperty: Option[Boolean] = None,
+                                  trustRecorded: Option[Boolean] = None,
+                                  trustUKRelation: Option[Boolean] = None,
+                                  trustUKResident: Option[Boolean] = None)
 
 object TrustDetailsType {
   implicit val trustDetailsTypeFormat: Format[TrustDetailsType] = Json.format[TrustDetailsType]
-
-
 }
 
 case class ResidentialStatusType(uk: Option[UkType],

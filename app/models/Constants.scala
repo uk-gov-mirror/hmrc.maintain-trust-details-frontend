@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import play.api.libs.json.JsPath
+object Constants {
 
-case object CountryAdministeringTrustPage extends QuestionPage[String] {
+  final val GB = "GB"
 
-  override def path: JsPath = basePath \ toString
-
-  override def toString: String = "countryAdministeringTrust"
 }
