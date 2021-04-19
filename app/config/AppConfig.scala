@@ -49,7 +49,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val logoutUrl: String = config.get[String]("urls.logout")
   lazy val maintainATrustOverviewUrl: String = config.get[String]("urls.maintainATrustOverview")
 
-  lazy val trustsUrl: String = config.get[Service]("microservice.services.trusts").baseUrl
+  lazy val trustsUrl: String = servicesConfig.baseUrl("trusts")
 
   lazy val logoutAudit: Boolean = config.get[Boolean]("features.auditing.logout")
 

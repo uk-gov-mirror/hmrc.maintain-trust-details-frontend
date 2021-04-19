@@ -16,10 +16,9 @@
 
 package controllers.maintain
 
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
-import handlers.ErrorHandler
 import mappers.TrustDetailsMapper
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}

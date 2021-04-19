@@ -16,13 +16,11 @@
 
 package generators
 
-import java.time.{Instant, LocalDate, ZoneOffset}
-
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Gen, Shrink}
 
-trait Generators extends UserAnswersGenerator with PageGenerators with ModelGenerators with UserAnswersEntryGenerators {
+trait Generators extends PageGenerators with ModelGenerators with UserAnswersGenerator {
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
 
@@ -58,7 +56,7 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     arbitrary[BigInt] suchThat(x => x < Int.MinValue)
 
   def nonNumerics: Gen[String] =
-    alphaStr suchThat(_.size > 0)
+    alphaStr suchThat(_.nonEmpty)
 
   def decimals: Gen[String] =
     arbitrary[BigDecimal]
@@ -96,7 +94,7 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     chars     <- listOfN(length, arbitrary[Char])
   } yield chars.mkString
 
-  def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =
+  def stringsExceptSpecificValues(excluded: List[String]): Gen[String] =
     nonEmptyString suchThat (!excluded.contains(_))
 
   def oneOf[T](xs: Seq[Gen[T]]): Gen[T] =
@@ -106,15 +104,4 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
       val vector = xs.toVector
       choose(0, vector.size - 1).flatMap(vector(_))
     }
-
-  def datesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
-
-    def toMillis(date: LocalDate): Long =
-      date.atStartOfDay.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
-
-    Gen.choose(toMillis(min), toMillis(max)).map {
-      millis =>
-        Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
-    }
-  }
 }

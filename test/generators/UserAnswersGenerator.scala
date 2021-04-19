@@ -21,6 +21,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
 import pages._
 import play.api.libs.json.{JsValue, Json}
+import utils.RichJson.RichJsObject
 
 trait UserAnswersGenerator extends TryValues {
   self: Generators =>
