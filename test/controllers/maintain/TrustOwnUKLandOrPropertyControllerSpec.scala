@@ -21,18 +21,16 @@ import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TrustOwnUKLandOrPropertyPage
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.TrustOwnUKLandOrPropertyView
 
 class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("trustOwnUKLandOrProperty")
+  val form: Form[Boolean] = formProvider.withPrefix("trustOwnUKLandOrProperty")
 
   lazy val trustOwnUKLandOrPropertyControllerRoute: String = routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
 

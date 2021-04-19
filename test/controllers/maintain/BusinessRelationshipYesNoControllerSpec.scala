@@ -20,18 +20,16 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
 import pages.BusinessRelationshipYesNoPage
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.BusinessRelationshipYesNoView
 
 class BusinessRelationshipYesNoControllerSpec extends SpecBase {
 
-  def onwardRoute = Call("GET", "/foo")
-
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("businessRelationshipYesNo")
+  val form: Form[Boolean] = formProvider.withPrefix("businessRelationshipYesNo")
 
   lazy val businessRelationshipYesNoControllerRoute: String = routes.BusinessRelationshipYesNoController.onPageLoad().url
 

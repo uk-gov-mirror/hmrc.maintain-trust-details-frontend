@@ -21,18 +21,16 @@ import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.TrustEEAYesNoPage
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.TrustEEAYesNoView
 
 class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("trustEEAYesNo")
+  val form: Form[Boolean] = formProvider.withPrefix("trustEEAYesNo")
 
   lazy val trustEEAYesNoControllerRoute: String = routes.TrustEEAYesNoController.onPageLoad().url
 
