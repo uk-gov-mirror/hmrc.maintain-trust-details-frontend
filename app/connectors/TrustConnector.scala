@@ -27,28 +27,24 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config : AppConfig) {
 
-  implicit val legacyRawReads: HttpReads[HttpResponse] = HttpReads.Implicits.throwOnFailure(HttpReads.Implicits.readEitherOf(HttpReads.Implicits.readRaw))
+  def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
+    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/transformed"
+    http.GET[TrustDetails](url)
+  }
 
-  private def getTrustDetailsUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details"
+  def setUkProperty(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/uk-property"
+    http.PUT(url, JsBoolean(answer))
+  }
 
-  def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] =
-    http.GET[TrustDetails](getTrustDetailsUrl(identifier))
+  def setUkRelation(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/uk-relation"
+    http.PUT(url, JsBoolean(answer))
+  }
 
-
-
-  private def amendPropertyOrLandUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details/uk-property"
-
-  def amendPropertyOrLand(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] =
-    http.PUT(amendPropertyOrLandUrl(identifier), JsBoolean(answer))
-
-  private def businessRelationshipYesNoUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details/uk-relation "
-
-  def amendBusinessRelationshipYesNo(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] =
-    http.PUT(businessRelationshipYesNoUrl(identifier), JsBoolean(answer))
-
-  private def trustEEAYesNoUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details/???"
-
-  def trustEEAYesNo(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] =
-    http.PUT(trustEEAYesNoUrl(identifier), JsBoolean(answer))
+  def setTrustRecorded(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/recorded"
+    http.PUT(url, JsBoolean(answer))
+  }
 
 }

@@ -21,6 +21,7 @@ import connectors.TrustConnector
 import controllers.actions._
 import handlers.ErrorHandler
 import javax.inject.Inject
+import pages.TrustOwnUKLandOrPropertyPage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,7 +30,8 @@ import utils.print.TrustDetailsPrintHelper
 import viewmodels.AnswerSection
 import views.html.maintain.CheckDetailsView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 class CheckDetailsController @Inject()(
                                         override val messagesApi: MessagesApi,
@@ -49,18 +51,14 @@ class CheckDetailsController @Inject()(
       Ok(view(section))
   }
 
-//  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
-//    implicit request =>
-//
-//      mapper(request.userAnswers) match {
-//        case None =>
-//          logger.error(s"[Check Trust Details][identifier: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
-//            s" unable to map user answers to TrustDetails due to errors")
-//          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate(request.request)))
-//        case Some(otherIndividual) =>
-//          connector.addOtherIndividual(request.userAnswers.identifier, otherIndividual).map(_ =>
-//            Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad())
-//          )
-//      }
-//  }
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
+    implicit request =>
+      val userAnswers = request.userAnswers
+      val identifier = userAnswers.identifier
+      for {
+        ukProperty <- Future.fromTry(Success(userAnswers.get(TrustOwnUKLandOrPropertyPage)))
+        
+        _ <- connector.setUkProperty(identifier, ukProperty)
+      }
+  }
 }

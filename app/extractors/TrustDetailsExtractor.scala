@@ -16,10 +16,10 @@
 
 package extractors
 
-import models.{TrustDetailsType, UserAnswers}
+import models.{ResidentialStatusType, TrustDetailsType, UserAnswers}
 import pages._
 
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 class TrustDetailsExtractor {
 
@@ -27,7 +27,16 @@ class TrustDetailsExtractor {
     answers.deleteAtPath(pages.basePath)
       .flatMap(_.set(TrustOwnUKLandOrPropertyPage, trustDetails.trustUKProperty))
       .flatMap(_.set(TrustEEAYesNoPage, trustDetails.trustRecorded))
-      .flatMap(_.set(TrustUKResidentPage, trustDetails.trustUKResident))
+      .flatMap(answers => extractTrustUKResident(trustDetails, answers))
       .flatMap(_.set(BusinessRelationshipYesNoPage, trustDetails.trustUKRelation))
 
+
+  private def extractTrustUKResident(trustDetails: TrustDetailsType, answers: UserAnswers) = {
+    (trustDetails.trustUKResident, trustDetails.residentialStatus) match {
+      case (Some(value), _) => answers.set(TrustUKResidentPage, value)
+      case (_, Some(ResidentialStatusType(Some(_), None))) => answers.set(TrustUKResidentPage, true)
+      case (_, Some(ResidentialStatusType(None, Some(_)))) => answers.set(TrustUKResidentPage, false)
+      case _ => Failure(new Throwable("Trust Details in unexpected shape"))
+    }
+  }
 }

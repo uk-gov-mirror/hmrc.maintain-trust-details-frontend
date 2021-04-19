@@ -17,11 +17,10 @@
 package extractors
 
 import base.SpecBase
-import models.TrustDetailsType
+import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
-
 import java.time.LocalDate
 
 class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -54,5 +53,42 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           result.get(TrustUKResidentPage) mustBe trustUKResident
       }
     }
+
+    "extract if uk resident from residentialStatus when 4mld" in {
+
+      val trustDetails = TrustDetailsType(
+        startDate = startDate,
+        lawCountry = None,
+        administrationCountry = None,
+        residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+        trustUKProperty = None,
+        trustRecorded = None,
+        trustUKRelation = None,
+        trustUKResident = None
+      )
+
+      val result = extractor(emptyUserAnswers, trustDetails).success.value
+
+      result.get(TrustUKResidentPage) mustBe true
+    }
+
+    "extract if non-uk resident from residentialStatus when 4mld" in {
+
+      val trustDetails = TrustDetailsType(
+        startDate = startDate,
+        lawCountry = None,
+        administrationCountry = None,
+        residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(sch5atcgga92 = true, None, None, None)))),
+        trustUKProperty = None,
+        trustRecorded = None,
+        trustUKRelation = None,
+        trustUKResident = None
+      )
+
+      val result = extractor(emptyUserAnswers, trustDetails).success.value
+
+      result.get(TrustUKResidentPage) mustBe false
+    }
+
   }
 }
