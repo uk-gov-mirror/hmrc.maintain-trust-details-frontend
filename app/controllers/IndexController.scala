@@ -18,7 +18,9 @@ package controllers
 
 import play.api.mvc._
 import config.AppConfig
+import connectors.TrustsConnector
 import controllers.actions.StandardActionSets
+import extractors.TrustDetailsExtractor
 import models.UserAnswers
 import repositories.PlaybackRepository
 import services.FeatureFlagService
@@ -27,6 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 @Singleton
 class IndexController @Inject()(
@@ -34,7 +37,9 @@ class IndexController @Inject()(
                                  actions: StandardActionSets,
                                  featureFlagService: FeatureFlagService,
                                  cacheRepository: PlaybackRepository,
-                                 appConfig: AppConfig
+                                 appConfig: AppConfig,
+                                 connector: TrustsConnector,
+                                 extractor: TrustDetailsExtractor
                                )(implicit ec: ExecutionContext) extends FrontendController(mcc) with SessionLogging {
 
   def onPageLoad(identifier: String): Action[AnyContent] = actions.authWithSavedSession(identifier).async {
@@ -42,19 +47,17 @@ class IndexController @Inject()(
 
       for {
         is5mldEnabled <- featureFlagService.is5mldEnabled()
-        ua <- Future.successful {
+        trustDetails <- connector.getTrustDetails(identifier)
+        ua <- Future.fromTry {
           request.userAnswers match {
-            case Some(userAnswers) => userAnswers
-            case None => UserAnswers(
-              internalId = request.user.internalId,
-              identifier = identifier
-            )
+            case Some(userAnswers) => Success(userAnswers)
+            case None => extractor(UserAnswers(request.user.internalId, identifier), trustDetails)
           }
         }
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
-          Redirect(routes.FeatureNotAvailableController.onPageLoad())
+          Redirect(controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad())
         } else {
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))
           Redirect(appConfig.maintainATrustOverviewUrl)
