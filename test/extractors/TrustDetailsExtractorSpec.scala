@@ -51,7 +51,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           result.get(TrustOwnUKLandOrPropertyPage) mustBe trustUKProperty
           result.get(TrustEEAYesNoPage) mustBe trustRecorded
           result.get(BusinessRelationshipYesNoPage) mustBe trustUKRelation
-          result.get(trustUKResidentPage) mustBe trustUKResident
+          result.get(TrustUKResidentPage) mustBe trustUKResident
       }
     }
   }

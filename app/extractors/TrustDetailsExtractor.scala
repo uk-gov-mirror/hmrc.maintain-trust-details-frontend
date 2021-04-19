@@ -27,7 +27,7 @@ class TrustDetailsExtractor {
     answers.deleteAtPath(pages.basePath)
       .flatMap(_.set(TrustOwnUKLandOrPropertyPage, trustDetails.trustUKProperty))
       .flatMap(_.set(TrustEEAYesNoPage, trustDetails.trustRecorded))
-      .flatMap(_.set(trustUKResidentPage, trustDetails.trustUKResident))
+      .flatMap(_.set(TrustUKResidentPage, trustDetails.trustUKResident))
       .flatMap(_.set(BusinessRelationshipYesNoPage, trustDetails.trustUKRelation))
 
 }

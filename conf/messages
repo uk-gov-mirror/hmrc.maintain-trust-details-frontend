@@ -3,6 +3,7 @@ site.service_section = Trust details
 site.sign_out = Sign out
 site.sign_in = Sign in
 site.error = Error:
+error.browser.title.prefix = Error:
 site.back = Back
 site.yes = Yes
 site.no = No
