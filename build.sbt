@@ -37,7 +37,6 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     dependencyOverrides ++= AppDependencies.overrides,
     resolvers ++= Seq(
-      Resolver.bintrayRepo("hmrc", "releases"),
       Resolver.jcenterRepo
     ),
     // concatenate js
