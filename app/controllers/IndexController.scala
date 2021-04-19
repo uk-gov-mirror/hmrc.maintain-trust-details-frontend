@@ -61,7 +61,7 @@ class IndexController @Inject()(
           if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
-            Redirect(controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad())
+            Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
           }
         } else {
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))

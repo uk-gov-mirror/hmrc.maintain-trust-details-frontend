@@ -163,7 +163,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustBe controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
+              redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
 
               verify(mockExtractor, never()).apply(any(), any())
             }
