@@ -28,6 +28,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.FeatureFlagService
+import utils.UserAnswersStatus
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -42,7 +43,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
   val onPageLoad: String = routes.IndexController.onPageLoad(identifier).url
 
   val fakeTrustDetails: TrustDetailsType =
-    TrustDetailsType(LocalDate.parse("2020-01-01"), None, None, None, None, None, None)
+    TrustDetailsType(LocalDate.parse("2020-01-01"), None, None, None, None, None, None, None)
 
   override def beforeEach(): Unit = {
     reset(mockFeatureFlagService)
@@ -57,9 +58,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   "IndexController" when {
 
-    "4mld and no previous answers" must {
-      "call extractor and redirect to task list" in {
-
+    "4mld" must {
+      "redirect to task list" in {
         when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
           .thenReturn(Future.successful(false))
 
@@ -78,36 +78,97 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         redirectLocation(result).value mustBe frontendAppConfig.maintainATrustOverviewUrl
 
-        verify(mockExtractor).apply(any(), any())
-
         application.stop()
       }
     }
 
-    "5mld and some previous answers" must {
-      "not call extractor and redirect to TrustOwnUKLandOrPropertyController" in {
+    "5mld" when {
+      "no previous answers" must {
+        "call extractor" in {
 
-        when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
-          .thenReturn(Future.successful(true))
+          when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+            .thenReturn(Future.successful(true))
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-            bind[TrustsConnector].toInstance(mockTrustsConnector),
-            bind[TrustDetailsExtractor].toInstance(mockExtractor)
-          ).build()
+          val application = applicationBuilder(userAnswers = None)
+            .overrides(
+              bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+              bind[TrustsConnector].toInstance(mockTrustsConnector),
+              bind[TrustDetailsExtractor].toInstance(mockExtractor)
+            ).build()
 
-        val request = FakeRequest(GET, onPageLoad)
+          val request = FakeRequest(GET, onPageLoad)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+          status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustBe controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
+          verify(mockExtractor).apply(any(), any())
+        }
+      }
 
-        verify(mockExtractor, never()).apply(any(), any())
+      "previous answers" must {
+        "not call extractor" when {
 
-        application.stop()
+          val mockUserAnswersStatus = mock[UserAnswersStatus]
+
+          "in submittable state" must {
+            "redirect to CheckDetailsController" in {
+
+              when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                .thenReturn(Future.successful(true))
+
+              when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                .thenReturn(true)
+
+              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                .overrides(
+                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                  bind[TrustsConnector].toInstance(mockTrustsConnector),
+                  bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                  bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                ).build()
+
+              val request = FakeRequest(GET, onPageLoad)
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
+
+              verify(mockExtractor, never()).apply(any(), any())
+            }
+          }
+
+          "not in submittable state" must {
+            "redirect to TrustOwnUKLandOrPropertyController" in {
+
+              when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                .thenReturn(Future.successful(true))
+
+              when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                .thenReturn(false)
+
+              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                .overrides(
+                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                  bind[TrustsConnector].toInstance(mockTrustsConnector),
+                  bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                  bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                ).build()
+
+              val request = FakeRequest(GET, onPageLoad)
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustBe controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
+
+              verify(mockExtractor, never()).apply(any(), any())
+            }
+          }
+        }
       }
     }
   }

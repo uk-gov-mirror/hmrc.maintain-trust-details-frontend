@@ -16,16 +16,16 @@
 
 package controllers
 
-import play.api.mvc._
 import config.AppConfig
 import connectors.TrustsConnector
 import controllers.actions.StandardActionSets
 import extractors.TrustDetailsExtractor
 import models.UserAnswers
+import play.api.mvc._
 import repositories.PlaybackRepository
 import services.FeatureFlagService
-import utils.SessionLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import utils.{SessionLogging, UserAnswersStatus}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +39,8 @@ class IndexController @Inject()(
                                  cacheRepository: PlaybackRepository,
                                  appConfig: AppConfig,
                                  connector: TrustsConnector,
-                                 extractor: TrustDetailsExtractor
+                                 extractor: TrustDetailsExtractor,
+                                 userAnswersStatus: UserAnswersStatus
                                )(implicit ec: ExecutionContext) extends FrontendController(mcc) with SessionLogging {
 
   def onPageLoad(identifier: String): Action[AnyContent] = actions.authWithSavedSession(identifier).async {
@@ -57,7 +58,11 @@ class IndexController @Inject()(
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
-          Redirect(controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad())
+          if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
+            Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          } else {
+            Redirect(controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad())
+          }
         } else {
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))
           Redirect(appConfig.maintainATrustOverviewUrl)

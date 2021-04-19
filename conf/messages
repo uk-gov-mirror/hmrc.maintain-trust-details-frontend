@@ -37,7 +37,7 @@ beforeYouContinue.bullet3 = if the trust has a business relationship in the UK
 
 trustOwnUKLandOrProperty.title = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.heading = Does the trust own UK land or property?
-trustOwnUKLandOrProperty.paragraph1 = Land or property refers to plots of land, or brick and mortar buildings in the UK.
+trustOwnUKLandOrProperty.paragraph1 = Land or property refers to plots of land or brick and mortar buildings in the UK.
 trustOwnUKLandOrProperty.error.required = Select yes if the trust owns UK land or property
 trustOwnUKLandOrProperty.checkYourAnswersLabel = Does the trust own UK land or property?
 

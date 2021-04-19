@@ -27,7 +27,14 @@ final case class TrustDetailsType(startDate: LocalDate,
                                   trustUKProperty: Option[Boolean] = None,
                                   trustRecorded: Option[Boolean] = None,
                                   trustUKRelation: Option[Boolean] = None,
-                                  trustUKResident: Option[Boolean] = None)
+                                  trustUKResident: Option[Boolean] = None) {
+
+  def ukResident: Boolean = (residentialStatus, trustUKResident) match {
+    case (Some(ResidentialStatusType(Some(_), None)), _) => true
+    case (_, Some(true)) => true
+    case _ => false
+  }
+}
 
 object TrustDetailsType {
   implicit val trustDetailsTypeFormat: Format[TrustDetailsType] = Json.format[TrustDetailsType]
