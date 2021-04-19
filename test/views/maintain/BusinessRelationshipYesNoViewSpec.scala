@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package views
+package views.maintain
 
 import controllers.maintain.routes
 import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.maintain.TrustEEAYesNoView
+import views.html.maintain.BusinessRelationshipYesNoView
 
-class TrustEEAYesNoViewSpec extends YesNoViewBehaviours {
+class BusinessRelationshipYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "trustEEAYesNo"
+  val messageKeyPrefix = "businessRelationshipYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-  "TrustEEAYesNoView view" must {
+  "BusinessRelationshipYesNo view" must {
 
-    val view = viewFor[TrustEEAYesNoView](Some(emptyUserAnswers))
+    val view = viewFor[BusinessRelationshipYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)
@@ -39,12 +39,12 @@ class TrustEEAYesNoViewSpec extends YesNoViewBehaviours {
     behave like normalPage(
       view = applyView(form),
       messageKeyPrefix = messageKeyPrefix,
-      expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4"
+      expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "paragraph2"
     )
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.TrustEEAYesNoController.onSubmit().url)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.BusinessRelationshipYesNoController.onSubmit().url)
 
     behave like pageWithASubmitButton(applyView(form))
   }

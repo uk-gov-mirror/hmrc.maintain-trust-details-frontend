@@ -23,17 +23,17 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("updateBeforeYouContinue.title")
+    title = messages("beforeYouContinue.title")
 ){
 
     @components.back_link()
 
-    @components.heading("updateBeforeYouContinue")
+    @components.heading("beforeYouContinue.heading")
 
-     <h2>@messages("updateBeforeYouContinue.subheading")</h2>
+     <h2>@messages("beforeYouContinue.subheading")</h2>
 
     @components.bullet_list(
-        "updateBeforeYouContinue",
+        "beforeYouContinue",
         List(
             "bullet1",
             "bullet2",

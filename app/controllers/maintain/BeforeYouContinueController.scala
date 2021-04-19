@@ -18,19 +18,17 @@ package controllers.maintain
 
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.maintain.BeforeYouContinueView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 class BeforeYouContinueController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: BeforeYouContinueView
-                                     ) extends FrontendBaseController with I18nSupport {
+                                             override val messagesApi: MessagesApi,
+                                             val controllerComponents: MessagesControllerComponents,
+                                             view: BeforeYouContinueView
+                                           ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad = Action { implicit request =>
+  def onPageLoad(): Action[AnyContent] = Action { implicit request =>
     Ok(view())
-
-
   }
 }
