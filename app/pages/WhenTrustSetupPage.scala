@@ -16,12 +16,14 @@
 
 package pages
 
+import java.time.LocalDate
+
+import models.TrustDetails
 import play.api.libs.json.JsPath
 
-case object BusinessRelationshipYesNoPage extends QuestionPage[Boolean] {
+case object WhenTrustSetupPage extends QuestionPage[LocalDate] {
 
   override def path: JsPath = basePath \ toString
 
-  override def toString: String = "businessRelationshipYesNo"
-
+  override def toString: String = "whenTrustSetup"
 }

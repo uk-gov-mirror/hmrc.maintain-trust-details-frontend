@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package pages
+package mapping
 
-import play.api.libs.json.JsPath
+import models.UserAnswers
 
-case object BusinessRelationshipYesNoPage extends QuestionPage[Boolean] {
+trait Mapping[T] {
 
-  override def path: JsPath = basePath \ toString
-
-  override def toString: String = "businessRelationshipYesNo"
+  def build(userAnswers: UserAnswers) : Option[T]
 
 }

@@ -18,10 +18,9 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object BusinessRelationshipYesNoPage extends QuestionPage[Boolean] {
+case object CountryGoverningTrustPage extends QuestionPage[String] {
 
   override def path: JsPath = basePath \ toString
 
-  override def toString: String = "businessRelationshipYesNo"
-
+  override def toString: String = "countryGoverningTrust"
 }

@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import play.api.libs.json.JsPath
-
-case object BusinessRelationshipYesNoPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = basePath \ toString
-
-  override def toString: String = "businessRelationshipYesNo"
-
+class WithName(string: String) {
+  override val toString: String = string
 }

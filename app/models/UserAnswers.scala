@@ -20,14 +20,16 @@ import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import utils.RichJson._
-
 import java.time.LocalDateTime
+
+import play.api.Logging
+
 import scala.util.{Failure, Success, Try}
 
 case class UserAnswers(internalId: String,
                        identifier: String,
                        data: JsObject = Json.obj(),
-                       updatedAt: LocalDateTime = LocalDateTime.now) {
+                       updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {
@@ -36,11 +38,22 @@ case class UserAnswers(internalId: String,
     }
   }
 
-  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
+  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
+    value match {
+      case Some(v) => setValue(page, v)
+      case None => page.cleanup(value, this)
+    }
+  }
+
+  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = setValue(page, value)
+
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(errors) =>
+        val errorPaths = errors.collectFirst { case (path, e) => s"$path $e" }
+        logger.warn(s"Unable to set path ${page.path} due to errors $errorPaths")
         Failure(JsResultException(errors))
     }
 
