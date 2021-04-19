@@ -17,13 +17,13 @@
 @import controllers.maintain.routes._
 
 @this(
-main_template: MainTemplate
+    main_template: MainTemplate
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("updateBeforeYouContinue.title")
+    title = messages("updateBeforeYouContinue.title")
 ){
 
     @components.back_link()
@@ -33,14 +33,14 @@ title = messages("updateBeforeYouContinue.title")
      <h2>@messages("updateBeforeYouContinue.subheading")</h2>
 
     @components.bullet_list(
-    "updateBeforeYouContinue",
-      List(
-        "bullet1",
-        "bullet2",
-        "bullet3"
+        "updateBeforeYouContinue",
+        List(
+            "bullet1",
+            "bullet2",
+            "bullet3"
         )
     )
 
     @components.button_link(messages("site.continue"), TrustOwnUKLandOrPropertyController.onPageLoad().url)
 
-  }
+}
