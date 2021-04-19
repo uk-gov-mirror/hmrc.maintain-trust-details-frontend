@@ -18,9 +18,9 @@ package extractors
 
 import base.SpecBase
 import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
+
 import java.time.LocalDate
 
 class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -28,67 +28,152 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
   private val extractor = injector.instanceOf[TrustDetailsExtractor]
   private val startDate = LocalDate.parse("2021-01-01")
 
-  "TrustDetailsExtractor" must {
+  "TrustDetailsExtractor" when {
 
-    "extract trustUKProperty, trustRecorded and trustUKRelation from TrustDetailsType to user answers" in {
+    "trustUKResident undefined and residentialStatus defined (i.e. 4mld data)" must {
+      "extract if uk resident from residentialStatus" in {
 
-      forAll(arbitrary[Option[Boolean]], arbitrary[Option[Boolean]], arbitrary[Option[Boolean]], arbitrary[Option[Boolean]]) {
-        (trustUKProperty, trustRecorded, trustUKRelation, trustUKResident) =>
-          val trustDetails = TrustDetailsType(
-            startDate = startDate,
-            lawCountry = None,
-            administrationCountry = None,
-            residentialStatus = None,
-            trustUKProperty = trustUKProperty,
-            trustRecorded = trustRecorded,
-            trustUKRelation = trustUKRelation,
-            trustUKResident = trustUKResident
-          )
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+          trustUKProperty = None,
+          trustRecorded = None,
+          trustUKRelation = None,
+          trustUKResident = None
+        )
 
-          val result = extractor(emptyUserAnswers, trustDetails).success.value
+        val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-          result.get(TrustOwnUKLandOrPropertyPage) mustBe trustUKProperty
-          result.get(TrustEEAYesNoPage) mustBe trustRecorded
-          result.get(BusinessRelationshipYesNoPage) mustBe trustUKRelation
-          result.get(TrustUKResidentPage) mustBe trustUKResident
+        result.get(TrustUKResidentPage).get mustBe true
+      }
+
+      "extract if non-uk resident from residentialStatus" in {
+
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(sch5atcgga92 = true, None, None, None)))),
+          trustUKProperty = None,
+          trustRecorded = None,
+          trustUKRelation = None,
+          trustUKResident = None
+        )
+
+        val result = extractor(emptyUserAnswers, trustDetails).success.value
+
+        result.get(TrustUKResidentPage).get mustBe false
       }
     }
 
-    "extract if uk resident from residentialStatus when 4mld" in {
+    "trustUKResident and residentialStatus defined (i.e. 5mld taxable data)" must {
+      "extract if uk resident from trustUKResident" in {
 
-      val trustDetails = TrustDetailsType(
-        startDate = startDate,
-        lawCountry = None,
-        administrationCountry = None,
-        residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
-        trustUKProperty = None,
-        trustRecorded = None,
-        trustUKRelation = None,
-        trustUKResident = None
-      )
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+          trustUKProperty = Some(true),
+          trustRecorded = Some(true),
+          trustUKRelation = None,
+          trustUKResident = Some(true)
+        )
 
-      val result = extractor(emptyUserAnswers, trustDetails).success.value
+        val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-      result.get(TrustUKResidentPage) mustBe true
+        result.get(TrustOwnUKLandOrPropertyPage).get mustBe true
+        result.get(TrustEEAYesNoPage).get mustBe true
+        result.get(BusinessRelationshipYesNoPage) mustBe None
+        result.get(TrustUKResidentPage).get mustBe true
+      }
+
+      "extract if non-uk resident from trustUKResident" in {
+
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(sch5atcgga92 = true, None, None, None)))),
+          trustUKProperty = Some(false),
+          trustRecorded = Some(false),
+          trustUKRelation = Some(true),
+          trustUKResident = Some(false)
+        )
+
+        val result = extractor(emptyUserAnswers, trustDetails).success.value
+
+        result.get(TrustOwnUKLandOrPropertyPage).get mustBe false
+        result.get(TrustEEAYesNoPage).get mustBe false
+        result.get(BusinessRelationshipYesNoPage).get mustBe true
+        result.get(TrustUKResidentPage).get mustBe false
+      }
     }
 
-    "extract if non-uk resident from residentialStatus when 4mld" in {
+    "trustUKResident undefined and residentialStatus undefined (i.e. 5mld non-taxable data)" must {
+      "extract if uk resident from trustUKResident" in {
 
-      val trustDetails = TrustDetailsType(
-        startDate = startDate,
-        lawCountry = None,
-        administrationCountry = None,
-        residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(sch5atcgga92 = true, None, None, None)))),
-        trustUKProperty = None,
-        trustRecorded = None,
-        trustUKRelation = None,
-        trustUKResident = None
-      )
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = None,
+          trustUKProperty = Some(true),
+          trustRecorded = Some(true),
+          trustUKRelation = None,
+          trustUKResident = Some(true)
+        )
 
-      val result = extractor(emptyUserAnswers, trustDetails).success.value
+        val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-      result.get(TrustUKResidentPage) mustBe false
+        result.get(TrustOwnUKLandOrPropertyPage).get mustBe true
+        result.get(TrustEEAYesNoPage).get mustBe true
+        result.get(BusinessRelationshipYesNoPage) mustBe None
+        result.get(TrustUKResidentPage).get mustBe true
+      }
+
+      "extract if non-uk resident from trustUKResident" in {
+
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = None,
+          trustUKProperty = Some(false),
+          trustRecorded = Some(false),
+          trustUKRelation = Some(true),
+          trustUKResident = Some(false)
+        )
+
+        val result = extractor(emptyUserAnswers, trustDetails).success.value
+
+        result.get(TrustOwnUKLandOrPropertyPage).get mustBe false
+        result.get(TrustEEAYesNoPage).get mustBe false
+        result.get(BusinessRelationshipYesNoPage).get mustBe true
+        result.get(TrustUKResidentPage).get mustBe false
+      }
     }
 
+    "trustUKResident and residentialStatus undefined (i.e. bad data)" must {
+      "return failure" in {
+
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = None,
+          trustUKProperty = Some(false),
+          trustRecorded = Some(false),
+          trustUKRelation = Some(true),
+          trustUKResident = None
+        )
+
+        val result = extractor(emptyUserAnswers, trustDetails)
+
+        result mustBe 'failure
+      }
+    }
   }
 }

@@ -27,6 +27,6 @@ GET        /business-relationship-yes-no        controllers.maintain.BusinessRel
 POST       /business-relationship-yes-no        controllers.maintain.BusinessRelationshipYesNoController.onSubmit()
 
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
-#POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
+POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

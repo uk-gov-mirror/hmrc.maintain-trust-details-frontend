@@ -20,18 +20,18 @@ import config.AppConfig
 import connectors.TrustConnector
 import controllers.actions._
 import handlers.ErrorHandler
-import javax.inject.Inject
-import pages.TrustOwnUKLandOrPropertyPage
+import mappers.TrustDetailsMapper
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import utils.print.TrustDetailsPrintHelper
 import viewmodels.AnswerSection
 import views.html.maintain.CheckDetailsView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
 
 class CheckDetailsController @Inject()(
                                         override val messagesApi: MessagesApi,
@@ -41,6 +41,7 @@ class CheckDetailsController @Inject()(
                                         connector: TrustConnector,
                                         val appConfig: AppConfig,
                                         printHelper: TrustDetailsPrintHelper,
+                                        mapper: TrustDetailsMapper,
                                         errorHandler: ErrorHandler
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
@@ -55,10 +56,26 @@ class CheckDetailsController @Inject()(
     implicit request =>
       val userAnswers = request.userAnswers
       val identifier = userAnswers.identifier
-      for {
-        ukProperty <- Future.fromTry(Success(userAnswers.get(TrustOwnUKLandOrPropertyPage)))
-        
-        _ <- connector.setUkProperty(identifier, ukProperty)
+
+      mapper(userAnswers) match {
+        case Some(trustDetails) =>
+          (for {
+            _ <- connector.setUkProperty(identifier, trustDetails.trustUKProperty)
+            _ <- connector.setTrustRecorded(identifier, trustDetails.trustRecorded)
+            _ <- trustDetails.trustUKRelation match {
+              case Some(value) => connector.setUkRelation(identifier, value)
+              case None => Future.successful(())
+            }
+          } yield {
+            Redirect(appConfig.maintainATrustOverviewUrl)
+          }).recoverWith {
+            case e =>
+              logger.error(s"[Session ID: ${Session.id(hc)}] Error setting transforms: ${e.getMessage}")
+              Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          }
+        case None =>
+          logger.error(s"[Session ID: ${Session.id(hc)}] Failed to map user answers")
+          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }
 }

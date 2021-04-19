@@ -17,34 +17,35 @@
 package connectors
 
 import config.AppConfig
-import javax.inject.Inject
-import models.TrustDetails
-import play.api.libs.json.JsBoolean
+import models.TrustDetailsType
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustConnector @Inject()(http: HttpClient, config : AppConfig) {
+class TrustConnector @Inject()(http: HttpClient, config: AppConfig) {
 
-  def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
-    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/transformed"
-    http.GET[TrustDetails](url)
+  private val baseUrl: String = s"${config.trustsUrl}/trusts/trust-details"
+
+  def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetailsType] = {
+    val url = s"$baseUrl/$identifier/transformed"
+    http.GET[TrustDetailsType](url)
   }
 
-  def setUkProperty(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/uk-property"
-    http.PUT(url, JsBoolean(answer))
+  def setUkProperty(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$baseUrl/$identifier/uk-property"
+    http.PUT[Boolean, HttpResponse](url, value)
   }
 
-  def setUkRelation(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/uk-relation"
-    http.PUT(url, JsBoolean(answer))
+  def setTrustRecorded(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$baseUrl/$identifier/recorded"
+    http.PUT[Boolean, HttpResponse](url, value)
   }
 
-  def setTrustRecorded(identifier: String, answer: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val url = s"${config.trustsUrl}/trusts/trust-details/$identifier/recorded"
-    http.PUT(url, JsBoolean(answer))
+  def setUkRelation(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$baseUrl/$identifier/uk-relation"
+    http.PUT[Boolean, HttpResponse](url, value)
   }
 
 }

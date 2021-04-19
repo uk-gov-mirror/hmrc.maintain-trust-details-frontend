@@ -16,14 +16,12 @@
 
 package models
 
+import play.api.Logging
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json._
 import queries.{Gettable, Settable}
-import utils.RichJson._
+
 import java.time.LocalDateTime
-
-import play.api.Logging
-
 import scala.util.{Failure, Success, Try}
 
 case class UserAnswers(internalId: String,

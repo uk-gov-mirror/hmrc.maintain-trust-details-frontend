@@ -31,7 +31,7 @@ class TrustDetailsExtractor {
       .flatMap(_.set(BusinessRelationshipYesNoPage, trustDetails.trustUKRelation))
 
 
-  private def extractTrustUKResident(trustDetails: TrustDetailsType, answers: UserAnswers) = {
+  private def extractTrustUKResident(trustDetails: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
     (trustDetails.trustUKResident, trustDetails.residentialStatus) match {
       case (Some(value), _) => answers.set(TrustUKResidentPage, value)
       case (_, Some(ResidentialStatusType(Some(_), None))) => answers.set(TrustUKResidentPage, true)

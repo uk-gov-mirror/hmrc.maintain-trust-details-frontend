@@ -16,19 +16,18 @@
 
 package connectors
 
-import java.time.LocalDate
-
 import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import generators.Generators
-import models.TrustDetails
+import controllers.Assets.OK
+import models.{ResidentialStatusType, TrustDetailsType, UkType}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
 import play.api.libs.json.Json
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
+import uk.gov.hmrc.http.HeaderCarrier
+
+import java.time.LocalDate
 
 class TrustConnectorSpec extends SpecBase with ScalaFutures
   with Inside with BeforeAndAfterAll with BeforeAndAfterEach with IntegrationPatience {
@@ -51,18 +50,16 @@ class TrustConnectorSpec extends SpecBase with ScalaFutures
     server.stop()
   }
 
-  override val identifier = "0987654321"
+  override val identifier = "1000000008"
   val index = 0
 
-  private def amendPropertyOrLandlUrl(identifier: String) = s"/trusts/$identifier/trust-details/uk-property"
-  private def trustEEAYesNoUrl(identifier: String) = s"/trusts/$identifier/trust-details/???"
-  private def businessRelationshipYesNoUrl(identifier: String) = s"/trusts/$identifier/trust-details/uk-relation"
+  private def setUkPropertyUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-property"
+  private def setTrustRecordedUrl(identifier: String) = s"/trusts/trust-details/$identifier/recorded"
+  private def setUkRelationUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-relation"
 
-  "trust connector" when {
+  "trust connector" must {
 
-    "get trusts details" ignore {
-
-      val utr = "1000000008"
+    "getTrustDetails" in {
 
       val json = Json.parse(
         """
@@ -93,173 +90,98 @@ class TrustConnectorSpec extends SpecBase with ScalaFutures
       val connector = application.injector.instanceOf[TrustConnector]
 
       server.stubFor(
-        get(urlEqualTo(s"/trusts/$utr/trust-details"))
+        get(urlEqualTo(s"/trusts/trust-details/$identifier/transformed"))
           .willReturn(okJson(json.toString))
       )
 
-      val processed = connector.getTrustDetails(utr)
+      val processed = connector.getTrustDetails(identifier)
 
       whenReady(processed) {
         r =>
-          r mustBe TrustDetails(startDate = LocalDate.parse("1920-03-28"))
+          r mustBe TrustDetailsType(
+            startDate = LocalDate.parse("1920-03-28"),
+            lawCountry = Some("AD"),
+            administrationCountry = Some("GB"),
+            residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = false, preOffShore = Some("AD"))), None)),
+            trustRecorded = None,
+            trustUKProperty = None,
+            trustUKRelation = None,
+            trustUKResident = None
+          )
       }
     }
 
-//    "amending uk land or property" must {
-//
-//      "Return OK when the request is successful" in {
-//
-//        val application = applicationBuilder()
-//          .configure(
-//            Seq(
-//              "microservice.services.trusts.port" -> server.port(),
-//              "auditing.enabled" -> false
-//            ): _*
-//          ).build()
-//
-//        val connector = application.injector.instanceOf[TrustConnector]
-//
-//        server.stubFor(
-//          put(urlEqualTo(amendPropertyOrLandlUrl(identifier)))
-//            .willReturn(ok)
-//        )
-//
-//        val result = connector.amendPropertyOrLand(identifier, true)
-//
-//        result.futureValue.status mustBe OK
-//
-//        application.stop()
-//      }
-//
-//      "return Bad Request when the request is unsuccessful" in {
-//
-//        val application = applicationBuilder()
-//          .configure(
-//            Seq(
-//              "microservice.services.trusts.port" -> server.port(),
-//              "auditing.enabled" -> false
-//            ): _*
-//          ).build()
-//
-//        val connector = application.injector.instanceOf[TrustConnector]
-//
-//        server.stubFor(
-//          put(urlEqualTo(amendPropertyOrLandlUrl(identifier)))
-//            .willReturn(badRequest)
-//        )
-//
-//         intercept[BadRequestException] {
-//           connector.amendPropertyOrLand(identifier, true).futureValue
-//         }
-//
-//        application.stop()
-//      }
-//
-//    }
-//
-//    "amending trust EEA Yes No" must {
-//
-//      "Return OK when the request is successful" in {
-//
-//        val application = applicationBuilder()
-//          .configure(
-//            Seq(
-//              "microservice.services.trusts.port" -> server.port(),
-//              "auditing.enabled" -> false
-//            ): _*
-//          ).build()
-//
-//        val connector = application.injector.instanceOf[TrustConnector]
-//
-//        server.stubFor(
-//          put(urlEqualTo(trustEEAYesNoUrl(identifier)))
-//            .willReturn(ok)
-//        )
-//
-//        val result = connector.trustEEAYesNo(identifier, true)
-//
-//        result.futureValue.status mustBe OK
-//
-//        application.stop()
-//      }
-//
-//      "return Bad Request when the request is unsuccessful" in {
-//
-//        val application = applicationBuilder()
-//          .configure(
-//            Seq(
-//              "microservice.services.trusts.port" -> server.port(),
-//              "auditing.enabled" -> false
-//            ): _*
-//          ).build()
-//
-//        val connector = application.injector.instanceOf[TrustConnector]
-//
-//        server.stubFor(
-//          put(urlEqualTo(trustEEAYesNoUrl(identifier)))
-//            .willReturn(badRequest)
-//        )
-//
-//        intercept[BadRequestException] {
-//          connector.trustEEAYesNo(identifier, true).futureValue
-//        }
-//
-//        application.stop()
-//      }
-//
-//    }
-//
-//    "amending business relationship yes no" must {
-//
-//      "Return OK when the request is successful" in {
-//
-//        val application = applicationBuilder()
-//          .configure(
-//            Seq(
-//              "microservice.services.trusts.port" -> server.port(),
-//              "auditing.enabled" -> false
-//            ): _*
-//          ).build()
-//
-//        val connector = application.injector.instanceOf[TrustConnector]
-//
-//        server.stubFor(
-//          put(urlEqualTo(businessRelationshipYesNoUrl(identifier)))
-//            .willReturn(ok)
-//        )
-//
-//        val result = connector.amendBusinessRelationshipYesNo(identifier, true)
-//
-//        result.futureValue.status mustBe OK
-//
-//        application.stop()
-//      }
-//
-//      "return Bad Request when the request is unsuccessful" in {
-//
-//        val application = applicationBuilder()
-//          .configure(
-//            Seq(
-//              "microservice.services.trusts.port" -> server.port(),
-//              "auditing.enabled" -> false
-//            ): _*
-//          ).build()
-//
-//        val connector = application.injector.instanceOf[TrustConnector]
-//
-//        server.stubFor(
-//          put(urlEqualTo(businessRelationshipYesNoUrl(identifier)))
-//            .willReturn(badRequest)
-//        )
-//
-//        intercept[BadRequestException] {
-//          connector.amendBusinessRelationshipYesNo(identifier, true).futureValue
-//        }
-//
-//        application.stop()
-//      }
-//
-//    }
+    "setUkProperty" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        put(urlEqualTo(setUkPropertyUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.setUkProperty(identifier, value = true)
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
+
+    "setTrustRecorded" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        put(urlEqualTo(setTrustRecordedUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.setTrustRecorded(identifier, value = true)
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
+
+    "setUkRelation" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        put(urlEqualTo(setUkRelationUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.setUkRelation(identifier, value = true)
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
 
   }
 }

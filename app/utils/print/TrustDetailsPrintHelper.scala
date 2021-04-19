@@ -29,16 +29,13 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
 
     val bound = answerRowConverter.bind(userAnswers)
 
-    lazy val add: Seq[AnswerRow] = Seq(
-      bound.yesNoQuestion(TrustEEAYesNoPage, "trustEEAYesNo", TrustEEAYesNoController.onPageLoad().url),
-      bound.yesNoQuestion(TrustOwnUKLandOrPropertyPage, "trustOwnUKLandOrProperty", TrustOwnUKLandOrPropertyController.onPageLoad().url),
-      bound.yesNoQuestion(BusinessRelationshipYesNoPage, "businessRelationshipYesNo", BusinessRelationshipYesNoController.onPageLoad().url)
+    val answerRows: Seq[AnswerRow] = Seq(
+      bound.yesNoQuestion(TrustEEAYesNoPage, "trustEEAYesNo", Some(TrustEEAYesNoController.onPageLoad().url)),
+      bound.yesNoQuestion(TrustOwnUKLandOrPropertyPage, "trustOwnUKLandOrProperty", Some(TrustOwnUKLandOrPropertyController.onPageLoad().url)),
+      bound.yesNoQuestion(BusinessRelationshipYesNoPage, "businessRelationshipYesNo", Some(BusinessRelationshipYesNoController.onPageLoad().url))
     ).flatten
 
-    AnswerSection(
-      None,
-       add
-    )
+    AnswerSection(None, answerRows)
 
   }
 }

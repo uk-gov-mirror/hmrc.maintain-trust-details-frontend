@@ -21,7 +21,7 @@ import com.google.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import queries.Gettable
 import viewmodels.AnswerRow
 
@@ -32,11 +32,9 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
 
   class Bound(userAnswers: UserAnswers)(implicit messages: Messages) {
 
-
-
     def yesNoQuestion(query: Gettable[Boolean],
                      labelKey: String,
-                     changeUrl: String): Option[AnswerRow] = {
+                     changeUrl: Option[String]): Option[AnswerRow] = {
       val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
       question(query, labelKey, format, changeUrl)
     }
@@ -44,16 +42,15 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     private def question[T](query: Gettable[T],
                             labelKey: String,
                             format: T => Html,
-                            changeUrl: String)
+                            changeUrl: Option[String])
                            (implicit rds: Reads[T]): Option[AnswerRow] = {
-//      userAnswers.get(query) map { x =>
-//        AnswerRow(
-//          label = HtmlFormat.escape(messages(s"$labelKey.checkYourAnswersLabel")),
-//          answer = format(x),
-//          changeUrl = changeUrl
-//        )
-//      }
-      None
+      userAnswers.get(query) map { x =>
+        AnswerRow(
+          label = messages(s"$labelKey.checkYourAnswersLabel"),
+          answer = format(x),
+          changeUrl = changeUrl
+        )
+      }
     }
   }
 }
