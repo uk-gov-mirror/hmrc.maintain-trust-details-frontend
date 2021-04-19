@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package extractors
+package pages
 
-import models.{TrustDetailsType, UserAnswers}
-import pages._
+import play.api.libs.json.JsPath
 
-import scala.util.Try
+case object trustUKResidentPage extends QuestionPage[Boolean] {
 
-class TrustDetailsExtractor {
+  override def path: JsPath = basePath \ toString
 
-  def apply(answers: UserAnswers, trustDetails: TrustDetailsType): Try[UserAnswers] =
-    answers.deleteAtPath(pages.basePath)
-      .flatMap(_.set(TrustOwnUKLandOrPropertyPage, trustDetails.trustUKProperty))
-      .flatMap(_.set(TrustEEAYesNoPage, trustDetails.trustRecorded))
-      .flatMap(_.set(trustUKResidentPage, trustDetails.trustUKResident))
-      .flatMap(_.set(BusinessRelationshipYesNoPage, trustDetails.trustUKRelation))
+  override def toString: String = "trustUKResident"
 
 }

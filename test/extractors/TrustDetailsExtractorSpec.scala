@@ -33,8 +33,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
     "extract trustUKProperty, trustRecorded and trustUKRelation from TrustDetailsType to user answers" in {
 
-      forAll(arbitrary[Option[Boolean]], arbitrary[Option[Boolean]], arbitrary[Option[Boolean]]) {
-        (trustUKProperty, trustRecorded, trustUKRelation) =>
+      forAll(arbitrary[Option[Boolean]], arbitrary[Option[Boolean]], arbitrary[Option[Boolean]], arbitrary[Option[Boolean]]) {
+        (trustUKProperty, trustRecorded, trustUKRelation, trustUKResident) =>
           val trustDetails = TrustDetailsType(
             startDate = startDate,
             lawCountry = None,
@@ -43,7 +43,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
             trustUKProperty = trustUKProperty,
             trustRecorded = trustRecorded,
             trustUKRelation = trustUKRelation,
-            trustUKResident = None
+            trustUKResident = trustUKResident
           )
 
           val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -51,6 +51,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           result.get(TrustOwnUKLandOrPropertyPage) mustBe trustUKProperty
           result.get(TrustEEAYesNoPage) mustBe trustRecorded
           result.get(BusinessRelationshipYesNoPage) mustBe trustUKRelation
+          result.get(trustUKResidentPage) mustBe trustUKResident
       }
     }
   }

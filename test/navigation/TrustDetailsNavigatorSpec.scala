@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, trustUKResidentPage}
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -36,7 +36,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       "TrustEEAYesNo Page -> UK Trust -> CYA page" in {
 
         val answers = emptyUserAnswers
-          .set(???, true).success.value
+          .set(trustUKResidentPage, true).success.value
 
         navigator.nextPage(TrustEEAYesNoPage, answers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
@@ -45,7 +45,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       "TrustEEAYesNo Page -> none UK Trust -> BusinessRelationshipYesNo page" in {
 
         val answers = emptyUserAnswers
-          .set(???, false).success.value
+          .set(trustUKResidentPage, false).success.value
 
         navigator.nextPage(TrustEEAYesNoPage, answers)
           .mustBe(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad())
