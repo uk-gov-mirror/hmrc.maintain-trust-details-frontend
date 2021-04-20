@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import connectors.TrustsConnector
 import controllers.actions.StandardActionSets
 import extractors.TrustDetailsExtractor
@@ -40,13 +40,14 @@ class IndexController @Inject()(
                                  appConfig: AppConfig,
                                  connector: TrustsConnector,
                                  extractor: TrustDetailsExtractor,
-                                 userAnswersStatus: UserAnswersStatus
+                                 userAnswersStatus: UserAnswersStatus,
+                                 errorHandler: ErrorHandler
                                )(implicit ec: ExecutionContext) extends FrontendController(mcc) with SessionLogging {
 
   def onPageLoad(identifier: String): Action[AnyContent] = actions.authWithSavedSession(identifier).async {
     implicit request =>
 
-      for {
+      (for {
         is5mldEnabled <- featureFlagService.is5mldEnabled()
         trustDetails <- connector.getTrustDetails(identifier)
         ua <- Future.fromTry {
@@ -67,6 +68,10 @@ class IndexController @Inject()(
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))
           Redirect(appConfig.maintainATrustOverviewUrl)
         }
+      }) recover {
+        case e =>
+          errorLog(s"Error setting up session: ${e.getMessage}")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 

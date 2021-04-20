@@ -20,12 +20,11 @@ import config.{AppConfig, ErrorHandler}
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
 import mappers.TrustDetailsMapper
-import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.Session
 import utils.print.TrustDetailsPrintHelper
+import utils.{Session, SessionLogging}
 import viewmodels.AnswerSection
 import views.html.maintain.CheckDetailsView
 
@@ -43,7 +42,7 @@ class CheckDetailsController @Inject()(
                                         mapper: TrustDetailsMapper,
                                         errorHandler: ErrorHandler,
                                         trustsStoreConnector: TrustsStoreConnector
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with SessionLogging {
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
     implicit request =>
@@ -72,11 +71,11 @@ class CheckDetailsController @Inject()(
             Redirect(appConfig.maintainATrustOverviewUrl)
           }).recoverWith {
             case e =>
-              logger.error(s"[Session ID: ${Session.id}] Error setting transforms: ${e.getMessage}")
+              errorLog(s"Error setting transforms: ${e.getMessage}")
               Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
           }
         case None =>
-          logger.error(s"[Session ID: ${Session.id}] Failed to map user answers")
+          errorLog(s"Failed to map user answers")
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }

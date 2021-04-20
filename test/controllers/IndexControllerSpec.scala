@@ -32,7 +32,7 @@ import utils.UserAnswersStatus
 
 import java.time.LocalDate
 import scala.concurrent.Future
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
@@ -169,6 +169,31 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
             }
           }
         }
+      }
+    }
+
+    "extractor fails" must {
+      "return internal server error" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+          .thenReturn(Future.successful(true))
+
+        when(mockExtractor(any(), any())).thenReturn(Failure(new Throwable("")))
+
+        val application = applicationBuilder(userAnswers = None)
+          .overrides(
+            bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+            bind[TrustsConnector].toInstance(mockTrustsConnector),
+            bind[TrustDetailsExtractor].toInstance(mockExtractor)
+          ).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+
+        verify(mockExtractor).apply(any(), any())
       }
     }
   }
