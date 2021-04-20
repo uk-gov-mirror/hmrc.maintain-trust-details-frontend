@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package utils
+package utils.print
 
 import base.SpecBase
 import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.twirl.api.Html
-import utils.print.TrustDetailsPrintHelper
 import viewmodels.{AnswerRow, AnswerSection}
 
 class TrustDetailsPrintHelperSpec extends SpecBase {
@@ -37,13 +36,13 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
       val result = printHelper(userAnswers)
 
       result mustEqual AnswerSection(
-        None,
-        Seq(
+        headingKey = None,
+        rows = Seq(
           AnswerRow(messages("trustOwnUKLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url)),
           AnswerRow(messages("trustEEAYesNo.checkYourAnswersLabel"), Html("No"), Some(controllers.maintain.routes.TrustEEAYesNoController.onPageLoad().url)),
           AnswerRow(messages("businessRelationshipYesNo.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad().url))
         ),
-        None
+        sectionKey = None
       )
     }
   }
