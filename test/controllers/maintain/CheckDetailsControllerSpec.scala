@@ -114,8 +114,10 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
           when(mockTrustConnector.setTrustRecorded(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
           when(mockTrustConnector.setUkRelation(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+          when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
-          when(mockMapper(any())).thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true))))
+          when(mockMapper(any()))
+            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -128,6 +130,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           verify(mockTrustConnector).setUkProperty(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
           verify(mockTrustConnector).setTrustRecorded(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
           verify(mockTrustConnector).setUkRelation(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
+          verify(mockTrustConnector).setUkResident(eqTo(userAnswers.identifier), eqTo(false))(any(), any())
 
           application.stop()
         }
@@ -148,8 +151,10 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
           when(mockTrustConnector.setTrustRecorded(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+          when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
-          when(mockMapper(any())).thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None)))
+          when(mockMapper(any()))
+            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -162,6 +167,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           verify(mockTrustConnector).setUkProperty(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
           verify(mockTrustConnector).setTrustRecorded(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
           verify(mockTrustConnector, never()).setUkRelation(any(), any())(any(), any())
+          verify(mockTrustConnector).setUkResident(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
 
           application.stop()
         }
@@ -171,20 +177,14 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         "error mapping answers" in {
 
-          val userAnswers = emptyUserAnswers
-
           val mockTrustConnector = mock[TrustsConnector]
           val mockMapper = mock[TrustDetailsMapper]
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), affinityGroup = Agent)
             .overrides(
               bind[TrustsConnector].toInstance(mockTrustConnector),
               bind[TrustDetailsMapper].toInstance(mockMapper)
             ).build()
-
-          when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
-          when(mockTrustConnector.setTrustRecorded(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
-          when(mockTrustConnector.setUkRelation(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
 
           when(mockMapper(any())).thenReturn(None)
 
@@ -199,16 +199,17 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         "error setting transforms" in {
 
-          val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(BusinessRelationshipYesNoPage, true).success.value
-
+          val mockMapper = mock[TrustDetailsMapper]
           val mockTrustConnector = mock[TrustsConnector]
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
-            .overrides(bind[TrustsConnector].toInstance(mockTrustConnector))
-            .build()
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), affinityGroup = Agent)
+            .overrides(
+              bind[TrustsConnector].toInstance(mockTrustConnector),
+              bind[TrustDetailsMapper].toInstance(mockMapper)
+            ).build()
+
+          when(mockMapper(any()))
+            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
 

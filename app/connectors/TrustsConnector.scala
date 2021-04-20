@@ -48,4 +48,9 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
     http.PUT[Boolean, HttpResponse](url, value)
   }
 
+  def setUkResident(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$baseUrl/$identifier/uk-resident"
+    http.PUT[Boolean, HttpResponse](url, value)
+  }
+
 }

@@ -112,7 +112,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
-    "trustUKResident undefined and residentialStatus undefined (i.e. 5mld non-taxable data)" must {
+    "trustUKResident defined and residentialStatus undefined (i.e. 5mld non-taxable data)" must {
       "extract if uk resident from trustUKResident" in {
 
         val trustDetails = TrustDetailsType(

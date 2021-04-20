@@ -35,7 +35,7 @@ class TrustDetailsExtractor {
       case (Some(value), _) => answers.set(TrustUKResidentPage, value)
       case (_, Some(ResidentialStatusType(Some(_), None))) => answers.set(TrustUKResidentPage, true)
       case (_, Some(ResidentialStatusType(None, Some(_)))) => answers.set(TrustUKResidentPage, false)
-      case _ => Failure(new Throwable("Trust Details in unexpected shape"))
+      case _ => Failure(new Throwable("Trust details in unexpected shape"))
     }
   }
 }

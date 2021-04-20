@@ -56,6 +56,7 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
   private def setUkPropertyUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-property"
   private def setTrustRecordedUrl(identifier: String) = s"/trusts/trust-details/$identifier/recorded"
   private def setUkRelationUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-relation"
+  private def setUkResidentUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-resident"
 
   "trust connector" must {
 
@@ -177,6 +178,30 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
       )
 
       val result = connector.setUkRelation(identifier, value = true)
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
+
+    "setUkResident" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsConnector]
+
+      server.stubFor(
+        put(urlEqualTo(setUkResidentUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.setUkResident(identifier, value = true)
 
       result.futureValue.status mustBe OK
 

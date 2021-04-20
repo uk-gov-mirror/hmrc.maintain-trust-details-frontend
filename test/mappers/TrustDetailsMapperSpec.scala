@@ -17,7 +17,7 @@
 package mappers
 
 import base.SpecBase
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain._
 
 class TrustDetailsMapperSpec extends SpecBase {
 
@@ -34,10 +34,16 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(TrustOwnUKLandOrPropertyPage, true).success.value
             .set(TrustEEAYesNoPage, true).success.value
             .set(BusinessRelationshipYesNoPage, true).success.value
+            .set(TrustUKResidentPage, false).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true)))
+          result mustBe Some(MappedTrustDetails(
+            trustUKProperty = true,
+            trustRecorded = true,
+            trustUKRelation = Some(true),
+            trustUKResident = false
+          ))
         }
 
         "BusinessRelationshipYesNoPage not populated" in {
@@ -45,21 +51,28 @@ class TrustDetailsMapperSpec extends SpecBase {
           val userAnswers = emptyUserAnswers
             .set(TrustOwnUKLandOrPropertyPage, true).success.value
             .set(TrustEEAYesNoPage, true).success.value
+            .set(TrustUKResidentPage, true).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None))
+          result mustBe Some(MappedTrustDetails(
+            trustUKProperty = true,
+            trustRecorded = true,
+            trustUKRelation = None,
+            trustUKResident = true
+          ))
         }
       }
     }
 
     "fail to map data" when {
-      "TrustOwnUKLandOrPropertyPage or TrustEEAYesNoPage unpopulated" when {
+      "TrustOwnUKLandOrPropertyPage, TrustEEAYesNoPage or TrustUKResidentPage not populated" when {
 
-        "TrustOwnUKLandOrPropertyPage populated" in {
+        "TrustOwnUKLandOrPropertyPage not populated" in {
 
           val userAnswers = emptyUserAnswers
             .set(TrustEEAYesNoPage, true).success.value
+            .set(TrustUKResidentPage, false).success.value
 
           val result = mapper(userAnswers)
 
@@ -70,6 +83,18 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val userAnswers = emptyUserAnswers
             .set(TrustOwnUKLandOrPropertyPage, true).success.value
+            .set(TrustUKResidentPage, false).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe None
+        }
+
+        "TrustUKResidentPage not populated" in {
+
+          val userAnswers = emptyUserAnswers
+            .set(TrustOwnUKLandOrPropertyPage, true).success.value
+            .set(TrustEEAYesNoPage, true).success.value
 
           val result = mapper(userAnswers)
 

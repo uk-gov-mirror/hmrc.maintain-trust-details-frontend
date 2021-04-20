@@ -17,7 +17,7 @@
 package mappers
 
 import models.UserAnswers
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain._
 
 class TrustDetailsMapper {
 
@@ -26,11 +26,15 @@ class TrustDetailsMapper {
       trustUKProperty <- userAnswers.get(TrustOwnUKLandOrPropertyPage)
       trustRecorded <- userAnswers.get(TrustEEAYesNoPage)
       trustUKRelation = userAnswers.get(BusinessRelationshipYesNoPage)
+      trustUKResident <- userAnswers.get(TrustUKResidentPage)
     } yield {
-      MappedTrustDetails(trustUKProperty, trustRecorded, trustUKRelation)
+      MappedTrustDetails(trustUKProperty, trustRecorded, trustUKRelation, trustUKResident)
     }
   }
 
 }
 
-case class MappedTrustDetails(trustUKProperty: Boolean, trustRecorded: Boolean, trustUKRelation: Option[Boolean])
+case class MappedTrustDetails(trustUKProperty: Boolean,
+                              trustRecorded: Boolean,
+                              trustUKRelation: Option[Boolean],
+                              trustUKResident: Boolean)

@@ -66,6 +66,7 @@ class CheckDetailsController @Inject()(
               case Some(value) => connector.setUkRelation(identifier, value)
               case None => Future.successful(())
             }
+            _ <- connector.setUkResident(identifier, trustDetails.trustUKResident)
             _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
