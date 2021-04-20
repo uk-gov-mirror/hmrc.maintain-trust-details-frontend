@@ -23,8 +23,8 @@ import mappers.TrustDetailsMapper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.SessionLogging
 import utils.print.TrustDetailsPrintHelper
-import utils.{Session, SessionLogging}
 import viewmodels.AnswerSection
 import views.html.maintain.CheckDetailsView
 
@@ -71,11 +71,11 @@ class CheckDetailsController @Inject()(
             Redirect(appConfig.maintainATrustOverviewUrl)
           }).recoverWith {
             case e =>
-              errorLog(s"Error setting transforms: ${e.getMessage}")
+              errorLog(s"Error setting transforms: ${e.getMessage}", Some(identifier))
               Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
           }
         case None =>
-          errorLog(s"Failed to map user answers")
+          errorLog(s"Failed to map user answers", Some(identifier))
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }

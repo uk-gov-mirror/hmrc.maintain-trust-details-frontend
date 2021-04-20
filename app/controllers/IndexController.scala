@@ -70,7 +70,7 @@ class IndexController @Inject()(
         }
       }) recover {
         case e =>
-          errorLog(s"Error setting up session: ${e.getMessage}")
+          errorLog(s"Error setting up session: ${e.getMessage}", Some(identifier))
           InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
