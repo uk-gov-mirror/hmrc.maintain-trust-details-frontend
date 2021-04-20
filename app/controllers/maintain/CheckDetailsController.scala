@@ -71,11 +71,11 @@ class CheckDetailsController @Inject()(
             Redirect(appConfig.maintainATrustOverviewUrl)
           }).recoverWith {
             case e =>
-              logger.error(s"[Session ID: ${Session.id(hc)}] Error setting transforms: ${e.getMessage}")
+              logger.error(s"[Session ID: ${Session.id}] Error setting transforms: ${e.getMessage}")
               Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
           }
         case None =>
-          logger.error(s"[Session ID: ${Session.id(hc)}] Failed to map user answers")
+          logger.error(s"[Session ID: ${Session.id}] Failed to map user answers")
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }

@@ -1,3 +1,7 @@
+date.day = Day
+date.month = Month
+date.year = Year
+
 site.service_name = Register and Maintain a Trust
 site.service_section = Trust details
 site.sign_out = Sign out
