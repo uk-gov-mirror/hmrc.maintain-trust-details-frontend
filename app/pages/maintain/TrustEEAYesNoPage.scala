@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package pages
+package pages.maintain
 
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object TrustEEAYesNoPage extends QuestionPage[Boolean] {

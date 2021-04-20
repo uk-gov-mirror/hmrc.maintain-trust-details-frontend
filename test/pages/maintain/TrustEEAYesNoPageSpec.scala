@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package pages
+package pages.maintain
 
 import pages.behaviours.PageBehaviours
 
-class TrustUKResidentPageSpec extends PageBehaviours {
+class TrustEEAYesNoPageSpec extends PageBehaviours {
 
-  "TrustUKResidentPage" must {
+  "TrustEEAYesNoPage" must {
 
-    beRetrievable[Boolean](TrustUKResidentPage)
+    beRetrievable[Boolean](TrustEEAYesNoPage)
 
-    beSettable[Boolean](TrustUKResidentPage)
+    beSettable[Boolean](TrustEEAYesNoPage)
 
-    beRemovable[Boolean](TrustUKResidentPage)
+    beRemovable[Boolean](TrustEEAYesNoPage)
   }
 }

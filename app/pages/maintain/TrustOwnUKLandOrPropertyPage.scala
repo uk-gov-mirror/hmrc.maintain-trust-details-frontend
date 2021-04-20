@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+package pages.maintain
+
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-package object pages {
+case object TrustOwnUKLandOrPropertyPage extends QuestionPage[Boolean] {
 
-  def basePath: JsPath = JsPath \ "trustDetails"
+  override def path: JsPath = basePath \ toString
+
+  override def toString: String = "trustOwnUKLandOrProperty"
 
 }

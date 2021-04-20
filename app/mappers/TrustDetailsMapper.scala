@@ -17,7 +17,7 @@
 package mappers
 
 import models.UserAnswers
-import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 
 class TrustDetailsMapper {
 

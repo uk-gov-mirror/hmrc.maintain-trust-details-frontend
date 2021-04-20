@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.TrustOwnUKLandOrPropertyPage
+import pages.maintain.TrustOwnUKLandOrPropertyPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest

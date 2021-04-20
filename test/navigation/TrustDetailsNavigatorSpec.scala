@@ -18,45 +18,46 @@ package navigation
 
 import base.SpecBase
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  val navigator = new TrustDetailsNavigator
+  private val navigator: TrustDetailsNavigator = injector.instanceOf[TrustDetailsNavigator]
 
-  "maintain trust details" when {
+  "TrustDetailsNavigator" when {
 
-    "updating" must {
+    "maintaining" must {
 
-      "TrustOwnUKLandOrProperty Page -> TrustEEAYesNo page" in {
+      "TrustOwnUKLandOrProperty page -> TrustEEAYesNo page" in {
         navigator.nextPage(TrustOwnUKLandOrPropertyPage, emptyUserAnswers)
           .mustBe(controllers.maintain.routes.TrustEEAYesNoController.onPageLoad())
       }
 
-      "TrustEEAYesNo Page -> UK Trust -> CYA page" in {
+      "TrustEEAYesNo page" when {
+        "UK resident trust" must {
+          "-> CYA page" in {
+            val answers = emptyUserAnswers
+              .set(TrustUKResidentPage, true).success.value
 
-        val answers = emptyUserAnswers
-          .set(TrustUKResidentPage, true).success.value
+            navigator.nextPage(TrustEEAYesNoPage, answers)
+              .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          }
+        }
+        "non-UK resident trust" must {
+          "-> BusinessRelationshipYesNo page" in {
+            val answers = emptyUserAnswers
+              .set(TrustUKResidentPage, false).success.value
 
-        navigator.nextPage(TrustEEAYesNoPage, answers)
-          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+            navigator.nextPage(TrustEEAYesNoPage, answers)
+              .mustBe(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad())
+          }
+        }
       }
 
-      "TrustEEAYesNo Page -> none UK Trust -> BusinessRelationshipYesNo page" in {
-
-        val answers = emptyUserAnswers
-          .set(TrustUKResidentPage, false).success.value
-
-        navigator.nextPage(TrustEEAYesNoPage, answers)
-          .mustBe(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad())
-      }
-
-      "BusinessRelationshipYesNo Page -> CYA page" in {
+      "BusinessRelationshipYesNo page -> CYA page" in {
         navigator.nextPage(BusinessRelationshipYesNoPage, emptyUserAnswers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
       }
-
     }
   }
-
 }

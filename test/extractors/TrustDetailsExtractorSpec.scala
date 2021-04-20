@@ -19,7 +19,7 @@ package extractors
 import base.SpecBase
 import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages._
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
 
 import java.time.LocalDate
 

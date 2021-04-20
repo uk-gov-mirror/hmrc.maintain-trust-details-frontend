@@ -17,7 +17,7 @@
 package mappers
 
 import base.SpecBase
-import pages._
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 
 class TrustDetailsMapperSpec extends SpecBase {
 

@@ -19,7 +19,7 @@ package controllers.maintain
 import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
-import pages.BusinessRelationshipYesNoPage
+import pages.maintain.BusinessRelationshipYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest

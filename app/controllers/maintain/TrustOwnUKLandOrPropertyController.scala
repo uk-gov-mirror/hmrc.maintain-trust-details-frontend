@@ -18,9 +18,10 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
+
 import javax.inject.Inject
 import navigation.Navigator
-import pages.TrustOwnUKLandOrPropertyPage
+import pages.maintain.TrustOwnUKLandOrPropertyPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,14 +32,14 @@ import views.html.maintain.TrustOwnUKLandOrPropertyView
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustOwnUKLandOrPropertyController @Inject()(
-                                              override val messagesApi: MessagesApi,
-                                              yesNoFormProvider: YesNoFormProvider,
-                                              repository: PlaybackRepository,
-                                              navigator: Navigator,
-                                              actions: StandardActionSets,
-                                              val controllerComponents: MessagesControllerComponents,
-                                              view: TrustOwnUKLandOrPropertyView
-                                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                    override val messagesApi: MessagesApi,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    repository: PlaybackRepository,
+                                                    navigator: Navigator,
+                                                    actions: StandardActionSets,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: TrustOwnUKLandOrPropertyView
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("trustOwnUKLandOrProperty")
 

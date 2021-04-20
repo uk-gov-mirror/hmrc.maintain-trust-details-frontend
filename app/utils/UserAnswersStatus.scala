@@ -17,7 +17,7 @@
 package utils
 
 import models.{TrustDetailsType, UserAnswers}
-import pages._
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 
 class UserAnswersStatus {
 

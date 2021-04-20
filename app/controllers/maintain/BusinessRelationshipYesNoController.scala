@@ -18,9 +18,10 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
+
 import javax.inject.Inject
 import navigation.Navigator
-import pages.BusinessRelationshipYesNoPage
+import pages.maintain.BusinessRelationshipYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,14 +32,14 @@ import views.html.maintain.BusinessRelationshipYesNoView
 import scala.concurrent.{ExecutionContext, Future}
 
 class BusinessRelationshipYesNoController @Inject()(
-                                              override val messagesApi: MessagesApi,
-                                              repository: PlaybackRepository,
-                                              yesNoFormProvider: YesNoFormProvider,
-                                              navigator: Navigator,
-                                              actions: StandardActionSets,
-                                              val controllerComponents: MessagesControllerComponents,
-                                              view: BusinessRelationshipYesNoView
-                                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                     override val messagesApi: MessagesApi,
+                                                     repository: PlaybackRepository,
+                                                     yesNoFormProvider: YesNoFormProvider,
+                                                     navigator: Navigator,
+                                                     actions: StandardActionSets,
+                                                     val controllerComponents: MessagesControllerComponents,
+                                                     view: BusinessRelationshipYesNoView
+                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipYesNo")
 

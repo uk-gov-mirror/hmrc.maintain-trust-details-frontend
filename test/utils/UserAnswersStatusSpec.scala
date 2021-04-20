@@ -18,7 +18,7 @@ package utils
 
 import base.SpecBase
 import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
-import pages._
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 
 import java.time.LocalDate
 

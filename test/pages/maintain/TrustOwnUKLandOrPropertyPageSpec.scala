@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package pages
+package pages.maintain
 
 import pages.behaviours.PageBehaviours
 
-class BusinessRelationshipYesNoPageSpec extends PageBehaviours {
+class TrustOwnUKLandOrPropertyPageSpec extends PageBehaviours {
 
-  "BusinessRelationshipYesNoPage" must {
+  "TrustOwnUKLandOrPropertyPage" must {
 
-    beRetrievable[Boolean](BusinessRelationshipYesNoPage)
+    beRetrievable[Boolean](TrustOwnUKLandOrPropertyPage)
 
-    beSettable[Boolean](BusinessRelationshipYesNoPage)
+    beSettable[Boolean](TrustOwnUKLandOrPropertyPage)
 
-    beRemovable[Boolean](BusinessRelationshipYesNoPage)
+    beRemovable[Boolean](TrustOwnUKLandOrPropertyPage)
   }
 }

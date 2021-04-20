@@ -19,7 +19,7 @@ package utils.print
 import com.google.inject.Inject
 import controllers.maintain.routes._
 import models.UserAnswers
-import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
 

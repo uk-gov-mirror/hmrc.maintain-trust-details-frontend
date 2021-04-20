@@ -17,14 +17,14 @@
 package extractors
 
 import models.{ResidentialStatusType, TrustDetailsType, UserAnswers}
-import pages._
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
 
 import scala.util.{Failure, Try}
 
 class TrustDetailsExtractor {
 
   def apply(answers: UserAnswers, trustDetails: TrustDetailsType): Try[UserAnswers] =
-    answers.deleteAtPath(pages.basePath)
+    answers.deleteAtPath(pages.maintain.basePath)
       .flatMap(_.set(TrustOwnUKLandOrPropertyPage, trustDetails.trustUKProperty))
       .flatMap(_.set(TrustEEAYesNoPage, trustDetails.trustRecorded))
       .flatMap(answers => extractTrustUKResident(trustDetails, answers))

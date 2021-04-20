@@ -18,10 +18,6 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object TrustUKResidentPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = basePath \ toString
-
-  override def toString: String = "trustUKResident"
-
+package object maintain {
+  def basePath: JsPath = JsPath \ "maintain"
 }

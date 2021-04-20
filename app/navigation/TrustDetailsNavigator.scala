@@ -18,7 +18,8 @@ package navigation
 
 import javax.inject.Inject
 import models.UserAnswers
-import pages.{BusinessRelationshipYesNoPage, Page, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
+import pages.Page
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
 import play.api.mvc.Call
 
 class TrustDetailsNavigator @Inject()() extends Navigator {

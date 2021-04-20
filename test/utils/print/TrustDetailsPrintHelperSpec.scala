@@ -17,7 +17,7 @@
 package utils.print
 
 import base.SpecBase
-import pages.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
 
