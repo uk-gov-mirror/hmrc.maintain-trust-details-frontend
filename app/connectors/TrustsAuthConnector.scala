@@ -17,10 +17,10 @@
 package connectors
 
 import com.google.inject.ImplementedBy
-import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import config.AppConfig
 import models.http.{TrustsAuthInternalServerError, TrustsAuthResponse}
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import utils.SessionLogging
 
 import javax.inject.Inject
@@ -35,23 +35,23 @@ trait TrustsAuthConnector {
 class TrustsAuthConnectorImpl @Inject()(http: HttpClient, config: AppConfig)
   extends TrustsAuthConnector with SessionLogging {
 
-  private val baseUrl: String = config.trustsAuthUrl + "/trusts-auth"
+  private val baseUrl: String = s"${config.trustsAuthUrl}/trusts-auth"
 
   override def agentIsAuthorised()
                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsAuthResponse] = {
-    http.GET[TrustsAuthResponse](s"$baseUrl/agent-authorised").recoverWith {
+    http.GET[TrustsAuthResponse](s"$baseUrl/agent-authorised").recover {
       case e =>
         warnLog(s"unable to authenticate agent due to an exception ${e.getMessage}")
-        Future.successful(TrustsAuthInternalServerError)
+        TrustsAuthInternalServerError
     }
   }
 
   override def authorisedForIdentifier(identifier: String)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsAuthResponse] = {
-    http.GET[TrustsAuthResponse](s"$baseUrl/authorised/$identifier").recoverWith {
+    http.GET[TrustsAuthResponse](s"$baseUrl/authorised/$identifier").recover {
       case e =>
         warnLog(s"unable to authenticate organisation for $identifier due to an exception ${e.getMessage}", Some(identifier))
-        Future.successful(TrustsAuthInternalServerError)
+        TrustsAuthInternalServerError
     }
   }
 }

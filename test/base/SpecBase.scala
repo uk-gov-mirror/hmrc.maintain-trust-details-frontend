@@ -18,6 +18,7 @@ package base
 
 import controllers.actions._
 import models.UserAnswers
+import navigation.FakeNavigator
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
@@ -32,6 +33,8 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
   val internalId: String = "internalId"
   val identifier: String = "identifier"
+
+  val fakeNavigator = new FakeNavigator()
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = internalId,

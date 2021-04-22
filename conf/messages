@@ -1,11 +1,18 @@
+date.day = Day
+date.month = Month
+date.year = Year
+
 site.service_name = Register and Maintain a Trust
+site.service_section = Trust details
 site.sign_out = Sign out
 site.sign_in = Sign in
 site.error = Error:
+error.browser.title.prefix = Error:
 site.back = Back
 site.yes = Yes
 site.no = No
 site.continue = Continue
+site.edit = Change
 
 session_expired.title = For your security, we signed you out
 session_expired.heading = For your security, we signed you out
@@ -24,3 +31,38 @@ featureNotAvailable.heading = This part of the online service is not available y
 featureNotAvailable.p1 = If you need to make any changes to the trust you can
 featureNotAvailable.link = contact our trusts helpline (opens in a new window or tab)
 featureNotAvailable.p2 = You will be able to update these details online in the future.
+
+beforeYouContinue.title = Information you need about trust details
+beforeYouContinue.heading = Information you need about trust details
+beforeYouContinue.caption = Trust details
+beforeYouContinue.subheading = To update the trust details, you need to tell us:
+beforeYouContinue.bullet1 = if the trust owns land or property in the UK
+beforeYouContinue.bullet2 = if the trust is listed on a European Economic Area (EEA) register
+beforeYouContinue.bullet3 = if the trust has a business relationship in the UK
+
+trustOwnUKLandOrProperty.title = Does the trust own UK land or property?
+trustOwnUKLandOrProperty.heading = Does the trust own UK land or property?
+trustOwnUKLandOrProperty.paragraph1 = Land or property refers to plots of land or brick and mortar buildings in the UK.
+trustOwnUKLandOrProperty.error.required = Select yes if the trust owns UK land or property
+trustOwnUKLandOrProperty.checkYourAnswersLabel = Does the trust own UK land or property?
+
+trustEEAYesNo.title = Is the trust also listed on another countries’ trust register within the European Economic Area (EEA)?
+trustEEAYesNo.heading = Is the trust also listed on another countries’ trust register within the European Economic Area (EEA)?
+trustEEAYesNo.checkYourAnswersLabel = Is the trust also listed on another countries’ trust register within the European Economic Area (EEA)?
+trustEEAYesNo.paragraph1 = The EEA includes:
+trustEEAYesNo.bullet1 = All countries within the European Union (EU)
+trustEEAYesNo.bullet2 = Iceland
+trustEEAYesNo.bullet3 = Lichtenstein
+trustEEAYesNo.bullet4 = Norway
+
+businessRelationshipYesNo.title = Does the trust have an ongoing business relationship in the UK?
+businessRelationshipYesNo.heading = Does the trust have an ongoing business relationship in the UK?
+businessRelationshipYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
+businessRelationshipYesNo.paragraph1 = The trust will have a business relationship if the trustees managing the trust get any of the following from a UK based organisation on an ongoing basis:
+businessRelationshipYesNo.bullet1 = financial services
+businessRelationshipYesNo.bullet2 = legal advice
+businessRelationshipYesNo.bullet3 = professional advice
+businessRelationshipYesNo.paragraph2 = Professional advice means the services of a solicitor, accountant, estate agent, bank or building society, or other professional organisation.
+
+checkDetails.title = Check trust details
+checkDetails.heading = Check trust details

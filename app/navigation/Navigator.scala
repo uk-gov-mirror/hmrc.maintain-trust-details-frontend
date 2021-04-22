@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package forms.generators
+package navigation
 
-trait PageGenerators {
+import models._
+import pages._
+import play.api.mvc.Call
+
+trait Navigator {
+
+  def nextPage(page: Page, userAnswers: UserAnswers): Call
+
+  def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
+    ua.get(fromPage)
+      .map(if (_) yesCall else noCall)
+      .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
+  }
 
 }
