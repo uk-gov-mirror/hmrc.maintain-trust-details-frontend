@@ -16,17 +16,20 @@
 
 package controllers
 
-import play.api.mvc._
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
+import connectors.TrustsConnector
 import controllers.actions.StandardActionSets
+import extractors.TrustDetailsExtractor
 import models.UserAnswers
+import play.api.mvc._
 import repositories.PlaybackRepository
 import services.FeatureFlagService
-import utils.SessionLogging
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import utils.{SessionLogging, UserAnswersStatus}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 @Singleton
 class IndexController @Inject()(
@@ -34,31 +37,41 @@ class IndexController @Inject()(
                                  actions: StandardActionSets,
                                  featureFlagService: FeatureFlagService,
                                  cacheRepository: PlaybackRepository,
-                                 appConfig: AppConfig
+                                 appConfig: AppConfig,
+                                 connector: TrustsConnector,
+                                 extractor: TrustDetailsExtractor,
+                                 userAnswersStatus: UserAnswersStatus,
+                                 errorHandler: ErrorHandler
                                )(implicit ec: ExecutionContext) extends FrontendController(mcc) with SessionLogging {
 
   def onPageLoad(identifier: String): Action[AnyContent] = actions.authWithSavedSession(identifier).async {
     implicit request =>
 
-      for {
+      (for {
         is5mldEnabled <- featureFlagService.is5mldEnabled()
-        ua <- Future.successful {
+        trustDetails <- connector.getTrustDetails(identifier)
+        ua <- Future.fromTry {
           request.userAnswers match {
-            case Some(userAnswers) => userAnswers
-            case None => UserAnswers(
-              internalId = request.user.internalId,
-              identifier = identifier
-            )
+            case Some(userAnswers) => Success(userAnswers)
+            case None => extractor(UserAnswers(request.user.internalId, identifier), trustDetails)
           }
         }
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
-          Redirect(routes.FeatureNotAvailableController.onPageLoad())
+          if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
+            Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          } else {
+            Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
+          }
         } else {
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))
           Redirect(appConfig.maintainATrustOverviewUrl)
         }
+      }) recover {
+        case e =>
+          errorLog(s"Error setting up session: ${e.getMessage}", Some(identifier))
+          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 

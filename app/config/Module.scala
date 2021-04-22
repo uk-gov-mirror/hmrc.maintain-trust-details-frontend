@@ -18,6 +18,7 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions._
+import navigation.{Navigator, TrustDetailsNavigator}
 import repositories._
 import services._
 
@@ -29,6 +30,8 @@ class Module extends AbstractModule {
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
 
     bind(classOf[PlaybackRepository]).to(classOf[PlaybackRepositoryImpl]).asEagerSingleton()
+
+    bind(classOf[Navigator]).to(classOf[TrustDetailsNavigator]).asEagerSingleton()
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()

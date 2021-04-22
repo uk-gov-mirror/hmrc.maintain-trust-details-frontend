@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-package forms.generators
+package utils
 
-trait ModelGenerators {
+import models.{TrustDetailsType, UserAnswers}
+import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 
+class UserAnswersStatus {
+
+  def areAnswersSubmittable(ua: UserAnswers, trustDetails: TrustDetailsType): Boolean = {
+    (
+      ua.get(TrustOwnUKLandOrPropertyPage).isDefined && ua.get(TrustEEAYesNoPage).isDefined,
+      ua.get(BusinessRelationshipYesNoPage).isDefined,
+      trustDetails.ukResident
+    ) match {
+      case (false, _, _) => false
+      case (true, false, false) => false
+      case _ => true
+    }
+  }
 }

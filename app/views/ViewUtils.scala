@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 object ViewUtils {
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")} " else ""
+    if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")}" else ""
   }
 
   def breadcrumbTitle(title: String)(implicit messages: Messages): String = {

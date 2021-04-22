@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package forms.generators
+package generators
 
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Gen, Shrink}
 
-trait Generators extends PageGenerators with ModelGenerators {
+trait Generators extends PageGenerators with ModelGenerators with UserAnswersGenerator {
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
 

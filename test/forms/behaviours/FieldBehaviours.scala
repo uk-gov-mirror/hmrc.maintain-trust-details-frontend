@@ -22,7 +22,7 @@ import play.api.data.{Form, FormError}
 import play.api.test.Helpers.baseApplicationBuilder.injector
 import config.AppConfig
 import forms.FormSpec
-import forms.generators.Generators
+import generators.Generators
 
 trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 
