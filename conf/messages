@@ -44,7 +44,7 @@ trustOwnUKLandOrProperty.title = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.heading = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.checkYourAnswersLabel = Does the trust own UK land or property?
 trustOwnUKLandOrProperty.error.required = Select yes if the trust owns UK land or property
-trustOwnUKLandOrProperty.paragraph1 = Land or property refers to plots of land or brick and mortar buildings in the UK.
+trustOwnUKLandOrProperty.paragraph1 = Land or property refers to plots of land or bricks and mortar buildings in the UK.
 
 trustEEAYesNo.title = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
 trustEEAYesNo.heading = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
