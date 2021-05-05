@@ -16,10 +16,13 @@
 
 package extractors
 
-import models.{ResidentialStatusType, TrustDetailsType, UserAnswers}
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage, TrustResidentInUkPage}
+import models.DeedOfVariation._
+import models.TypeOfTrust._
+import models.{DeedOfVariation, ResidentialStatusType, TrustDetailsType, UserAnswers}
+import pages.maintain._
 
-import scala.util.{Failure, Try}
+import java.time.LocalDate
+import scala.util.{Failure, Success, Try}
 
 class TrustDetailsExtractor {
 
@@ -27,8 +30,58 @@ class TrustDetailsExtractor {
     answers.deleteAtPath(pages.maintain.basePath)
       .flatMap(_.set(OwnsUkLandOrPropertyPage, trustDetails.trustUKProperty))
       .flatMap(_.set(RecordedOnEeaRegisterPage, trustDetails.trustRecorded))
-      .flatMap(answers => extractTrustUKResident(trustDetails, answers))
+      .flatMap(ua => extractTrustType(trustDetails, ua))
+      .flatMap(ua => extractTrustUKResident(trustDetails, ua))
       .flatMap(_.set(BusinessRelationshipInUkPage, trustDetails.trustUKRelation))
+
+  private def extractTrustType(trustDetails: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+    trustDetails.typeOfTrust match {
+      case Some(WillTrustOrIntestacyTrust) => answers
+        .set(SetUpAfterSettlorDiedPage, true)
+      case Some(DeedOfVariationTrustOrFamilyArrangement) => answers
+        .set(SetUpAfterSettlorDiedPage, false)
+        .flatMap(_.set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement))
+        .flatMap(ua => extractDeedOfVariation(trustDetails.deedOfVariation, ua))
+      case Some(InterVivosSettlement) => answers
+        .set(SetUpAfterSettlorDiedPage, false)
+        .flatMap(_.set(TypeOfTrustPage, InterVivosSettlement))
+        .flatMap(_.set(HoldoverReliefClaimedPage, trustDetails.interVivos))
+      case Some(EmploymentRelated) => answers
+        .set(SetUpAfterSettlorDiedPage, false)
+        .flatMap(_.set(TypeOfTrustPage, EmploymentRelated))
+        .flatMap(ua => extractEfrbs(trustDetails.efrbsStartDate, ua))
+      case Some(HeritageMaintenanceFund) => answers
+        .set(SetUpAfterSettlorDiedPage, false)
+        .flatMap(_.set(TypeOfTrustPage, HeritageMaintenanceFund))
+      case Some(FlatManagementCompanyOrSinkingFund) => answers
+        .set(SetUpAfterSettlorDiedPage, false)
+        .flatMap(_.set(TypeOfTrustPage, FlatManagementCompanyOrSinkingFund))
+      case None =>
+        Success(answers)
+    }
+  }
+
+  private def extractDeedOfVariation(deedOfVariation: Option[DeedOfVariation], answers: UserAnswers): Try[UserAnswers] = {
+    deedOfVariation match {
+      case Some(AdditionToWillTrust) => answers
+        .set(SetUpInAdditionToWillTrustPage, true)
+      case Some(value) => answers
+        .set(SetUpInAdditionToWillTrustPage, false)
+        .flatMap(_.set(WhyDeedOfVariationCreatedPage, value))
+      case None =>
+        Success(answers)
+    }
+  }
+
+  private def extractEfrbs(efrbsStartDate: Option[LocalDate], answers: UserAnswers): Try[UserAnswers] = {
+    efrbsStartDate match {
+      case Some(value) => answers
+        .set(EfrbsYesNoPage, true)
+        .flatMap(_.set(EfrbsStartDatePage, value))
+      case None => answers
+        .set(EfrbsYesNoPage, false)
+    }
+  }
 
   private def extractTrustUKResident(trustDetails: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
     (trustDetails.trustUKResident, trustDetails.residentialStatus) match {
