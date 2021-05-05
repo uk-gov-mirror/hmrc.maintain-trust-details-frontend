@@ -16,13 +16,17 @@
 
 package pages.maintain
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import models.TypeOfTrust
+import pages.behaviours.PageBehaviours
 
-case object TrustOwnUKLandOrPropertyPage extends QuestionPage[Boolean] {
+class TypeOfTrustPageSpec extends PageBehaviours {
 
-  override def path: JsPath = basePath \ toString
+  "TypeOfTrustPage" must {
 
-  override def toString: String = "trustOwnUKLandOrProperty"
+    beRetrievable[TypeOfTrust](TypeOfTrustPage)
 
+    beSettable[TypeOfTrust](TypeOfTrustPage)
+
+    beRemovable[TypeOfTrust](TypeOfTrustPage)
+  }
 }

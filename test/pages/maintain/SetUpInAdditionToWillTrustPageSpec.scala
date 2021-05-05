@@ -18,14 +18,14 @@ package pages.maintain
 
 import pages.behaviours.PageBehaviours
 
-class BusinessRelationshipYesNoPageSpec extends PageBehaviours {
+class SetUpInAdditionToWillTrustPageSpec extends PageBehaviours {
 
-  "BusinessRelationshipYesNoPage" must {
+  "SetUpInAdditionToWillTrustPage" must {
 
-    beRetrievable[Boolean](BusinessRelationshipYesNoPage)
+    beRetrievable[Boolean](SetUpInAdditionToWillTrustPage)
 
-    beSettable[Boolean](BusinessRelationshipYesNoPage)
+    beSettable[Boolean](SetUpInAdditionToWillTrustPage)
 
-    beRemovable[Boolean](BusinessRelationshipYesNoPage)
+    beRemovable[Boolean](SetUpInAdditionToWillTrustPage)
   }
 }

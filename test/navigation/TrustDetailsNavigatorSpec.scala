@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
+import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage, TrustResidentInUkPage}
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -29,33 +29,33 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
     "maintaining" must {
 
       "TrustOwnUKLandOrProperty page -> TrustEEAYesNo page" in {
-        navigator.nextPage(TrustOwnUKLandOrPropertyPage, emptyUserAnswers)
-          .mustBe(controllers.maintain.routes.TrustEEAYesNoController.onPageLoad())
+        navigator.nextPage(OwnsUkLandOrPropertyPage, emptyUserAnswers)
+          .mustBe(controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad())
       }
 
       "TrustEEAYesNo page" when {
         "UK resident trust" must {
           "-> CYA page" in {
             val answers = emptyUserAnswers
-              .set(TrustUKResidentPage, true).success.value
+              .set(TrustResidentInUkPage, true).success.value
 
-            navigator.nextPage(TrustEEAYesNoPage, answers)
+            navigator.nextPage(RecordedOnEeaRegisterPage, answers)
               .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           }
         }
         "non-UK resident trust" must {
           "-> BusinessRelationshipYesNo page" in {
             val answers = emptyUserAnswers
-              .set(TrustUKResidentPage, false).success.value
+              .set(TrustResidentInUkPage, false).success.value
 
-            navigator.nextPage(TrustEEAYesNoPage, answers)
-              .mustBe(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad())
+            navigator.nextPage(RecordedOnEeaRegisterPage, answers)
+              .mustBe(controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad())
           }
         }
       }
 
       "BusinessRelationshipYesNo page -> CYA page" in {
-        navigator.nextPage(BusinessRelationshipYesNoPage, emptyUserAnswers)
+        navigator.nextPage(BusinessRelationshipInUkPage, emptyUserAnswers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
       }
     }

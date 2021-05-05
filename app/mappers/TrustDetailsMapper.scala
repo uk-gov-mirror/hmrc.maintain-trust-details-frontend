@@ -23,10 +23,10 @@ class TrustDetailsMapper {
 
   def apply(userAnswers: UserAnswers): Option[MappedTrustDetails] = {
     for {
-      trustUKProperty <- userAnswers.get(TrustOwnUKLandOrPropertyPage)
-      trustRecorded <- userAnswers.get(TrustEEAYesNoPage)
-      trustUKRelation = userAnswers.get(BusinessRelationshipYesNoPage)
-      trustUKResident <- userAnswers.get(TrustUKResidentPage)
+      trustUKProperty <- userAnswers.get(OwnsUkLandOrPropertyPage)
+      trustRecorded <- userAnswers.get(RecordedOnEeaRegisterPage)
+      trustUKRelation = userAnswers.get(BusinessRelationshipInUkPage)
+      trustUKResident <- userAnswers.get(TrustResidentInUkPage)
     } yield {
       MappedTrustDetails(trustUKProperty, trustRecorded, trustUKRelation, trustUKResident)
     }

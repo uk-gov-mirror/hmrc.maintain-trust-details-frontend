@@ -19,19 +19,19 @@ package controllers.maintain
 import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
-import pages.maintain.BusinessRelationshipYesNoPage
+import pages.maintain.BusinessRelationshipInUkPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.BusinessRelationshipYesNoView
+import views.html.maintain.BusinessRelationshipInUkView
 
-class BusinessRelationshipYesNoControllerSpec extends SpecBase {
+class BusinessRelationshipInUkControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("businessRelationshipYesNo")
+  val form: Form[Boolean] = formProvider.withPrefix("businessRelationshipInUk")
 
-  lazy val businessRelationshipYesNoControllerRoute: String = routes.BusinessRelationshipYesNoController.onPageLoad().url
+  lazy val businessRelationshipYesNoControllerRoute: String = routes.BusinessRelationshipInUkController.onPageLoad().url
 
   "businessRelationshipYesNo Controller" must {
 
@@ -43,7 +43,7 @@ class BusinessRelationshipYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[BusinessRelationshipYesNoView]
+      val view = application.injector.instanceOf[BusinessRelationshipInUkView]
 
       status(result) mustEqual OK
 
@@ -55,13 +55,13 @@ class BusinessRelationshipYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(BusinessRelationshipYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(BusinessRelationshipInUkPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request = FakeRequest(GET, businessRelationshipYesNoControllerRoute)
 
-      val view = application.injector.instanceOf[BusinessRelationshipYesNoView]
+      val view = application.injector.instanceOf[BusinessRelationshipInUkView]
 
       val result = route(application, request).value
 
@@ -103,7 +103,7 @@ class BusinessRelationshipYesNoControllerSpec extends SpecBase {
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[BusinessRelationshipYesNoView]
+      val view = application.injector.instanceOf[BusinessRelationshipInUkView]
 
       val result = route(application, request).value
 

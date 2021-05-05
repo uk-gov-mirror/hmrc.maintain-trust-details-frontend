@@ -18,35 +18,34 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
-
-import javax.inject.Inject
 import navigation.Navigator
-import pages.maintain.TrustEEAYesNoPage
+import pages.maintain.OwnsUkLandOrPropertyPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.TrustEEAYesNoView
+import views.html.maintain.OwnsUkLandOrPropertyView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustEEAYesNoController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         yesNoFormProvider: YesNoFormProvider,
-                                         repository: PlaybackRepository,
-                                         navigator: Navigator,
-                                         actions: StandardActionSets,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: TrustEEAYesNoView
-                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class OwnsUkLandOrPropertyController @Inject()(
+                                                override val messagesApi: MessagesApi,
+                                                yesNoFormProvider: YesNoFormProvider,
+                                                repository: PlaybackRepository,
+                                                navigator: Navigator,
+                                                actions: StandardActionSets,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: OwnsUkLandOrPropertyView
+                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("trustEEAYesNo")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("ownsUkLandOrProperty")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(TrustEEAYesNoPage) match {
+      val preparedForm = request.userAnswers.get(OwnsUkLandOrPropertyPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,9 +62,9 @@ class TrustEEAYesNoController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(TrustEEAYesNoPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(OwnsUkLandOrPropertyPage, value))
             _              <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(TrustEEAYesNoPage,updatedAnswers))
+          } yield Redirect(navigator.nextPage(OwnsUkLandOrPropertyPage,updatedAnswers))
         }
       )
   }

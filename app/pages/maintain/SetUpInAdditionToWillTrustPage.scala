@@ -16,16 +16,13 @@
 
 package pages.maintain
 
-import pages.behaviours.PageBehaviours
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class TrustEEAYesNoPageSpec extends PageBehaviours {
+case object SetUpInAdditionToWillTrustPage extends QuestionPage[Boolean] {
 
-  "TrustEEAYesNoPage" must {
+  override def path: JsPath = basePath \ toString
 
-    beRetrievable[Boolean](TrustEEAYesNoPage)
+  override def toString: String = "setUpInAdditionToWillTrust"
 
-    beSettable[Boolean](TrustEEAYesNoPage)
-
-    beRemovable[Boolean](TrustEEAYesNoPage)
-  }
 }

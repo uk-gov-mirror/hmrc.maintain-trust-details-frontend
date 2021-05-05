@@ -17,14 +17,14 @@ GET        /feature-not-available               controllers.FeatureNotAvailableC
 
 GET        /before-you-continue                 controllers.maintain.BeforeYouContinueController.onPageLoad()
 
-GET        /land-or-property                    controllers.maintain.TrustOwnUKLandOrPropertyController.onPageLoad()
-POST       /land-or-property                    controllers.maintain.TrustOwnUKLandOrPropertyController.onSubmit()
+GET        /land-or-property                    controllers.maintain.OwnsUkLandOrPropertyController.onPageLoad()
+POST       /land-or-property                    controllers.maintain.OwnsUkLandOrPropertyController.onSubmit()
 
-GET        /eea-yes-no                          controllers.maintain.TrustEEAYesNoController.onPageLoad()
-POST       /eea-yes-no                          controllers.maintain.TrustEEAYesNoController.onSubmit()
+GET        /eea-yes-no                          controllers.maintain.RecordedOnEeaRegisterController.onPageLoad()
+POST       /eea-yes-no                          controllers.maintain.RecordedOnEeaRegisterController.onSubmit()
 
-GET        /business-relationship-yes-no        controllers.maintain.BusinessRelationshipYesNoController.onPageLoad()
-POST       /business-relationship-yes-no        controllers.maintain.BusinessRelationshipYesNoController.onSubmit()
+GET        /business-relationship-yes-no        controllers.maintain.BusinessRelationshipInUkController.onPageLoad()
+POST       /business-relationship-yes-no        controllers.maintain.BusinessRelationshipInUkController.onSubmit()
 
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()

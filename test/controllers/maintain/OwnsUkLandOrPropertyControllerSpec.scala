@@ -20,19 +20,19 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.TrustOwnUKLandOrPropertyPage
+import pages.maintain.OwnsUkLandOrPropertyPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.TrustOwnUKLandOrPropertyView
+import views.html.maintain.OwnsUkLandOrPropertyView
 
-class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar {
+class OwnsUkLandOrPropertyControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("trustOwnUKLandOrProperty")
+  val form: Form[Boolean] = formProvider.withPrefix("ownsUkLandOrProperty")
 
-  lazy val trustOwnUKLandOrPropertyControllerRoute: String = routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
+  lazy val trustOwnUKLandOrPropertyControllerRoute: String = routes.OwnsUkLandOrPropertyController.onPageLoad().url
 
   "trustOwnUKLandOrProperty Controller" must {
 
@@ -44,7 +44,7 @@ class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar 
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[TrustOwnUKLandOrPropertyView]
+      val view = application.injector.instanceOf[OwnsUkLandOrPropertyView]
 
       status(result) mustEqual OK
 
@@ -56,13 +56,13 @@ class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar 
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(TrustOwnUKLandOrPropertyPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(OwnsUkLandOrPropertyPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request = FakeRequest(GET, trustOwnUKLandOrPropertyControllerRoute)
 
-      val view = application.injector.instanceOf[TrustOwnUKLandOrPropertyView]
+      val view = application.injector.instanceOf[OwnsUkLandOrPropertyView]
 
       val result = route(application, request).value
 
@@ -104,7 +104,7 @@ class TrustOwnUKLandOrPropertyControllerSpec extends SpecBase with MockitoSugar 
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[TrustOwnUKLandOrPropertyView]
+      val view = application.injector.instanceOf[OwnsUkLandOrPropertyView]
 
       val result = route(application, request).value
 

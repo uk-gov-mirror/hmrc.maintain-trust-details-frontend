@@ -31,10 +31,10 @@ class TrustDetailsMapperSpec extends SpecBase {
         "BusinessRelationshipYesNoPage populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(BusinessRelationshipYesNoPage, true).success.value
-            .set(TrustUKResidentPage, false).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
 
           val result = mapper(userAnswers)
 
@@ -49,9 +49,9 @@ class TrustDetailsMapperSpec extends SpecBase {
         "BusinessRelationshipYesNoPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(TrustUKResidentPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(TrustResidentInUkPage, true).success.value
 
           val result = mapper(userAnswers)
 
@@ -71,8 +71,8 @@ class TrustDetailsMapperSpec extends SpecBase {
         "TrustOwnUKLandOrPropertyPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(TrustUKResidentPage, false).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
 
           val result = mapper(userAnswers)
 
@@ -82,8 +82,8 @@ class TrustDetailsMapperSpec extends SpecBase {
         "TrustEEAYesNoPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustUKResidentPage, false).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
 
           val result = mapper(userAnswers)
 
@@ -93,8 +93,8 @@ class TrustDetailsMapperSpec extends SpecBase {
         "TrustUKResidentPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
 
           val result = mapper(userAnswers)
 

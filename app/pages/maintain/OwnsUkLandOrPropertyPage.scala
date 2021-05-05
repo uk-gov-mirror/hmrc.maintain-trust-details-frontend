@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package utils
+package pages.maintain
 
-import models.{TrustDetailsType, UserAnswers}
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class UserAnswersStatus {
+case object OwnsUkLandOrPropertyPage extends QuestionPage[Boolean] {
 
-  def areAnswersSubmittable(ua: UserAnswers, trustDetails: TrustDetailsType): Boolean = {
-    (
-      ua.get(OwnsUkLandOrPropertyPage).isDefined && ua.get(RecordedOnEeaRegisterPage).isDefined,
-      ua.get(BusinessRelationshipInUkPage).isDefined,
-      trustDetails.ukResident
-    ) match {
-      case (false, _, _) => false
-      case (true, false, false) => false
-      case _ => true
-    }
-  }
+  override def path: JsPath = basePath \ toString
+
+  override def toString: String = "ownsUkLandOrProperty"
+
 }

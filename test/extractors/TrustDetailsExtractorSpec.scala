@@ -19,7 +19,7 @@ package extractors
 import base.SpecBase
 import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage, TrustUKResidentPage}
+import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage, TrustResidentInUkPage}
 
 import java.time.LocalDate
 
@@ -50,7 +50,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-        result.get(TrustUKResidentPage).get mustBe true
+        result.get(TrustResidentInUkPage).get mustBe true
       }
 
       "extract if non-uk resident from residentialStatus" in {
@@ -72,7 +72,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-        result.get(TrustUKResidentPage).get mustBe false
+        result.get(TrustResidentInUkPage).get mustBe false
       }
     }
 
@@ -96,10 +96,10 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-        result.get(TrustOwnUKLandOrPropertyPage).get mustBe true
-        result.get(TrustEEAYesNoPage).get mustBe true
-        result.get(BusinessRelationshipYesNoPage) mustBe None
-        result.get(TrustUKResidentPage).get mustBe true
+        result.get(OwnsUkLandOrPropertyPage).get mustBe true
+        result.get(RecordedOnEeaRegisterPage).get mustBe true
+        result.get(BusinessRelationshipInUkPage) mustBe None
+        result.get(TrustResidentInUkPage).get mustBe true
       }
 
       "extract if non-uk resident from trustUKResident" in {
@@ -121,10 +121,10 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-        result.get(TrustOwnUKLandOrPropertyPage).get mustBe false
-        result.get(TrustEEAYesNoPage).get mustBe false
-        result.get(BusinessRelationshipYesNoPage).get mustBe true
-        result.get(TrustUKResidentPage).get mustBe false
+        result.get(OwnsUkLandOrPropertyPage).get mustBe false
+        result.get(RecordedOnEeaRegisterPage).get mustBe false
+        result.get(BusinessRelationshipInUkPage).get mustBe true
+        result.get(TrustResidentInUkPage).get mustBe false
       }
     }
 
@@ -148,10 +148,10 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-        result.get(TrustOwnUKLandOrPropertyPage).get mustBe true
-        result.get(TrustEEAYesNoPage).get mustBe true
-        result.get(BusinessRelationshipYesNoPage) mustBe None
-        result.get(TrustUKResidentPage).get mustBe true
+        result.get(OwnsUkLandOrPropertyPage).get mustBe true
+        result.get(RecordedOnEeaRegisterPage).get mustBe true
+        result.get(BusinessRelationshipInUkPage) mustBe None
+        result.get(TrustResidentInUkPage).get mustBe true
       }
 
       "extract if non-uk resident from trustUKResident" in {
@@ -173,10 +173,10 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-        result.get(TrustOwnUKLandOrPropertyPage).get mustBe false
-        result.get(TrustEEAYesNoPage).get mustBe false
-        result.get(BusinessRelationshipYesNoPage).get mustBe true
-        result.get(TrustUKResidentPage).get mustBe false
+        result.get(OwnsUkLandOrPropertyPage).get mustBe false
+        result.get(RecordedOnEeaRegisterPage).get mustBe false
+        result.get(BusinessRelationshipInUkPage).get mustBe true
+        result.get(TrustResidentInUkPage).get mustBe false
       }
     }
 

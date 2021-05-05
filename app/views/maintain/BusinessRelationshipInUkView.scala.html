@@ -24,10 +24,10 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @content = {
-    <p>@messages("businessRelationshipYesNo.paragraph1")</p>
+    <p>@messages("businessRelationshipInUk.paragraph1")</p>
 
     @components.bullet_list(
-        "businessRelationshipYesNo",
+        "businessRelationshipInUk",
         List(
             "bullet1",
             "bullet2",
@@ -35,14 +35,14 @@
         )
     )
 
-    <p>@messages("businessRelationshipYesNo.paragraph2")</p>
+    <p>@messages("businessRelationshipInUk.paragraph2")</p>
 }
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("businessRelationshipYesNo.title")}"
+    title = s"${errorPrefix(form)} ${messages("businessRelationshipInUk.title")}"
 ) {
 
-    @formHelper(action = BusinessRelationshipYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = BusinessRelationshipInUkController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -50,7 +50,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            legend = messages("businessRelationshipYesNo.heading"),
+            legend = messages("businessRelationshipInUk.heading"),
             headingIsLegend = true,
             additionalContent = Some(content)
         )

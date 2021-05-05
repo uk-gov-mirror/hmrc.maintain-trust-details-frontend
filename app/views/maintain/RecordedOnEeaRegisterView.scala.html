@@ -24,14 +24,24 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @content = {
-    <p>@messages("trustOwnUKLandOrProperty.paragraph1")</p>
+    <p>@messages("recordedOnEeaRegister.paragraph1")</p>
+
+    @components.bullet_list(
+        "recordedOnEeaRegister",
+        List(
+            "bullet1",
+            "bullet2",
+            "bullet3",
+            "bullet4"
+        )
+    )
 }
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("trustOwnUKLandOrProperty.title")}"
+    title = s"${errorPrefix(form)} ${messages("recordedOnEeaRegister.title")}"
 ) {
 
-    @formHelper(action = TrustOwnUKLandOrPropertyController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = RecordedOnEeaRegisterController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -39,7 +49,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            legend = messages("trustOwnUKLandOrProperty.heading"),
+            legend = messages("recordedOnEeaRegister.heading"),
             headingIsLegend = true,
             additionalContent = Some(content)
         )

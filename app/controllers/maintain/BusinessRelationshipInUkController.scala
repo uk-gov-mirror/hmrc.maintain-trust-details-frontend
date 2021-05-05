@@ -18,35 +18,34 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
-
-import javax.inject.Inject
 import navigation.Navigator
-import pages.maintain.BusinessRelationshipYesNoPage
+import pages.maintain.BusinessRelationshipInUkPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.BusinessRelationshipYesNoView
+import views.html.maintain.BusinessRelationshipInUkView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class BusinessRelationshipYesNoController @Inject()(
-                                                     override val messagesApi: MessagesApi,
-                                                     repository: PlaybackRepository,
-                                                     yesNoFormProvider: YesNoFormProvider,
-                                                     navigator: Navigator,
-                                                     actions: StandardActionSets,
-                                                     val controllerComponents: MessagesControllerComponents,
-                                                     view: BusinessRelationshipYesNoView
-                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class BusinessRelationshipInUkController @Inject()(
+                                                    override val messagesApi: MessagesApi,
+                                                    repository: PlaybackRepository,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    navigator: Navigator,
+                                                    actions: StandardActionSets,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: BusinessRelationshipInUkView
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipYesNo")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipInUk")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(BusinessRelationshipYesNoPage) match {
+      val preparedForm = request.userAnswers.get(BusinessRelationshipInUkPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,9 +62,9 @@ class BusinessRelationshipYesNoController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(BusinessRelationshipYesNoPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(BusinessRelationshipInUkPage, value))
             _              <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(BusinessRelationshipYesNoPage,updatedAnswers))
+          } yield Redirect(navigator.nextPage(BusinessRelationshipInUkPage,updatedAnswers))
         }
       )
   }
