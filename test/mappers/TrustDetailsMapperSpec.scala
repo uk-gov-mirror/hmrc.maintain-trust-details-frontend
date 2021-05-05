@@ -39,7 +39,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe JsSuccess(MappedTrustDetails(
+          result mustBe JsSuccess(NonMigratingTrustDetails(
             trustUKProperty = true,
             trustRecorded = true,
             trustUKRelation = Some(true),
@@ -56,7 +56,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe JsSuccess(MappedTrustDetails(
+          result mustBe JsSuccess(NonMigratingTrustDetails(
             trustUKProperty = true,
             trustRecorded = true,
             trustUKRelation = None,

@@ -18,7 +18,7 @@ package controllers.maintain
 
 import base.SpecBase
 import connectors.{TrustsConnector, TrustsStoreConnector}
-import mappers.{MappedTrustDetails, TrustDetailsMapper}
+import mappers.{NonMigratingTrustDetails, TrustDetailsMapper}
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -101,7 +101,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           when(mockMapper(any()))
-            .thenReturn(JsSuccess(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
+            .thenReturn(JsSuccess(NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -138,7 +138,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           when(mockMapper(any()))
-            .thenReturn(JsSuccess(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
+            .thenReturn(JsSuccess(NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -193,7 +193,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
             ).build()
 
           when(mockMapper(any()))
-            .thenReturn(JsSuccess(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
+            .thenReturn(JsSuccess(NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
 
