@@ -18,6 +18,7 @@ package connectors
 
 import config.AppConfig
 import models.TrustDetailsType
+import models.http.TaxableMigrationFlag
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
@@ -26,7 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
 
-  private val baseUrl: String = s"${config.trustsUrl}/trusts/trust-details"
+  private val trustsUrl: String = s"${config.trustsUrl}/trusts"
+  private val baseUrl: String = s"$trustsUrl/trust-details"
 
   def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetailsType] = {
     val url = s"$baseUrl/$identifier/transformed"
@@ -51,6 +53,11 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
   def setUkResident(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url = s"$baseUrl/$identifier/uk-resident"
     http.PUT[Boolean, HttpResponse](url, value)
+  }
+
+  def getTrustMigrationFlag(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TaxableMigrationFlag] = {
+    val url = s"$trustsUrl/$identifier/taxable-migration/migrating-to-taxable"
+    http.GET[TaxableMigrationFlag](url)
   }
 
 }

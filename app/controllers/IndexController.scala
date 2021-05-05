@@ -57,6 +57,7 @@ class IndexController @Inject()(
           }
         }
         _ <- cacheRepository.set(ua)
+        // TODO - call GET /:identifier/taxable-migration/migrating-to-taxable in trusts and add result to user answers
       } yield {
         if (is5mldEnabled) {
           if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
