@@ -16,5 +16,20 @@
 
 package generators
 
+import models.http.TaxableMigrationFlag
+import org.scalacheck.Arbitrary
+import org.scalacheck.Arbitrary.arbitrary
+
 trait ModelGenerators {
+
+  implicit lazy val arbitraryTaxableMigrationFlag: Arbitrary[TaxableMigrationFlag] = {
+    Arbitrary {
+      for {
+        value <- arbitrary[Option[Boolean]]
+      } yield {
+        TaxableMigrationFlag(value)
+      }
+    }
+  }
+
 }

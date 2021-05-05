@@ -20,10 +20,15 @@ import base.SpecBase
 import connectors.TrustsConnector
 import controllers.Assets.SEE_OTHER
 import extractors.TrustDetailsExtractor
-import models.TrustDetailsType
+import generators.ModelGenerators
+import models.{TrustDetailsType, UserAnswers}
+import models.http.TaxableMigrationFlag
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, reset, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -34,7 +39,7 @@ import java.time.LocalDate
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
+class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
 
   val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
   val mockTrustsConnector: TrustsConnector = mock[TrustsConnector]
@@ -54,14 +59,21 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     reset(mockExtractor)
     when(mockExtractor(any(), any())).thenReturn(Success(emptyUserAnswers))
+
+    reset(playbackRepository)
+    when(playbackRepository.set(any())).thenReturn(Future.successful(true))
   }
 
   "IndexController" when {
 
     "4mld" must {
       "redirect to task list" in {
+
         when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
           .thenReturn(Future.successful(false))
+
+        when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+          .thenReturn(Future.successful(TaxableMigrationFlag(None)))
 
         val application = applicationBuilder(userAnswers = None)
           .overrides(
@@ -86,23 +98,34 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
       "no previous answers" must {
         "call extractor" in {
 
-          when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
-            .thenReturn(Future.successful(true))
+          forAll(arbitrary[TaxableMigrationFlag]) {
+            taxableMigrationFlag =>
 
-          val application = applicationBuilder(userAnswers = None)
-            .overrides(
-              bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-              bind[TrustsConnector].toInstance(mockTrustsConnector),
-              bind[TrustDetailsExtractor].toInstance(mockExtractor)
-            ).build()
+              beforeEach()
 
-          val request = FakeRequest(GET, onPageLoad)
+              when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                .thenReturn(Future.successful(true))
 
-          val result = route(application, request).value
+              when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                .thenReturn(Future.successful(taxableMigrationFlag))
 
-          status(result) mustEqual SEE_OTHER
+              val application = applicationBuilder(userAnswers = None)
+                .overrides(
+                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                  bind[TrustsConnector].toInstance(mockTrustsConnector),
+                  bind[TrustDetailsExtractor].toInstance(mockExtractor)
+                ).build()
 
-          verify(mockExtractor).apply(any(), any())
+              val request = FakeRequest(GET, onPageLoad)
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+
+              val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+              verify(mockExtractor).apply(uaCaptor.capture, any())
+              uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+          }
         }
       }
 
@@ -114,58 +137,84 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
           "in submittable state" must {
             "redirect to CheckDetailsController" in {
 
-              when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
-                .thenReturn(Future.successful(true))
+              forAll(arbitrary[TaxableMigrationFlag]) {
+                taxableMigrationFlag =>
 
-              when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
-                .thenReturn(true)
+                  beforeEach()
 
-              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-                .overrides(
-                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-                  bind[TrustsConnector].toInstance(mockTrustsConnector),
-                  bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                  bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
-                ).build()
+                  when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                    .thenReturn(Future.successful(true))
 
-              val request = FakeRequest(GET, onPageLoad)
+                  when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                    .thenReturn(Future.successful(taxableMigrationFlag))
 
-              val result = route(application, request).value
+                  when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                    .thenReturn(true)
 
-              status(result) mustEqual SEE_OTHER
+                  val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                    .overrides(
+                      bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                      bind[TrustsConnector].toInstance(mockTrustsConnector),
+                      bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                      bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                    ).build()
 
-              redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
+                  val request = FakeRequest(GET, onPageLoad)
 
-              verify(mockExtractor, never()).apply(any(), any())
+                  val result = route(application, request).value
+
+                  status(result) mustEqual SEE_OTHER
+
+                  redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
+
+                  verify(mockExtractor, never()).apply(any(), any())
+
+                  val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+                  verify(playbackRepository).set(uaCaptor.capture)
+                  uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+              }
             }
           }
 
           "not in submittable state" must {
             "redirect to TrustOwnUKLandOrPropertyController" in {
 
-              when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
-                .thenReturn(Future.successful(true))
+              forAll(arbitrary[TaxableMigrationFlag]) {
+                taxableMigrationFlag =>
 
-              when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
-                .thenReturn(false)
+                  beforeEach()
 
-              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-                .overrides(
-                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-                  bind[TrustsConnector].toInstance(mockTrustsConnector),
-                  bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                  bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
-                ).build()
+                  when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                    .thenReturn(Future.successful(true))
 
-              val request = FakeRequest(GET, onPageLoad)
+                  when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                    .thenReturn(Future.successful(taxableMigrationFlag))
 
-              val result = route(application, request).value
+                  when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                    .thenReturn(false)
 
-              status(result) mustEqual SEE_OTHER
+                  val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                    .overrides(
+                      bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                      bind[TrustsConnector].toInstance(mockTrustsConnector),
+                      bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                      bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                    ).build()
 
-              redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
+                  val request = FakeRequest(GET, onPageLoad)
 
-              verify(mockExtractor, never()).apply(any(), any())
+                  val result = route(application, request).value
+
+                  status(result) mustEqual SEE_OTHER
+
+                  redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
+
+                  verify(mockExtractor, never()).apply(any(), any())
+
+                  val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+                  verify(playbackRepository).set(uaCaptor.capture)
+                  uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+              }
             }
           }
         }
@@ -177,6 +226,9 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
           .thenReturn(Future.successful(true))
+
+        when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+          .thenReturn(Future.successful(TaxableMigrationFlag(None)))
 
         when(mockExtractor(any(), any())).thenReturn(Failure(new Throwable("")))
 
