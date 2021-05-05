@@ -18,6 +18,7 @@ package mappers
 
 import base.SpecBase
 import pages.maintain._
+import play.api.libs.json.JsSuccess
 
 class TrustDetailsMapperSpec extends SpecBase {
 
@@ -38,7 +39,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe Some(MappedTrustDetails(
+          result mustBe JsSuccess(MappedTrustDetails(
             trustUKProperty = true,
             trustRecorded = true,
             trustUKRelation = Some(true),
@@ -55,7 +56,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe Some(MappedTrustDetails(
+          result mustBe JsSuccess(MappedTrustDetails(
             trustUKProperty = true,
             trustRecorded = true,
             trustUKRelation = None,
@@ -76,7 +77,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe None
+          result.isSuccess mustBe false
         }
 
         "TrustEEAYesNoPage not populated" in {
@@ -87,7 +88,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe None
+          result.isSuccess mustBe false
         }
 
         "TrustUKResidentPage not populated" in {
@@ -98,7 +99,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           val result = mapper(userAnswers)
 
-          result mustBe None
+          result.isSuccess mustBe false
         }
       }
     }

@@ -18,22 +18,29 @@ package mappers
 
 import models.UserAnswers
 import pages.maintain._
+import play.api.Logging
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsResult, Reads}
 
-class TrustDetailsMapper {
+class TrustDetailsMapper extends Logging {
 
-  def apply(userAnswers: UserAnswers): Option[MappedTrustDetails] = {
-    for {
-      trustUKProperty <- userAnswers.get(OwnsUkLandOrPropertyPage)
-      trustRecorded <- userAnswers.get(RecordedOnEeaRegisterPage)
-      trustUKRelation = userAnswers.get(BusinessRelationshipInUkPage)
-      trustUKResident <- userAnswers.get(TrustResidentInUkPage)
-    } yield {
-      MappedTrustDetails(trustUKProperty, trustRecorded, trustUKRelation, trustUKResident)
-    }
+  def apply(userAnswers: UserAnswers): JsResult[MappedTrustDetails] = {
+
+    val reads: Reads[MappedTrustDetails] = (
+      OwnsUkLandOrPropertyPage.path.read[Boolean] and
+        RecordedOnEeaRegisterPage.path.read[Boolean] and
+        BusinessRelationshipInUkPage.path.readNullable[Boolean] and
+        TrustResidentInUkPage.path.read[Boolean]
+      )(MappedTrustDetails.apply _)
+
+    userAnswers.data.validate[MappedTrustDetails](reads)
   }
 
 }
 
+/**
+ * Used for mapping answers when maintaining trust details in taxable and non-taxable
+ */
 case class MappedTrustDetails(trustUKProperty: Boolean,
                               trustRecorded: Boolean,
                               trustUKRelation: Option[Boolean],

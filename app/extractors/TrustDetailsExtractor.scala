@@ -36,12 +36,12 @@ class TrustDetailsExtractor {
 
   private def extractTrustType(trustDetails: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
     (trustDetails.typeOfTrust, trustDetails.deedOfVariation) match {
-      case (Some(WillTrustOrIntestacyTrust), None) => answers
-        .set(SetUpAfterSettlorDiedPage, true)
       case (Some(WillTrustOrIntestacyTrust), Some(AdditionToWillTrust)) => answers
         .set(SetUpAfterSettlorDiedPage, false)
         .flatMap(_.set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement))
         .flatMap(_.set(SetUpInAdditionToWillTrustPage, true))
+      case (Some(WillTrustOrIntestacyTrust), _) => answers
+        .set(SetUpAfterSettlorDiedPage, true)
       case (Some(DeedOfVariationTrustOrFamilyArrangement), _) => answers
         .set(SetUpAfterSettlorDiedPage, false)
         .flatMap(_.set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement))

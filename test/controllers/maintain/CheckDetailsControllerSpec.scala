@@ -23,6 +23,7 @@ import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.inject.bind
+import play.api.libs.json.{JsError, JsSuccess}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -100,7 +101,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           when(mockMapper(any()))
-            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
+            .thenReturn(JsSuccess(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -137,7 +138,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           when(mockMapper(any()))
-            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
+            .thenReturn(JsSuccess(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -169,7 +170,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
               bind[TrustDetailsMapper].toInstance(mockMapper)
             ).build()
 
-          when(mockMapper(any())).thenReturn(None)
+          when(mockMapper(any())).thenReturn(JsError())
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -192,7 +193,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
             ).build()
 
           when(mockMapper(any()))
-            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
+            .thenReturn(JsSuccess(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
 
