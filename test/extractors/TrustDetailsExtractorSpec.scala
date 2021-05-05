@@ -210,37 +210,9 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
     "extract trust type answers" when {
 
-      "WillTrustOrIntestacyTrust" in {
+      "WillTrustOrIntestacyTrust" when {
 
-        val trustDetails = TrustDetailsType(
-          startDate = startDate,
-          lawCountry = None,
-          administrationCountry = None,
-          residentialStatus = None,
-          trustUKProperty = Some(true),
-          trustRecorded = Some(true),
-          trustUKRelation = None,
-          trustUKResident = Some(true),
-          typeOfTrust = Some(WillTrustOrIntestacyTrust),
-          deedOfVariation = None,
-          interVivos = None,
-          efrbsStartDate = None
-        )
-
-        val result = extractor(emptyUserAnswers, trustDetails).success.value
-
-        result.get(SetUpAfterSettlorDiedPage).get mustBe true
-        result.get(TypeOfTrustPage) mustBe None
-        result.get(SetUpInAdditionToWillTrustPage) mustBe None
-        result.get(WhyDeedOfVariationCreatedPage) mustBe None
-        result.get(HoldoverReliefClaimedPage) mustBe None
-        result.get(EfrbsYesNoPage) mustBe None
-        result.get(EfrbsStartDatePage) mustBe None
-      }
-
-      "DeedOfVariationTrustOrFamilyArrangement" when {
-
-        "trust set up in addition to will trust" in {
+        "set up after settlor died" in {
 
           val trustDetails = TrustDetailsType(
             startDate = startDate,
@@ -251,7 +223,35 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
             trustRecorded = Some(true),
             trustUKRelation = None,
             trustUKResident = Some(true),
-            typeOfTrust = Some(DeedOfVariationTrustOrFamilyArrangement),
+            typeOfTrust = Some(WillTrustOrIntestacyTrust),
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          )
+
+          val result = extractor(emptyUserAnswers, trustDetails).success.value
+
+          result.get(SetUpAfterSettlorDiedPage).get mustBe true
+          result.get(TypeOfTrustPage) mustBe None
+          result.get(SetUpInAdditionToWillTrustPage) mustBe None
+          result.get(WhyDeedOfVariationCreatedPage) mustBe None
+          result.get(HoldoverReliefClaimedPage) mustBe None
+          result.get(EfrbsYesNoPage) mustBe None
+          result.get(EfrbsStartDatePage) mustBe None
+        }
+
+        "set up in addition to will trust" in {
+
+          val trustDetails = TrustDetailsType(
+            startDate = startDate,
+            lawCountry = None,
+            administrationCountry = None,
+            residentialStatus = None,
+            trustUKProperty = Some(true),
+            trustRecorded = Some(true),
+            trustUKRelation = None,
+            trustUKResident = Some(true),
+            typeOfTrust = Some(WillTrustOrIntestacyTrust),
             deedOfVariation = Some(AdditionToWillTrust),
             interVivos = None,
             efrbsStartDate = None
@@ -267,37 +267,37 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           result.get(EfrbsYesNoPage) mustBe None
           result.get(EfrbsStartDatePage) mustBe None
         }
+      }
 
-        "trust not set up in addition to will trust" in {
+      "DeedOfVariationTrustOrFamilyArrangement" in {
 
-          forAll(arbitrary[DeedOfVariation].suchThat(_ != AdditionToWillTrust)) {
-            deedOfVariation =>
+        forAll(arbitrary[DeedOfVariation].suchThat(_ != AdditionToWillTrust)) {
+          deedOfVariation =>
 
-              val trustDetails = TrustDetailsType(
-                startDate = startDate,
-                lawCountry = None,
-                administrationCountry = None,
-                residentialStatus = None,
-                trustUKProperty = Some(true),
-                trustRecorded = Some(true),
-                trustUKRelation = None,
-                trustUKResident = Some(true),
-                typeOfTrust = Some(DeedOfVariationTrustOrFamilyArrangement),
-                deedOfVariation = Some(deedOfVariation),
-                interVivos = None,
-                efrbsStartDate = None
-              )
+            val trustDetails = TrustDetailsType(
+              startDate = startDate,
+              lawCountry = None,
+              administrationCountry = None,
+              residentialStatus = None,
+              trustUKProperty = Some(true),
+              trustRecorded = Some(true),
+              trustUKRelation = None,
+              trustUKResident = Some(true),
+              typeOfTrust = Some(DeedOfVariationTrustOrFamilyArrangement),
+              deedOfVariation = Some(deedOfVariation),
+              interVivos = None,
+              efrbsStartDate = None
+            )
 
-              val result = extractor(emptyUserAnswers, trustDetails).success.value
+            val result = extractor(emptyUserAnswers, trustDetails).success.value
 
-              result.get(SetUpAfterSettlorDiedPage).get mustBe false
-              result.get(TypeOfTrustPage).get mustBe DeedOfVariationTrustOrFamilyArrangement
-              result.get(SetUpInAdditionToWillTrustPage).get mustBe false
-              result.get(WhyDeedOfVariationCreatedPage).get mustBe deedOfVariation
-              result.get(HoldoverReliefClaimedPage) mustBe None
-              result.get(EfrbsYesNoPage) mustBe None
-              result.get(EfrbsStartDatePage) mustBe None
-          }
+            result.get(SetUpAfterSettlorDiedPage).get mustBe false
+            result.get(TypeOfTrustPage).get mustBe DeedOfVariationTrustOrFamilyArrangement
+            result.get(SetUpInAdditionToWillTrustPage).get mustBe false
+            result.get(WhyDeedOfVariationCreatedPage).get mustBe deedOfVariation
+            result.get(HoldoverReliefClaimedPage) mustBe None
+            result.get(EfrbsYesNoPage) mustBe None
+            result.get(EfrbsStartDatePage) mustBe None
         }
       }
 
