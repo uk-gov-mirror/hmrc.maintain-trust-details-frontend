@@ -52,7 +52,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(true)
+                trustUKResident = Some(true),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -73,7 +77,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -96,7 +104,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(true)
+                trustUKResident = Some(true),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -117,7 +129,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -139,7 +155,11 @@ class UserAnswersStatusSpec extends SpecBase {
               trustUKProperty = None,
               trustRecorded = None,
               trustUKRelation = None,
-              trustUKResident = None
+              trustUKResident = None,
+              typeOfTrust = None,
+              deedOfVariation = None,
+              interVivos = None,
+              efrbsStartDate = None
             )
 
             userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
@@ -161,7 +181,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
@@ -177,7 +201,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false

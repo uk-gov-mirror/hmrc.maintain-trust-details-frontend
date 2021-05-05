@@ -21,6 +21,8 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import controllers.Assets.OK
+import models.DeedOfVariation.PreviouslyAbsoluteInterestUnderWill
+import models.TypeOfTrust.WillTrustOrIntestacyTrust
 import models.http.TaxableMigrationFlag
 import models.{ResidentialStatusType, TrustDetailsType, UkType}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -109,7 +111,11 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
             trustRecorded = None,
             trustUKProperty = None,
             trustUKRelation = None,
-            trustUKResident = None
+            trustUKResident = None,
+            typeOfTrust = Some(WillTrustOrIntestacyTrust),
+            deedOfVariation = Some(PreviouslyAbsoluteInterestUnderWill),
+            interVivos = Some(false),
+            efrbsStartDate = None
           )
       }
     }

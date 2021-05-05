@@ -41,7 +41,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = None,
           trustRecorded = None,
           trustUKRelation = None,
-          trustUKResident = None
+          trustUKResident = None,
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -59,7 +63,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = None,
           trustRecorded = None,
           trustUKRelation = None,
-          trustUKResident = None
+          trustUKResident = None,
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -79,7 +87,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = Some(true),
           trustRecorded = Some(true),
           trustUKRelation = None,
-          trustUKResident = Some(true)
+          trustUKResident = Some(true),
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -100,7 +112,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = Some(false),
           trustRecorded = Some(false),
           trustUKRelation = Some(true),
-          trustUKResident = Some(false)
+          trustUKResident = Some(false),
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -123,7 +139,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = Some(true),
           trustRecorded = Some(true),
           trustUKRelation = None,
-          trustUKResident = Some(true)
+          trustUKResident = Some(true),
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -144,7 +164,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = Some(false),
           trustRecorded = Some(false),
           trustUKRelation = Some(true),
-          trustUKResident = Some(false)
+          trustUKResident = Some(false),
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
@@ -167,7 +191,11 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks {
           trustUKProperty = Some(false),
           trustRecorded = Some(false),
           trustUKRelation = Some(true),
-          trustUKResident = None
+          trustUKResident = None,
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails)
