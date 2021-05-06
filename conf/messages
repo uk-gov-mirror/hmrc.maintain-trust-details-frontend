@@ -68,3 +68,8 @@ businessRelationshipInUk.paragraph2 = Professional advice means the services of 
 
 checkDetails.title = Check trust details
 checkDetails.heading = Check trust details
+
+setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
+setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?
+setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
+setUpAfterSettlorDied.error.required = Select yes if the trust was set up after the settlor died

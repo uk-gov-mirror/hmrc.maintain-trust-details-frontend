@@ -29,4 +29,7 @@ POST       /business-relationship-yes-no        controllers.maintain.BusinessRel
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
+GET        /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
+POST       /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)
