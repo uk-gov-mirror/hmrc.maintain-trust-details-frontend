@@ -73,3 +73,7 @@ setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.error.required = Select yes if the trust was set up after the settlor died
+
+typeOfTrust.title = What kind of trust did the settlor create?
+typeOfTrust.heading = What kind of trust did the settlor create?
+typeOfTrust.error.required = Select the type of trust the settlor created

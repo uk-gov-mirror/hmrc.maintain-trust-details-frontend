@@ -18,9 +18,8 @@ package navigation
 
 import models.UserAnswers
 import pages.Page
-import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, TrustResidentInUkPage}
+import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, SetUpAfterSettlorDiedPage, TrustResidentInUkPage}
 import play.api.mvc.Call
-
 import javax.inject.Inject
 
 class TrustDetailsNavigator @Inject()() extends Navigator {
@@ -32,6 +31,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case OwnsUkLandOrPropertyPage => _ => controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad()
     case RecordedOnEeaRegisterPage => ua => trustUKResidentPage(ua)
     case BusinessRelationshipInUkPage => _ => controllers.maintain.routes.CheckDetailsController.onPageLoad()
+    case SetUpAfterSettlorDiedPage => ua => fromSetUpAfterSettlorDiedPage(ua)
   }
 
 
@@ -44,6 +44,14 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       controllers.maintain.routes.CheckDetailsController.onPageLoad()
     } else {
       controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad()
+    }
+  }
+
+  private def fromSetUpAfterSettlorDiedPage(ua: UserAnswers): Call = {
+    if (ua.get(SetUpAfterSettlorDiedPage).contains(true)) {
+      controllers.maintain.routes.TypeOfTrustController.onPageLoad() //ToDo navigate to Trustees In UK Controller
+    } else {
+      controllers.maintain.routes.TypeOfTrustController.onPageLoad()
     }
   }
 }

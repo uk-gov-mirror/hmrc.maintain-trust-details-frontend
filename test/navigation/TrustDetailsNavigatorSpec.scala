@@ -18,7 +18,7 @@ package navigation
 
 import base.SpecBase
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage, TrustResidentInUkPage}
+import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage, TrustResidentInUkPage, SetUpAfterSettlorDiedPage}
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -57,6 +57,24 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       "BusinessRelationshipYesNo page -> CYA page" in {
         navigator.nextPage(BusinessRelationshipInUkPage, emptyUserAnswers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      }
+
+      "SetUpAfterSettlorDied page" when {
+        "Yes -> Trustees in the UK page" in {
+          val answers = emptyUserAnswers
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+
+          navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
+            .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad()) //ToDo Change to Trustees in the UK Controller
+        }
+
+        "No -> TypeOfTrust page" in {
+          val answers = emptyUserAnswers
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+
+          navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
+            .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
+        }
       }
     }
   }

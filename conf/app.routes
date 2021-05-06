@@ -32,4 +32,7 @@ POST       /check-details                       controllers.maintain.CheckDetail
 GET        /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
 POST       /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()
 
+GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
+POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)
