@@ -17,8 +17,8 @@
 package connectors
 
 import config.AppConfig
-import models.TrustDetailsType
 import models.http.TaxableMigrationFlag
+import models.{MigratingTrustDetails, NonMigratingTrustDetails, TrustDetailsType}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
@@ -58,6 +58,18 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
   def getTrustMigrationFlag(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TaxableMigrationFlag] = {
     val url = s"$trustsUrl/$identifier/taxable-migration/migrating-to-taxable"
     http.GET[TaxableMigrationFlag](url)
+  }
+
+  def setMigratingTrustDetails(identifier: String, value: MigratingTrustDetails)
+                              (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$baseUrl/$identifier/migrating-trust-details"
+    http.PUT[MigratingTrustDetails, HttpResponse](url, value)
+  }
+
+  def setNonMigratingTrustDetails(identifier: String, value: NonMigratingTrustDetails)
+                                 (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$baseUrl/$identifier/non-migrating-trust-details"
+    http.PUT[NonMigratingTrustDetails, HttpResponse](url, value)
   }
 
 }

@@ -17,6 +17,7 @@
 package mappers
 
 import base.SpecBase
+import models.NonMigratingTrustDetails
 import pages.maintain._
 import play.api.libs.json.JsSuccess
 
@@ -27,80 +28,94 @@ class TrustDetailsMapperSpec extends SpecBase {
   "TrustDetailsMapper" must {
 
     "successfully map data" when {
-      "TrustOwnUKLandOrPropertyPage and TrustEEAYesNoPage populated" when {
 
-        "BusinessRelationshipYesNoPage populated" in {
+      "not migrating" when {
+        "TrustOwnUKLandOrPropertyPage and TrustEEAYesNoPage populated" when {
 
-          val userAnswers = emptyUserAnswers
-            .set(OwnsUkLandOrPropertyPage, true).success.value
-            .set(RecordedOnEeaRegisterPage, true).success.value
-            .set(BusinessRelationshipInUkPage, true).success.value
-            .set(TrustResidentInUkPage, false).success.value
+          "BusinessRelationshipYesNoPage populated" in {
 
-          val result = mapper(userAnswers)
+            val userAnswers = emptyUserAnswers
+              .set(OwnsUkLandOrPropertyPage, true).success.value
+              .set(RecordedOnEeaRegisterPage, true).success.value
+              .set(BusinessRelationshipInUkPage, true).success.value
+              .set(TrustResidentInUkPage, false).success.value
 
-          result mustBe JsSuccess(NonMigratingTrustDetails(
-            trustUKProperty = true,
-            trustRecorded = true,
-            trustUKRelation = Some(true),
-            trustUKResident = false
-          ))
+            val result = mapper(userAnswers)
+
+            result mustBe JsSuccess(NonMigratingTrustDetails(
+              trustUKProperty = true,
+              trustRecorded = true,
+              trustUKRelation = Some(true),
+              trustUKResident = false
+            ))
+          }
+
+          "BusinessRelationshipYesNoPage not populated" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(OwnsUkLandOrPropertyPage, true).success.value
+              .set(RecordedOnEeaRegisterPage, true).success.value
+              .set(TrustResidentInUkPage, true).success.value
+
+            val result = mapper(userAnswers)
+
+            result mustBe JsSuccess(NonMigratingTrustDetails(
+              trustUKProperty = true,
+              trustRecorded = true,
+              trustUKRelation = None,
+              trustUKResident = true
+            ))
+          }
         }
+      }
 
-        "BusinessRelationshipYesNoPage not populated" in {
+      "migrating" ignore {
 
-          val userAnswers = emptyUserAnswers
-            .set(OwnsUkLandOrPropertyPage, true).success.value
-            .set(RecordedOnEeaRegisterPage, true).success.value
-            .set(TrustResidentInUkPage, true).success.value
-
-          val result = mapper(userAnswers)
-
-          result mustBe JsSuccess(NonMigratingTrustDetails(
-            trustUKProperty = true,
-            trustRecorded = true,
-            trustUKRelation = None,
-            trustUKResident = true
-          ))
-        }
       }
     }
 
     "fail to map data" when {
-      "TrustOwnUKLandOrPropertyPage, TrustEEAYesNoPage or TrustUKResidentPage not populated" when {
 
-        "TrustOwnUKLandOrPropertyPage not populated" in {
+      "not migrating" when {
+        "TrustOwnUKLandOrPropertyPage, TrustEEAYesNoPage or TrustUKResidentPage not populated" when {
 
-          val userAnswers = emptyUserAnswers
-            .set(RecordedOnEeaRegisterPage, true).success.value
-            .set(TrustResidentInUkPage, false).success.value
+          "TrustOwnUKLandOrPropertyPage not populated" in {
 
-          val result = mapper(userAnswers)
+            val userAnswers = emptyUserAnswers
+              .set(RecordedOnEeaRegisterPage, true).success.value
+              .set(TrustResidentInUkPage, false).success.value
 
-          result.isSuccess mustBe false
+            val result = mapper(userAnswers)
+
+            result.isSuccess mustBe false
+          }
+
+          "TrustEEAYesNoPage not populated" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(OwnsUkLandOrPropertyPage, true).success.value
+              .set(TrustResidentInUkPage, false).success.value
+
+            val result = mapper(userAnswers)
+
+            result.isSuccess mustBe false
+          }
+
+          "TrustUKResidentPage not populated" in {
+
+            val userAnswers = emptyUserAnswers
+              .set(OwnsUkLandOrPropertyPage, true).success.value
+              .set(RecordedOnEeaRegisterPage, true).success.value
+
+            val result = mapper(userAnswers)
+
+            result.isSuccess mustBe false
+          }
         }
+      }
 
-        "TrustEEAYesNoPage not populated" in {
+      "migrating" ignore {
 
-          val userAnswers = emptyUserAnswers
-            .set(OwnsUkLandOrPropertyPage, true).success.value
-            .set(TrustResidentInUkPage, false).success.value
-
-          val result = mapper(userAnswers)
-
-          result.isSuccess mustBe false
-        }
-
-        "TrustUKResidentPage not populated" in {
-
-          val userAnswers = emptyUserAnswers
-            .set(OwnsUkLandOrPropertyPage, true).success.value
-            .set(RecordedOnEeaRegisterPage, true).success.value
-
-          val result = mapper(userAnswers)
-
-          result.isSuccess mustBe false
-        }
       }
     }
   }
