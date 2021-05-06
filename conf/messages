@@ -76,4 +76,10 @@ setUpAfterSettlorDied.error.required = Select yes if the trust was set up after 
 
 typeOfTrust.title = What kind of trust did the settlor create?
 typeOfTrust.heading = What kind of trust did the settlor create?
+typeOfTrust.will-trust =
+typeOfTrust.inter-vivos = A trust create during their lifetime to give or transfer assets
+typeOfTrust.deed-of-variation = A trust through a Deed of Variation or family agreement
+typeOfTrust.employment-related = A trust for the employees of a company
+typeOfTrust.flat-or-sinking-fund = A trust for a building or building with tenants
+typeOfTrust.heritage = A trust for a the repair of historic buildings
 typeOfTrust.error.required = Select the type of trust the settlor created

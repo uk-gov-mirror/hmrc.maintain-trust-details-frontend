@@ -65,7 +65,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .set(SetUpAfterSettlorDiedPage, true).success.value
 
           navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
-            .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad()) //ToDo Change to Trustees in the UK Controller
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad()) //ToDo Change to Trustees in the UK Controller
         }
 
         "No -> TypeOfTrust page" in {

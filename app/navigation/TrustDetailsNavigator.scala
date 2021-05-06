@@ -49,7 +49,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
 
   private def fromSetUpAfterSettlorDiedPage(ua: UserAnswers): Call = {
     if (ua.get(SetUpAfterSettlorDiedPage).contains(true)) {
-      controllers.maintain.routes.TypeOfTrustController.onPageLoad() //ToDo navigate to Trustees In UK Controller
+      controllers.routes.FeatureNotAvailableController.onPageLoad() //ToDo navigate to Trustees In UK Controller
     } else {
       controllers.maintain.routes.TypeOfTrustController.onPageLoad()
     }

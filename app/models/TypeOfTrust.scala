@@ -25,27 +25,27 @@ sealed trait TypeOfTrust {
 
 object TypeOfTrust {
 
-  case object WillTrustOrIntestacyTrust extends TypeOfTrust {
+  case object WillTrustOrIntestacyTrust extends WithName("will-trust") with TypeOfTrust {
     override val asString: String = "Will Trust or Intestacy Trust"
   }
 
-  case object DeedOfVariationTrustOrFamilyArrangement extends TypeOfTrust {
+  case object DeedOfVariationTrustOrFamilyArrangement extends WithName("deed-of-variation") with TypeOfTrust {
     override val asString: String = "Deed of Variation Trust or Family Arrangement"
   }
 
-  case object InterVivosSettlement extends TypeOfTrust {
+  case object InterVivosSettlement extends WithName("inter-vivos") with TypeOfTrust {
     override val asString: String = "Inter vivos Settlement"
   }
 
-  case object EmploymentRelated extends TypeOfTrust {
+  case object EmploymentRelated extends WithName("employment-related") with TypeOfTrust {
     override val asString: String = "Employment Related"
   }
 
-  case object HeritageMaintenanceFund extends TypeOfTrust {
+  case object HeritageMaintenanceFund extends WithName("heritage") with TypeOfTrust {
     override val asString: String = "Heritage Maintenance Fund"
   }
 
-  case object FlatManagementCompanyOrSinkingFund extends TypeOfTrust {
+  case object FlatManagementCompanyOrSinkingFund extends WithName("flat-or-sinking-fund") with TypeOfTrust {
     override val asString: String = "Flat Management Company or Sinking Fund"
   }
 
@@ -62,17 +62,17 @@ object TypeOfTrust {
   implicit val writes: Writes[TypeOfTrust] = Writes(x => JsString(x.asString))
 
   val values: List[TypeOfTrust] = List(
-    WillTrustOrIntestacyTrust,
-    DeedOfVariationTrustOrFamilyArrangement,
+    //WillTrustOrIntestacyTrust,
     InterVivosSettlement,
+    DeedOfVariationTrustOrFamilyArrangement,
     EmploymentRelated,
-    HeritageMaintenanceFund,
-    FlatManagementCompanyOrSinkingFund
+    FlatManagementCompanyOrSinkingFund,
+    HeritageMaintenanceFund
   )
 
-  val options: List[(RadioOption, String)] = {
-    values
-      .map(value => (RadioOption(s"typeOfTrust", value.toString), s"typeOfTrust.$value.hint"))
+  val options: List[RadioOption] = values.map {
+    value =>
+      RadioOption("typeOfTrust", value.toString)
   }
 
   implicit val enumerable: Enumerable[TypeOfTrust] =
