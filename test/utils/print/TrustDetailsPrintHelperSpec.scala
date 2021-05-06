@@ -27,23 +27,30 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
 
   "TrustDetailsPrintHelper" must {
 
-    "render answer rows" in {
-      val userAnswers = emptyUserAnswers
-        .set(OwnsUkLandOrPropertyPage, true).success.value
-        .set(RecordedOnEeaRegisterPage, false).success.value
-        .set(BusinessRelationshipInUkPage, true).success.value
+    "render answer rows" when {
 
-      val result = printHelper(userAnswers)
+      "migrating from non-taxable to taxable" ignore {
+        // TODO - fill in unit test once print helper updated
+      }
 
-      result mustEqual AnswerSection(
-        headingKey = None,
-        rows = Seq(
-          AnswerRow(messages("ownsUkLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.OwnsUkLandOrPropertyController.onPageLoad().url)),
-          AnswerRow(messages("recordedOnEeaRegister.checkYourAnswersLabel"), Html("No"), Some(controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad().url)),
-          AnswerRow(messages("businessRelationshipInUk.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad().url))
-        ),
-        sectionKey = None
-      )
+      "not migrating" in {
+        val userAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = false)
+          .set(OwnsUkLandOrPropertyPage, true).success.value
+          .set(RecordedOnEeaRegisterPage, false).success.value
+          .set(BusinessRelationshipInUkPage, true).success.value
+
+        val result = printHelper(userAnswers)
+
+        result mustEqual AnswerSection(
+          headingKey = None,
+          rows = Seq(
+            AnswerRow(messages("ownsUkLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.OwnsUkLandOrPropertyController.onPageLoad().url)),
+            AnswerRow(messages("recordedOnEeaRegister.checkYourAnswersLabel"), Html("No"), Some(controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad().url)),
+            AnswerRow(messages("businessRelationshipInUk.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad().url))
+          ),
+          sectionKey = None
+        )
+      }
     }
   }
 

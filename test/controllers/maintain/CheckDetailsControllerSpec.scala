@@ -19,7 +19,8 @@ package controllers.maintain
 import base.SpecBase
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import mappers.TrustDetailsMapper
-import models.NonMigratingTrustDetails
+import models.TypeOfTrust.WillTrustOrIntestacyTrust
+import models.{MigratingTrustDetails, NonMigratingTrustDetails, ResidentialStatusType, UkType}
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -48,6 +49,25 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
     when(mockTrustsStoreConnector.setTaskComplete(any())(any(), any()))
       .thenReturn(Future.successful(HttpResponse(OK, "")))
   }
+
+  private val migratingTrustDetails = MigratingTrustDetails(
+    lawCountry = None,
+    administrationCountry = "GB",
+    residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
+    trustUKRelation = None,
+    trustUKResident = true,
+    typeOfTrust = WillTrustOrIntestacyTrust,
+    deedOfVariation = None,
+    interVivos = None,
+    efrbsStartDate = None
+  )
+
+  private val nonMigratingTrustDetails = NonMigratingTrustDetails(
+    trustUKProperty = true,
+    trustRecorded = true,
+    trustUKRelation = None,
+    trustUKResident = true
+  )
 
   "CheckDetails Controller" when {
 
@@ -98,7 +118,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           when(mockTrustConnector.setNonMigratingTrustDetails(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
-          val trustDetails = NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)
+          val trustDetails = nonMigratingTrustDetails
 
           when(mockMapper(any())).thenReturn(JsSuccess(trustDetails))
 
@@ -115,8 +135,37 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           application.stop()
         }
 
-        "migrating" ignore {
+        "migrating" in {
 
+          val userAnswers = emptyUserAnswers
+
+          val mockTrustConnector = mock[TrustsConnector]
+          val mockMapper = mock[TrustDetailsMapper]
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
+            .overrides(
+              bind[TrustsConnector].toInstance(mockTrustConnector),
+              bind[TrustDetailsMapper].toInstance(mockMapper),
+              bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector)
+            ).build()
+
+          when(mockTrustConnector.setMigratingTrustDetails(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+
+          val trustDetails = migratingTrustDetails
+
+          when(mockMapper(any())).thenReturn(JsSuccess(trustDetails))
+
+          val request = FakeRequest(POST, submitDetailsRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual onwardRoute
+
+          verify(mockTrustConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
+
+          application.stop()
         }
       }
 
@@ -157,9 +206,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
                 bind[TrustDetailsMapper].toInstance(mockMapper)
               ).build()
 
-            val trustDetails = NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)
-
-            when(mockMapper(any())).thenReturn(JsSuccess(trustDetails))
+            when(mockMapper(any())).thenReturn(JsSuccess(nonMigratingTrustDetails))
 
             when(mockTrustConnector.setNonMigratingTrustDetails(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
 
@@ -172,8 +219,28 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
             application.stop()
           }
 
-          "migrating" ignore {
+          "migrating" in {
 
+            val mockMapper = mock[TrustDetailsMapper]
+            val mockTrustConnector = mock[TrustsConnector]
+
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), affinityGroup = Agent)
+              .overrides(
+                bind[TrustsConnector].toInstance(mockTrustConnector),
+                bind[TrustDetailsMapper].toInstance(mockMapper)
+              ).build()
+
+            when(mockMapper(any())).thenReturn(JsSuccess(migratingTrustDetails))
+
+            when(mockTrustConnector.setMigratingTrustDetails(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
+
+            val request = FakeRequest(POST, submitDetailsRoute)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual INTERNAL_SERVER_ERROR
+
+            application.stop()
           }
         }
       }

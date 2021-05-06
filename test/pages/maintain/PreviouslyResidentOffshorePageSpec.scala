@@ -20,7 +20,7 @@ import pages.behaviours.PageBehaviours
 
 class PreviouslyResidentOffshorePageSpec extends PageBehaviours {
 
-  "BeenResidentOffshorePage" must {
+  "PreviouslyResidentOffshorePage" must {
 
     beRetrievable[Boolean](PreviouslyResidentOffshorePage)
 

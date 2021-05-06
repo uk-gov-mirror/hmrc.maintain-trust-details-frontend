@@ -29,13 +29,17 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
 
     val bound = answerRowConverter.bind(userAnswers)
 
-    val answerRows: Seq[AnswerRow] = Seq(
-      bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrProperty", Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
-      bound.yesNoQuestion(RecordedOnEeaRegisterPage, "recordedOnEeaRegister", Some(RecordedOnEeaRegisterController.onPageLoad().url)),
-      bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUk", Some(BusinessRelationshipInUkController.onPageLoad().url))
-    ).flatten
+    val answerRows: Seq[Option[AnswerRow]] = if (userAnswers.migratingFromNonTaxableToTaxable) {
+      Seq() // TODO - add relevant rows once controllers built
+    } else {
+      Seq(
+        bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrProperty", Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
+        bound.yesNoQuestion(RecordedOnEeaRegisterPage, "recordedOnEeaRegister", Some(RecordedOnEeaRegisterController.onPageLoad().url)),
+        bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUk", Some(BusinessRelationshipInUkController.onPageLoad().url))
+      )
+    }
 
-    AnswerSection(None, answerRows)
+    AnswerSection(None, answerRows.flatten)
 
   }
 }
