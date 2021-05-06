@@ -21,11 +21,10 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import controllers.Assets.OK
-import mappers.{MigratingTrustDetails, NonMigratingTrustDetails}
 import models.DeedOfVariation.PreviouslyAbsoluteInterestUnderWill
 import models.TypeOfTrust.WillTrustOrIntestacyTrust
 import models.http.TaxableMigrationFlag
-import models.{ResidentialStatusType, TrustDetailsType, UkType}
+import models._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
 import play.api.libs.json.Json

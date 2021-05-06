@@ -17,9 +17,8 @@
 package connectors
 
 import config.AppConfig
-import mappers.{MigratingTrustDetails, NonMigratingTrustDetails}
-import models.TrustDetailsType
 import models.http.TaxableMigrationFlag
+import models.{MigratingTrustDetails, NonMigratingTrustDetails, TrustDetailsType}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 

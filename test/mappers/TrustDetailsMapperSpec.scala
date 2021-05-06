@@ -17,6 +17,7 @@
 package mappers
 
 import base.SpecBase
+import models.NonMigratingTrustDetails
 import pages.maintain._
 import play.api.libs.json.JsSuccess
 

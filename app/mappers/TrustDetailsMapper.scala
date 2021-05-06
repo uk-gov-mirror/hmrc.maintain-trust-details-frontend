@@ -16,13 +16,11 @@
 
 package mappers
 
-import models.{DeedOfVariation, ResidentialStatusType, TypeOfTrust, UserAnswers}
+import models.{NonMigratingTrustDetails, UserAnswers}
 import pages.maintain._
 import play.api.Logging
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Format, JsResult, Json, Reads}
-
-import java.time.LocalDate
+import play.api.libs.json.{JsResult, Reads}
 
 class TrustDetailsMapper extends Logging {
 
@@ -38,36 +36,4 @@ class TrustDetailsMapper extends Logging {
     userAnswers.data.validate[NonMigratingTrustDetails](reads)
   }
 
-}
-
-/**
- * Used for mapping answers when maintaining trust details in taxable and non-taxable
- */
-case class NonMigratingTrustDetails(trustUKProperty: Boolean,
-                                    trustRecorded: Boolean,
-                                    trustUKRelation: Option[Boolean],
-                                    trustUKResident: Boolean)
-
-object NonMigratingTrustDetails {
-  implicit val format: Format[NonMigratingTrustDetails] = Json.format[NonMigratingTrustDetails]
-}
-
-/**
- * Used for mapping answers when migrating from non-taxable to taxable
- * @param lawCountry - either Some(nonUkCountry) or None
- * @param administrationCountry - either nonUkCountry or GB
- * @param trustUKResident - driven by whether residentialStatus contains UkType or NonUKType
- */
-case class MigratingTrustDetails(lawCountry: Option[String],
-                                 administrationCountry: String,
-                                 residentialStatus: Option[ResidentialStatusType],
-                                 trustUKRelation: Option[Boolean],
-                                 trustUKResident: Boolean,
-                                 typeOfTrust: TypeOfTrust,
-                                 deedOfVariation: Option[DeedOfVariation],
-                                 interVivos: Option[Boolean],
-                                 efrbsStartDate: Option[LocalDate])
-
-object MigratingTrustDetails {
-  implicit val format: Format[MigratingTrustDetails] = Json.format[MigratingTrustDetails]
 }

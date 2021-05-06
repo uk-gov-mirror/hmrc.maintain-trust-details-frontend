@@ -18,7 +18,8 @@ package controllers.maintain
 
 import base.SpecBase
 import connectors.{TrustsConnector, TrustsStoreConnector}
-import mappers.{NonMigratingTrustDetails, TrustDetailsMapper}
+import mappers.TrustDetailsMapper
+import models.NonMigratingTrustDetails
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
