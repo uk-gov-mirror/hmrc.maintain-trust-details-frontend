@@ -66,3 +66,37 @@ case class NonUKType(sch5atcgga92: Boolean,
 object NonUKType {
   implicit val nonUKTypeFormat: Format[NonUKType] = Json.format[NonUKType]
 }
+
+sealed trait TrustDetails
+
+/**
+ * Used for mapping answers when maintaining trust details in taxable and non-taxable
+ */
+case class NonMigratingTrustDetails(trustUKProperty: Boolean,
+                                    trustRecorded: Boolean,
+                                    trustUKRelation: Option[Boolean],
+                                    trustUKResident: Boolean) extends TrustDetails
+
+object NonMigratingTrustDetails {
+  implicit val format: Format[NonMigratingTrustDetails] = Json.format[NonMigratingTrustDetails]
+}
+
+/**
+ * Used for mapping answers when migrating from non-taxable to taxable
+ * @param lawCountry - either Some(nonUkCountry) or None
+ * @param administrationCountry - either nonUkCountry or GB
+ * @param trustUKResident - driven by whether residentialStatus contains UkType or NonUKType
+ */
+case class MigratingTrustDetails(lawCountry: Option[String],
+                                 administrationCountry: String,
+                                 residentialStatus: Option[ResidentialStatusType],
+                                 trustUKRelation: Option[Boolean],
+                                 trustUKResident: Boolean,
+                                 typeOfTrust: TypeOfTrust,
+                                 deedOfVariation: Option[DeedOfVariation],
+                                 interVivos: Option[Boolean],
+                                 efrbsStartDate: Option[LocalDate]) extends TrustDetails
+
+object MigratingTrustDetails {
+  implicit val format: Format[MigratingTrustDetails] = Json.format[MigratingTrustDetails]
+}
