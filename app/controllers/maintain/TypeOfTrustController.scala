@@ -41,8 +41,7 @@ class TypeOfTrustController @Inject()(
                                        view: TypeOfTrustView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
-  val form: Form[TypeOfTrust] = formProvider()
-
+  private val form: Form[TypeOfTrust] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
     implicit request =>
@@ -62,7 +61,6 @@ class TypeOfTrustController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
-
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(TypeOfTrustPage, value))
             _              <- repository.set(updatedAnswers)

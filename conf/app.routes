@@ -35,4 +35,6 @@ POST       /after-settlor-died                  controllers.maintain.SetUpAfterS
 GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
 POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
 
+GET        /resident-in-the-uk                  controllers.maintain.ResidentInTheUkController.onPageLoad()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)
