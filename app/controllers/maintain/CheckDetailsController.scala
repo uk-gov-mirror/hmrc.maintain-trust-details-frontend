@@ -60,13 +60,7 @@ class CheckDetailsController @Inject()(
       mapper(userAnswers) match {
         case JsSuccess(trustDetails, _) =>
           (for {
-            _ <- connector.setUkProperty(identifier, trustDetails.trustUKProperty)
-            _ <- connector.setTrustRecorded(identifier, trustDetails.trustRecorded)
-            _ <- trustDetails.trustUKRelation match {
-              case Some(value) => connector.setUkRelation(identifier, value)
-              case None => Future.successful(())
-            }
-            _ <- connector.setUkResident(identifier, trustDetails.trustUKResident)
+            _ <- connector.setNonMigratingTrustDetails(identifier, trustDetails)
             _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
