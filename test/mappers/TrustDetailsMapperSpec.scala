@@ -17,24 +17,36 @@
 package mappers
 
 import base.SpecBase
-import models.NonMigratingTrustDetails
+import models.Constants.GB
+import models.DeedOfVariation._
+import models.{MigratingTrustDetails, NonMigratingTrustDetails, NonUKType, ResidentialStatusType, UkType}
+import models.TrusteesBased._
+import models.TypeOfTrust._
 import pages.maintain._
 import play.api.libs.json.JsSuccess
+
+import java.time.LocalDate
 
 class TrustDetailsMapperSpec extends SpecBase {
 
   private val mapper = injector.instanceOf[TrustDetailsMapper]
+
+  private val country: String = "FR"
+  private val date: LocalDate = LocalDate.parse("2000-01-01")
 
   "TrustDetailsMapper" must {
 
     "successfully map data" when {
 
       "not migrating" when {
+
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = false)
+
         "TrustOwnUKLandOrPropertyPage and TrustEEAYesNoPage populated" when {
 
           "BusinessRelationshipYesNoPage populated" in {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(RecordedOnEeaRegisterPage, true).success.value
               .set(BusinessRelationshipInUkPage, true).success.value
@@ -52,7 +64,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           "BusinessRelationshipYesNoPage not populated" in {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(RecordedOnEeaRegisterPage, true).success.value
               .set(TrustResidentInUkPage, true).success.value
@@ -69,19 +81,260 @@ class TrustDetailsMapperSpec extends SpecBase {
         }
       }
 
-      "migrating" ignore {
+      "migrating" when {
 
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
+
+        "governed and administered in UK; set up after settlor died; trustees UK based; never resident offshore" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = None,
+            administrationCountry = GB,
+            residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
+            trustUKRelation = None,
+            trustUKResident = true,
+            typeOfTrust = WillTrustOrIntestacyTrust,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          ))
+        }
+
+        "governed and administered in UK; not set up after settlor died;" +
+          "deed of variation set up in addition to will trust; trustees UK based; resident offshore" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
+            .set(SetUpInAdditionToWillTrustPage, true).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, false).success.value
+            .set(PreviouslyResidentOffshorePage, true).success.value
+            .set(PreviouslyResidentOffshoreCountryPage, country).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = None,
+            administrationCountry = GB,
+            residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = false, preOffShore = Some(country)))),
+            trustUKRelation = None,
+            trustUKResident = true,
+            typeOfTrust = WillTrustOrIntestacyTrust,
+            deedOfVariation = Some(AdditionToWillTrust),
+            interVivos = None,
+            efrbsStartDate = None
+          ))
+        }
+
+        "governed and administered in UK; not set up after settlor died;" +
+          "deed of variation not set up in addition to will trust; trustees UK based; resident offshore" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
+            .set(SetUpInAdditionToWillTrustPage, false).success.value
+            .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, false).success.value
+            .set(PreviouslyResidentOffshorePage, true).success.value
+            .set(PreviouslyResidentOffshoreCountryPage, country).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = None,
+            administrationCountry = GB,
+            residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = false, preOffShore = Some(country)))),
+            trustUKRelation = None,
+            trustUKResident = true,
+            typeOfTrust = DeedOfVariationTrustOrFamilyArrangement,
+            deedOfVariation = Some(ReplacedWillTrust),
+            interVivos = None,
+            efrbsStartDate = None
+          ))
+        }
+
+        "governed and administered in UK; not set up after settlor died; inter-vivos with holdover relief;" +
+          "some trustees UK based; settlors UK based; resident offshore" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, InterVivosSettlement).success.value
+            .set(HoldoverReliefClaimedPage, true).success.value
+            .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
+            .set(SettlorsUkBasedPage, true).success.value
+            .set(CreatedUnderScotsLawPage, false).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = None,
+            administrationCountry = GB,
+            residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = false, preOffShore = None))),
+            trustUKRelation = None,
+            trustUKResident = true,
+            typeOfTrust = InterVivosSettlement,
+            deedOfVariation = None,
+            interVivos = Some(true),
+            efrbsStartDate = None
+          ))
+        }
+
+        "governed and administered outside UK; not set up after settlor died; employee-related with EFRBS;" +
+          "some trustees UK based; settlors non-UK based; settlor benefits from assets" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, false).success.value
+            .set(GoverningCountryPage, country).success.value
+            .set(AdministeredInUkPage, false).success.value
+            .set(AdministrationCountryPage, country).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, EmploymentRelated).success.value
+            .set(EfrbsYesNoPage, true).success.value
+            .set(EfrbsStartDatePage, date).success.value
+            .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
+            .set(SettlorsUkBasedPage, false).success.value
+            .set(BusinessRelationshipInUkPage, false).success.value
+            .set(SettlorBenefitsFromAssetsPage, true).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = Some(country),
+            administrationCountry = country,
+            residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = true, s218ihta84 = None, agentS218IHTA84 = None))),
+            trustUKRelation = Some(false),
+            trustUKResident = false,
+            typeOfTrust = EmploymentRelated,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = Some(date)
+          ))
+        }
+
+        "governed and administered outside UK; not set up after settlor died; employee-related without EFRBS;" +
+          "some trustees UK based; settlors non-UK based; settlor benefits from assets" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, false).success.value
+            .set(GoverningCountryPage, country).success.value
+            .set(AdministeredInUkPage, false).success.value
+            .set(AdministrationCountryPage, country).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, EmploymentRelated).success.value
+            .set(EfrbsYesNoPage, false).success.value
+            .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
+            .set(SettlorsUkBasedPage, false).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(SettlorBenefitsFromAssetsPage, true).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = Some(country),
+            administrationCountry = country,
+            residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = true, s218ihta84 = None, agentS218IHTA84 = None))),
+            trustUKRelation = Some(true),
+            trustUKResident = false,
+            typeOfTrust = EmploymentRelated,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          ))
+        }
+
+        "governed and administered outside UK; not set up after settlor died; flat management; no trustees UK based;" +
+          "not for purpose of section 218" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, false).success.value
+            .set(GoverningCountryPage, country).success.value
+            .set(AdministeredInUkPage, false).success.value
+            .set(AdministrationCountryPage, country).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, FlatManagementCompanyOrSinkingFund).success.value
+            .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(SettlorBenefitsFromAssetsPage, false).success.value
+            .set(ForPurposeOfSection218Page, false).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = Some(country),
+            administrationCountry = country,
+            residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = false, s218ihta84 = Some(false), agentS218IHTA84 = None))),
+            trustUKRelation = Some(true),
+            trustUKResident = false,
+            typeOfTrust = FlatManagementCompanyOrSinkingFund,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          ))
+        }
+
+        "governed and administered outside UK; not set up after settlor died; historic buildings;" +
+          "no trustees UK based; for purpose of section 218" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, false).success.value
+            .set(GoverningCountryPage, country).success.value
+            .set(AdministeredInUkPage, false).success.value
+            .set(AdministrationCountryPage, country).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, HeritageMaintenanceFund).success.value
+            .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(SettlorBenefitsFromAssetsPage, false).success.value
+            .set(ForPurposeOfSection218Page, true).success.value
+            .set(AgentCreatedTrustPage, true).success.value
+
+          val result = mapper(userAnswers)
+
+          result mustBe JsSuccess(MigratingTrustDetails(
+            lawCountry = Some(country),
+            administrationCountry = country,
+            residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = false, s218ihta84 = Some(true), agentS218IHTA84 = Some(true)))),
+            trustUKRelation = Some(true),
+            trustUKResident = false,
+            typeOfTrust = HeritageMaintenanceFund,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          ))
+        }
       }
     }
 
     "fail to map data" when {
 
       "not migrating" when {
+
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = false)
+
         "TrustOwnUKLandOrPropertyPage, TrustEEAYesNoPage or TrustUKResidentPage not populated" when {
 
           "TrustOwnUKLandOrPropertyPage not populated" in {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
               .set(RecordedOnEeaRegisterPage, true).success.value
               .set(TrustResidentInUkPage, false).success.value
 
@@ -92,7 +345,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           "TrustEEAYesNoPage not populated" in {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(TrustResidentInUkPage, false).success.value
 
@@ -103,7 +356,7 @@ class TrustDetailsMapperSpec extends SpecBase {
 
           "TrustUKResidentPage not populated" in {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(RecordedOnEeaRegisterPage, true).success.value
 
@@ -114,7 +367,44 @@ class TrustDetailsMapperSpec extends SpecBase {
         }
       }
 
-      "migrating" ignore {
+      "migrating" when {
+
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
+
+        "DeedOfVariationTrustOrFamilyArrangement trust, but set up in addition to will trust unanswered" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, false).success.value
+            .set(PreviouslyResidentOffshorePage, true).success.value
+            .set(PreviouslyResidentOffshoreCountryPage, country).success.value
+
+          val result = mapper(userAnswers)
+
+          result.isSuccess mustBe false
+        }
+
+        "not set up in addition to will trust, but why deed of variation created unanswered" in {
+
+          val userAnswers = baseAnswers
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
+            .set(SetUpInAdditionToWillTrustPage, false).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, false).success.value
+            .set(PreviouslyResidentOffshorePage, true).success.value
+            .set(PreviouslyResidentOffshoreCountryPage, country).success.value
+
+          val result = mapper(userAnswers)
+
+          result.isSuccess mustBe false
+        }
 
       }
     }

@@ -16,29 +16,123 @@
 
 package mappers
 
-import models.{NonMigratingTrustDetails, TrustDetails, UserAnswers}
+import models.Constants.GB
+import models.DeedOfVariation._
+import models.TrusteesBased._
+import models.TypeOfTrust._
+import models._
 import pages.maintain._
 import play.api.Logging
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsError, JsResult, Reads}
+import play.api.libs.json.{JsResult, JsSuccess, Reads}
+
+import java.time.LocalDate
 
 class TrustDetailsMapper extends Logging {
 
   def apply(userAnswers: UserAnswers): JsResult[TrustDetails] = {
 
     if (userAnswers.migratingFromNonTaxableToTaxable) {
-      // TODO - needs implementing
-      JsError("Not implemented yet")
+      userAnswers.data.validate[MigratingTrustDetails](migratingTrustDetailsReads)
     } else {
-      val reads: Reads[NonMigratingTrustDetails] = (
-        OwnsUkLandOrPropertyPage.path.read[Boolean] and
-          RecordedOnEeaRegisterPage.path.read[Boolean] and
-          BusinessRelationshipInUkPage.path.readNullable[Boolean] and
-          TrustResidentInUkPage.path.read[Boolean]
-        )(NonMigratingTrustDetails.apply _)
-
-      userAnswers.data.validate[NonMigratingTrustDetails](reads)
+      userAnswers.data.validate[NonMigratingTrustDetails](nonMigratingTrustDetailsReads)
     }
   }
+
+  private lazy val migratingTrustDetailsReads: Reads[MigratingTrustDetails] = {
+
+    lazy val administrationCountryReads: Reads[String] = {
+      AdministrationCountryPage.path.readNullable[String].flatMap {
+        case Some(value) => Reads(_ => JsSuccess(value))
+        case None => Reads(_ => JsSuccess(GB))
+      }
+    }
+
+    lazy val residentialStatusReads: Reads[ResidentialStatusType] = {
+
+      def combineReads(ukReads: Reads[Option[UkType]], nonUkReads: Reads[Option[NonUKType]]): Reads[ResidentialStatusType] = {
+        (ukReads and nonUkReads)(ResidentialStatusType.apply _)
+      }
+
+      lazy val ukReads: Reads[ResidentialStatusType] = {
+        lazy val reads: Reads[Option[UkType]] = (
+          CreatedUnderScotsLawPage.path.read[Boolean] and
+            PreviouslyResidentOffshoreCountryPage.path.readNullable[String]
+          )(UkType.apply _).map(Some(_))
+
+        combineReads(reads, Reads(_ => JsSuccess(None: Option[NonUKType])))
+      }
+
+      lazy val nonUkReads: Reads[ResidentialStatusType] = {
+        lazy val reads: Reads[Option[NonUKType]] = (
+          SettlorBenefitsFromAssetsPage.path.read[Boolean] and
+            ForPurposeOfSection218Page.path.readNullable[Boolean] and
+            AgentCreatedTrustPage.path.readNullable[Boolean] and
+            Reads(_ => JsSuccess(None))
+          )(NonUKType.apply _).map(Some(_))
+
+        combineReads(Reads(_ => JsSuccess(None: Option[UkType])), reads)
+      }
+
+      basedInUkReads[ResidentialStatusType](ukReads, nonUkReads)
+    }
+
+    lazy val trustUkResidentReads: Reads[Boolean] = {
+      basedInUkReads[Boolean](
+        ukReads = Reads(_ => JsSuccess(true)),
+        nonUkReads = Reads(_ => JsSuccess(false))
+      )
+    }
+
+    def basedInUkReads[T](ukReads: Reads[T], nonUkReads: Reads[T]): Reads[T] = {
+      WhereTrusteesBasedPage.path.read[TrusteesBased].flatMap {
+        case AllTrusteesUkBased => ukReads
+        case NoTrusteesUkBased => nonUkReads
+        case InternationalAndUkBasedTrustees =>
+          SettlorsUkBasedPage.path.read[Boolean].flatMap {
+            case true => ukReads
+            case false => nonUkReads
+          }
+      }
+    }
+
+    lazy val typeOfTrustReads: Reads[TypeOfTrust] = {
+      TypeOfTrustPage.path.readNullable[TypeOfTrust].flatMap {
+        case Some(DeedOfVariationTrustOrFamilyArrangement) => SetUpInAdditionToWillTrustPage.path.read[Boolean].flatMap {
+          case true => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
+          case false => Reads(_ => JsSuccess(DeedOfVariationTrustOrFamilyArrangement))
+        }
+        case Some(value) => Reads(_ => JsSuccess(value))
+        case None => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
+      }
+    }
+
+    lazy val deedOfVariationReads: Reads[Option[DeedOfVariation]] = {
+      SetUpInAdditionToWillTrustPage.path.readNullable[Boolean].flatMap {
+        case Some(true) => Reads(_ => JsSuccess(Some(AdditionToWillTrust)))
+        case Some(false) => WhyDeedOfVariationCreatedPage.path.read[DeedOfVariation].map(Some(_))
+        case None => Reads(_ => JsSuccess(None))
+      }
+    }
+
+    (
+      GoverningCountryPage.path.readNullable[String] and
+      administrationCountryReads and
+      residentialStatusReads and
+      BusinessRelationshipInUkPage.path.readNullable[Boolean] and
+      trustUkResidentReads and
+      typeOfTrustReads and
+      deedOfVariationReads and
+      HoldoverReliefClaimedPage.path.readNullable[Boolean] and
+      EfrbsStartDatePage.path.readNullable[LocalDate]
+    )(MigratingTrustDetails.apply _)
+  }
+
+  private lazy val nonMigratingTrustDetailsReads: Reads[NonMigratingTrustDetails] = (
+    OwnsUkLandOrPropertyPage.path.read[Boolean] and
+      RecordedOnEeaRegisterPage.path.read[Boolean] and
+      BusinessRelationshipInUkPage.path.readNullable[Boolean] and
+      TrustResidentInUkPage.path.read[Boolean]
+    )(NonMigratingTrustDetails.apply _)
 
 }

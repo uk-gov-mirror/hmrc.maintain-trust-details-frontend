@@ -304,7 +304,17 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
 
       val result = connector.setMigratingTrustDetails(
         identifier,
-        MigratingTrustDetails(None, "GB", None, None, trustUKResident = true, WillTrustOrIntestacyTrust, None, None, None)
+        MigratingTrustDetails(
+          lawCountry = None,
+          administrationCountry = "GB",
+          residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
+          trustUKRelation = None,
+          trustUKResident = true,
+          typeOfTrust = WillTrustOrIntestacyTrust,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
+        )
       )
 
       result.futureValue.status mustBe OK
@@ -331,7 +341,12 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
 
       val result = connector.setNonMigratingTrustDetails(
         identifier,
-        NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, None, trustUKResident = true)
+        NonMigratingTrustDetails(
+          trustUKProperty = true,
+          trustRecorded = true,
+          trustUKRelation = None,
+          trustUKResident = true
+        )
       )
 
       result.futureValue.status mustBe OK
