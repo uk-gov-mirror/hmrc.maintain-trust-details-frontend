@@ -16,12 +16,13 @@
 
 package generators
 
-import models.{DeedOfVariation, TypeOfTrust}
 import models.DeedOfVariation._
+import models.TrusteesBased._
 import models.TypeOfTrust._
 import models.http.TaxableMigrationFlag
-import org.scalacheck.{Arbitrary, Gen}
+import models.{DeedOfVariation, TrusteesBased, TypeOfTrust}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 
 import java.time.LocalDate
 
@@ -77,6 +78,16 @@ trait ModelGenerators {
       } yield {
         LocalDate.of(year, month, day)
       }
+    }
+  }
+
+  implicit lazy val arbitraryTrusteesBased: Arbitrary[TrusteesBased] = {
+    Arbitrary {
+      Gen.oneOf(
+        AllTrusteesUkBased,
+        InternationalAndUkBasedTrustees,
+        NoTrusteesUkBased
+      )
     }
   }
 
