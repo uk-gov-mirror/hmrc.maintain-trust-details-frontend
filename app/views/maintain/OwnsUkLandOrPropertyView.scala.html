@@ -24,24 +24,14 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @content = {
-    <p>@messages("trustEEAYesNo.paragraph1")</p>
-
-    @components.bullet_list(
-        "trustEEAYesNo",
-        List(
-            "bullet1",
-            "bullet2",
-            "bullet3",
-            "bullet4"
-        )
-    )
+    <p>@messages("ownsUkLandOrProperty.paragraph1")</p>
 }
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("trustEEAYesNo.title")}"
+    title = s"${errorPrefix(form)} ${messages("ownsUkLandOrProperty.title")}"
 ) {
 
-    @formHelper(action = TrustEEAYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = OwnsUkLandOrPropertyController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -49,7 +39,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            legend = messages("trustEEAYesNo.heading"),
+            legend = messages("ownsUkLandOrProperty.heading"),
             headingIsLegend = true,
             additionalContent = Some(content)
         )

@@ -16,18 +16,22 @@
 
 package models
 
-import java.time.LocalDate
-
 import play.api.libs.json._
+
+import java.time.LocalDate
 
 final case class TrustDetailsType(startDate: LocalDate,
                                   lawCountry: Option[String],
                                   administrationCountry: Option[String],
                                   residentialStatus: Option[ResidentialStatusType],
-                                  trustUKProperty: Option[Boolean] = None,
-                                  trustRecorded: Option[Boolean] = None,
-                                  trustUKRelation: Option[Boolean] = None,
-                                  trustUKResident: Option[Boolean] = None) {
+                                  trustUKProperty: Option[Boolean],
+                                  trustRecorded: Option[Boolean],
+                                  trustUKRelation: Option[Boolean],
+                                  trustUKResident: Option[Boolean],
+                                  typeOfTrust: Option[TypeOfTrust],
+                                  deedOfVariation: Option[DeedOfVariation],
+                                  interVivos: Option[Boolean],
+                                  efrbsStartDate: Option[LocalDate]) {
 
   def ukResident: Boolean = (residentialStatus, trustUKResident) match {
     case (Some(ResidentialStatusType(Some(_), None)), _) => true

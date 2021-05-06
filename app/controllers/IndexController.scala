@@ -50,15 +50,19 @@ class IndexController @Inject()(
       (for {
         is5mldEnabled <- featureFlagService.is5mldEnabled()
         trustDetails <- connector.getTrustDetails(identifier)
+        taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
         ua <- Future.fromTry {
           request.userAnswers match {
-            case Some(userAnswers) => Success(userAnswers)
-            case None => extractor(UserAnswers(request.user.internalId, identifier), trustDetails)
+            case Some(userAnswers) =>
+              Success(userAnswers.copy(migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable))
+            case None =>
+              extractor(UserAnswers(request.user.internalId, identifier, taxableMigrationFlag.migratingFromNonTaxableToTaxable), trustDetails)
           }
         }
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
+          // TODO - use taxableMigrationFlag to determine where to navigate to
           if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {

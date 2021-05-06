@@ -19,10 +19,10 @@ package pages.maintain
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object TrustEEAYesNoPage extends QuestionPage[Boolean] {
+case object SetUpAfterSettlorDiedPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = basePath \ toString
 
-  override def toString: String = "trustEEAYesNo"
+  override def toString: String = "setUpAfterSettlorDied"
 
 }

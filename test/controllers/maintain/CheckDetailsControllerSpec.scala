@@ -14,32 +14,16 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2021 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package controllers.maintain
 
 import base.SpecBase
 import connectors.{TrustsConnector, TrustsStoreConnector}
-import mappers.{MappedTrustDetails, TrustDetailsMapper}
+import mappers.{NonMigratingTrustDetails, TrustDetailsMapper}
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
 import play.api.inject.bind
+import play.api.libs.json.{JsError, JsSuccess}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -117,7 +101,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           when(mockMapper(any()))
-            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
+            .thenReturn(JsSuccess(NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = Some(true), trustUKResident = false)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -154,7 +138,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           when(mockTrustConnector.setUkResident(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           when(mockMapper(any()))
-            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
+            .thenReturn(JsSuccess(NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -186,7 +170,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
               bind[TrustDetailsMapper].toInstance(mockMapper)
             ).build()
 
-          when(mockMapper(any())).thenReturn(None)
+          when(mockMapper(any())).thenReturn(JsError())
 
           val request = FakeRequest(POST, submitDetailsRoute)
 
@@ -209,7 +193,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
             ).build()
 
           when(mockMapper(any()))
-            .thenReturn(Some(MappedTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
+            .thenReturn(JsSuccess(NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, trustUKRelation = None, trustUKResident = true)))
 
           when(mockTrustConnector.setUkProperty(any(), any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
 

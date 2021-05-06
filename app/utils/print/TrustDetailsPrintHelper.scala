@@ -19,7 +19,7 @@ package utils.print
 import com.google.inject.Inject
 import controllers.maintain.routes._
 import models.UserAnswers
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
 
@@ -30,9 +30,9 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
     val bound = answerRowConverter.bind(userAnswers)
 
     val answerRows: Seq[AnswerRow] = Seq(
-      bound.yesNoQuestion(TrustOwnUKLandOrPropertyPage, "trustOwnUKLandOrProperty", Some(TrustOwnUKLandOrPropertyController.onPageLoad().url)),
-      bound.yesNoQuestion(TrustEEAYesNoPage, "trustEEAYesNo", Some(TrustEEAYesNoController.onPageLoad().url)),
-      bound.yesNoQuestion(BusinessRelationshipYesNoPage, "businessRelationshipYesNo", Some(BusinessRelationshipYesNoController.onPageLoad().url))
+      bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrProperty", Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
+      bound.yesNoQuestion(RecordedOnEeaRegisterPage, "recordedOnEeaRegister", Some(RecordedOnEeaRegisterController.onPageLoad().url)),
+      bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUk", Some(BusinessRelationshipInUkController.onPageLoad().url))
     ).flatten
 
     AnswerSection(None, answerRows)

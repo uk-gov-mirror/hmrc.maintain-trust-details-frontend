@@ -16,13 +16,18 @@
 
 package pages.maintain
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.behaviours.PageBehaviours
 
-case object BusinessRelationshipYesNoPage extends QuestionPage[Boolean] {
+import java.time.LocalDate
 
-  override def path: JsPath = basePath \ toString
+class EfrbsStartDatePageSpec extends PageBehaviours {
 
-  override def toString: String = "businessRelationshipYesNo"
+  "EfrbsStartDatePage" must {
 
+    beRetrievable[LocalDate](EfrbsStartDatePage)
+
+    beSettable[LocalDate](EfrbsStartDatePage)
+
+    beRemovable[LocalDate](EfrbsStartDatePage)
+  }
 }

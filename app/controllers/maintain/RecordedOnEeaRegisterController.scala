@@ -18,35 +18,34 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
-
-import javax.inject.Inject
 import navigation.Navigator
-import pages.maintain.TrustOwnUKLandOrPropertyPage
+import pages.maintain.RecordedOnEeaRegisterPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.TrustOwnUKLandOrPropertyView
+import views.html.maintain.RecordedOnEeaRegisterView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustOwnUKLandOrPropertyController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    yesNoFormProvider: YesNoFormProvider,
-                                                    repository: PlaybackRepository,
-                                                    navigator: Navigator,
-                                                    actions: StandardActionSets,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: TrustOwnUKLandOrPropertyView
-                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class RecordedOnEeaRegisterController @Inject()(
+                                                 override val messagesApi: MessagesApi,
+                                                 yesNoFormProvider: YesNoFormProvider,
+                                                 repository: PlaybackRepository,
+                                                 navigator: Navigator,
+                                                 actions: StandardActionSets,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: RecordedOnEeaRegisterView
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("trustOwnUKLandOrProperty")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("recordedOnEeaRegister")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(TrustOwnUKLandOrPropertyPage) match {
+      val preparedForm = request.userAnswers.get(RecordedOnEeaRegisterPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,9 +62,9 @@ class TrustOwnUKLandOrPropertyController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(TrustOwnUKLandOrPropertyPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(RecordedOnEeaRegisterPage, value))
             _              <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(TrustOwnUKLandOrPropertyPage,updatedAnswers))
+          } yield Redirect(navigator.nextPage(RecordedOnEeaRegisterPage,updatedAnswers))
         }
       )
   }

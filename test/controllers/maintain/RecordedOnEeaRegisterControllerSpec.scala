@@ -20,19 +20,19 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.TrustEEAYesNoPage
+import pages.maintain.RecordedOnEeaRegisterPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.TrustEEAYesNoView
+import views.html.maintain.RecordedOnEeaRegisterView
 
-class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
+class RecordedOnEeaRegisterControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("trustEEAYesNo")
+  val form: Form[Boolean] = formProvider.withPrefix("recordedOnEeaRegister")
 
-  lazy val trustEEAYesNoControllerRoute: String = routes.TrustEEAYesNoController.onPageLoad().url
+  lazy val trustEEAYesNoControllerRoute: String = routes.RecordedOnEeaRegisterController.onPageLoad().url
 
   "trustEEAYesNoController Controller" must {
 
@@ -44,7 +44,7 @@ class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[TrustEEAYesNoView]
+      val view = application.injector.instanceOf[RecordedOnEeaRegisterView]
 
       status(result) mustEqual OK
 
@@ -56,13 +56,13 @@ class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(TrustEEAYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(RecordedOnEeaRegisterPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request = FakeRequest(GET, trustEEAYesNoControllerRoute)
 
-      val view = application.injector.instanceOf[TrustEEAYesNoView]
+      val view = application.injector.instanceOf[RecordedOnEeaRegisterView]
 
       val result = route(application, request).value
 
@@ -104,7 +104,7 @@ class TrustEEAYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[TrustEEAYesNoView]
+      val view = application.injector.instanceOf[RecordedOnEeaRegisterView]
 
       val result = route(application, request).value
 

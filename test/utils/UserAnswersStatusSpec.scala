@@ -18,7 +18,7 @@ package utils
 
 import base.SpecBase
 import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
 
 import java.time.LocalDate
 
@@ -41,8 +41,8 @@ class UserAnswersStatusSpec extends SpecBase {
             "uk resident" in {
 
               val userAnswers = emptyUserAnswers
-                .set(TrustOwnUKLandOrPropertyPage, true).success.value
-                .set(TrustEEAYesNoPage, true).success.value
+                .set(OwnsUkLandOrPropertyPage, true).success.value
+                .set(RecordedOnEeaRegisterPage, true).success.value
 
               val trustDetails = TrustDetailsType(
                 startDate = startDate,
@@ -52,7 +52,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(true)
+                trustUKResident = Some(true),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -61,9 +65,9 @@ class UserAnswersStatusSpec extends SpecBase {
             "non-uk resident" in {
 
               val userAnswers = emptyUserAnswers
-                .set(TrustOwnUKLandOrPropertyPage, true).success.value
-                .set(TrustEEAYesNoPage, true).success.value
-                .set(BusinessRelationshipYesNoPage, true).success.value
+                .set(OwnsUkLandOrPropertyPage, true).success.value
+                .set(RecordedOnEeaRegisterPage, true).success.value
+                .set(BusinessRelationshipInUkPage, true).success.value
 
               val trustDetails = TrustDetailsType(
                 startDate = startDate,
@@ -73,7 +77,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -85,8 +93,8 @@ class UserAnswersStatusSpec extends SpecBase {
             "uk resident" in {
 
               val userAnswers = emptyUserAnswers
-                .set(TrustOwnUKLandOrPropertyPage, true).success.value
-                .set(TrustEEAYesNoPage, true).success.value
+                .set(OwnsUkLandOrPropertyPage, true).success.value
+                .set(RecordedOnEeaRegisterPage, true).success.value
 
               val trustDetails = TrustDetailsType(
                 startDate = startDate,
@@ -96,7 +104,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(true)
+                trustUKResident = Some(true),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -105,9 +117,9 @@ class UserAnswersStatusSpec extends SpecBase {
             "non-uk resident" in {
 
               val userAnswers = emptyUserAnswers
-                .set(TrustOwnUKLandOrPropertyPage, true).success.value
-                .set(TrustEEAYesNoPage, true).success.value
-                .set(BusinessRelationshipYesNoPage, true).success.value
+                .set(OwnsUkLandOrPropertyPage, true).success.value
+                .set(RecordedOnEeaRegisterPage, true).success.value
+                .set(BusinessRelationshipInUkPage, true).success.value
 
               val trustDetails = TrustDetailsType(
                 startDate = startDate,
@@ -117,7 +129,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
@@ -139,7 +155,11 @@ class UserAnswersStatusSpec extends SpecBase {
               trustUKProperty = None,
               trustRecorded = None,
               trustUKRelation = None,
-              trustUKResident = None
+              trustUKResident = None,
+              typeOfTrust = None,
+              deedOfVariation = None,
+              interVivos = None,
+              efrbsStartDate = None
             )
 
             userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
@@ -148,8 +168,8 @@ class UserAnswersStatusSpec extends SpecBase {
           "BusinessRelationshipYesNoPage not answered and non-UK resident" when {
 
             val userAnswers = emptyUserAnswers
-              .set(TrustOwnUKLandOrPropertyPage, true).success.value
-              .set(TrustEEAYesNoPage, true).success.value
+              .set(OwnsUkLandOrPropertyPage, true).success.value
+              .set(RecordedOnEeaRegisterPage, true).success.value
 
             "taxable" in {
 
@@ -161,7 +181,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
@@ -177,7 +201,11 @@ class UserAnswersStatusSpec extends SpecBase {
                 trustUKProperty = None,
                 trustRecorded = None,
                 trustUKRelation = None,
-                trustUKResident = Some(false)
+                trustUKResident = Some(false),
+                typeOfTrust = None,
+                deedOfVariation = None,
+                interVivos = None,
+                efrbsStartDate = None
               )
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false

@@ -16,13 +16,16 @@
 
 package pages.maintain
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
+import pages.behaviours.PageBehaviours
 
-case object TrustUKResidentPage extends QuestionPage[Boolean] {
+class BusinessRelationshipInUkPageSpec extends PageBehaviours {
 
-  override def path: JsPath = basePath \ toString
+  "BusinessRelationshipInUkPage" must {
 
-  override def toString: String = "trustUKResident"
+    beRetrievable[Boolean](BusinessRelationshipInUkPage)
 
+    beSettable[Boolean](BusinessRelationshipInUkPage)
+
+    beRemovable[Boolean](BusinessRelationshipInUkPage)
+  }
 }

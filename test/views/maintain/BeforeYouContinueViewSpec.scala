@@ -41,7 +41,7 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
 
     behave like pageWithContinueButton(
       view = applyView(),
-      url = controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url
+      url = controllers.maintain.routes.OwnsUkLandOrPropertyController.onPageLoad().url
     )
   }
 }

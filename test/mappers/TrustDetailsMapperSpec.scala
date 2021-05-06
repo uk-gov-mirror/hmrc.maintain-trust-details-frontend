@@ -18,6 +18,7 @@ package mappers
 
 import base.SpecBase
 import pages.maintain._
+import play.api.libs.json.JsSuccess
 
 class TrustDetailsMapperSpec extends SpecBase {
 
@@ -31,14 +32,14 @@ class TrustDetailsMapperSpec extends SpecBase {
         "BusinessRelationshipYesNoPage populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(BusinessRelationshipYesNoPage, true).success.value
-            .set(TrustUKResidentPage, false).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe Some(MappedTrustDetails(
+          result mustBe JsSuccess(NonMigratingTrustDetails(
             trustUKProperty = true,
             trustRecorded = true,
             trustUKRelation = Some(true),
@@ -49,13 +50,13 @@ class TrustDetailsMapperSpec extends SpecBase {
         "BusinessRelationshipYesNoPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(TrustUKResidentPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(TrustResidentInUkPage, true).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe Some(MappedTrustDetails(
+          result mustBe JsSuccess(NonMigratingTrustDetails(
             trustUKProperty = true,
             trustRecorded = true,
             trustUKRelation = None,
@@ -71,34 +72,34 @@ class TrustDetailsMapperSpec extends SpecBase {
         "TrustOwnUKLandOrPropertyPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustEEAYesNoPage, true).success.value
-            .set(TrustUKResidentPage, false).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe None
+          result.isSuccess mustBe false
         }
 
         "TrustEEAYesNoPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustUKResidentPage, false).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe None
+          result.isSuccess mustBe false
         }
 
         "TrustUKResidentPage not populated" in {
 
           val userAnswers = emptyUserAnswers
-            .set(TrustOwnUKLandOrPropertyPage, true).success.value
-            .set(TrustEEAYesNoPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
 
           val result = mapper(userAnswers)
 
-          result mustBe None
+          result.isSuccess mustBe false
         }
       }
     }

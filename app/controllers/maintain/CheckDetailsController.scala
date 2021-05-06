@@ -21,6 +21,7 @@ import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
 import mappers.TrustDetailsMapper
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.SessionLogging
@@ -57,7 +58,7 @@ class CheckDetailsController @Inject()(
       val identifier = userAnswers.identifier
 
       mapper(userAnswers) match {
-        case Some(trustDetails) =>
+        case JsSuccess(trustDetails, _) =>
           (for {
             _ <- connector.setUkProperty(identifier, trustDetails.trustUKProperty)
             _ <- connector.setTrustRecorded(identifier, trustDetails.trustRecorded)
@@ -74,8 +75,8 @@ class CheckDetailsController @Inject()(
               errorLog(s"Error setting transforms: ${e.getMessage}", Some(identifier))
               InternalServerError(errorHandler.internalServerErrorTemplate)
           }
-        case None =>
-          errorLog(s"Failed to map user answers", Some(identifier))
+        case JsError(errors) =>
+          errorLog(s"Failed to map user answers: $errors", Some(identifier))
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }

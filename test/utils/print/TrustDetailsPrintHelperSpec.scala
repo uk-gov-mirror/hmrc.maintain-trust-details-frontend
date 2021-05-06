@@ -17,7 +17,7 @@
 package utils.print
 
 import base.SpecBase
-import pages.maintain.{BusinessRelationshipYesNoPage, TrustEEAYesNoPage, TrustOwnUKLandOrPropertyPage}
+import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
 
@@ -29,18 +29,18 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
 
     "render answer rows" in {
       val userAnswers = emptyUserAnswers
-        .set(TrustOwnUKLandOrPropertyPage, true).success.value
-        .set(TrustEEAYesNoPage, false).success.value
-        .set(BusinessRelationshipYesNoPage, true).success.value
+        .set(OwnsUkLandOrPropertyPage, true).success.value
+        .set(RecordedOnEeaRegisterPage, false).success.value
+        .set(BusinessRelationshipInUkPage, true).success.value
 
       val result = printHelper(userAnswers)
 
       result mustEqual AnswerSection(
         headingKey = None,
         rows = Seq(
-          AnswerRow(messages("trustOwnUKLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.TrustOwnUKLandOrPropertyController.onPageLoad().url)),
-          AnswerRow(messages("trustEEAYesNo.checkYourAnswersLabel"), Html("No"), Some(controllers.maintain.routes.TrustEEAYesNoController.onPageLoad().url)),
-          AnswerRow(messages("businessRelationshipYesNo.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.BusinessRelationshipYesNoController.onPageLoad().url))
+          AnswerRow(messages("ownsUkLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.OwnsUkLandOrPropertyController.onPageLoad().url)),
+          AnswerRow(messages("recordedOnEeaRegister.checkYourAnswersLabel"), Html("No"), Some(controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad().url)),
+          AnswerRow(messages("businessRelationshipInUk.checkYourAnswersLabel"), Html("Yes"), Some(controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad().url))
         ),
         sectionKey = None
       )
