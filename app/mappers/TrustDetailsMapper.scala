@@ -20,7 +20,7 @@ import models.{DeedOfVariation, ResidentialStatusType, TypeOfTrust, UserAnswers}
 import pages.maintain._
 import play.api.Logging
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsResult, Reads}
+import play.api.libs.json.{Format, JsResult, Json, Reads}
 
 import java.time.LocalDate
 
@@ -48,6 +48,10 @@ case class NonMigratingTrustDetails(trustUKProperty: Boolean,
                                     trustUKRelation: Option[Boolean],
                                     trustUKResident: Boolean)
 
+object NonMigratingTrustDetails {
+  implicit val format: Format[NonMigratingTrustDetails] = Json.format[NonMigratingTrustDetails]
+}
+
 /**
  * Used for mapping answers when migrating from non-taxable to taxable
  * @param lawCountry - either Some(nonUkCountry) or None
@@ -63,3 +67,7 @@ case class MigratingTrustDetails(lawCountry: Option[String],
                                  deedOfVariation: Option[DeedOfVariation],
                                  interVivos: Option[Boolean],
                                  efrbsStartDate: Option[LocalDate])
+
+object MigratingTrustDetails {
+  implicit val format: Format[MigratingTrustDetails] = Json.format[MigratingTrustDetails]
+}

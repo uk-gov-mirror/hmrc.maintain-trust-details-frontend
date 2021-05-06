@@ -21,6 +21,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import controllers.Assets.OK
+import mappers.{MigratingTrustDetails, NonMigratingTrustDetails}
 import models.DeedOfVariation.PreviouslyAbsoluteInterestUnderWill
 import models.TypeOfTrust.WillTrustOrIntestacyTrust
 import models.http.TaxableMigrationFlag
@@ -61,6 +62,8 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
   private def setUkRelationUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-relation"
   private def setUkResidentUrl(identifier: String) = s"/trusts/trust-details/$identifier/uk-resident"
   private def getTrustMigrationFlagUrl(identifier: String) = s"/trusts/$identifier/taxable-migration/migrating-to-taxable"
+  private def setMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/migrating-trust-details"
+  private def setNonMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/non-migrating-trust-details"
 
   "trust connector" must {
 
@@ -281,6 +284,60 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
 
         application.stop()
       }
+    }
+
+    "setMigratingTrustDetails" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsConnector]
+
+      server.stubFor(
+        put(urlEqualTo(setMigratingTrustDetailsUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.setMigratingTrustDetails(
+        identifier,
+        MigratingTrustDetails(None, "GB", None, None, trustUKResident = true, WillTrustOrIntestacyTrust, None, None, None)
+      )
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
+
+    "setNonMigratingTrustDetails" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsConnector]
+
+      server.stubFor(
+        put(urlEqualTo(setNonMigratingTrustDetailsUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.setNonMigratingTrustDetails(
+        identifier,
+        NonMigratingTrustDetails(trustUKProperty = true, trustRecorded = true, None, trustUKResident = true)
+      )
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
     }
 
   }
