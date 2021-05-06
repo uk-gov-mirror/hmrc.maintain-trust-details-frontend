@@ -16,24 +16,29 @@
 
 package mappers
 
-import models.{NonMigratingTrustDetails, UserAnswers}
+import models.{NonMigratingTrustDetails, TrustDetails, UserAnswers}
 import pages.maintain._
 import play.api.Logging
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsResult, Reads}
+import play.api.libs.json.{JsError, JsResult, Reads}
 
 class TrustDetailsMapper extends Logging {
 
-  def apply(userAnswers: UserAnswers): JsResult[NonMigratingTrustDetails] = {
+  def apply(userAnswers: UserAnswers): JsResult[TrustDetails] = {
 
-    val reads: Reads[NonMigratingTrustDetails] = (
-      OwnsUkLandOrPropertyPage.path.read[Boolean] and
-        RecordedOnEeaRegisterPage.path.read[Boolean] and
-        BusinessRelationshipInUkPage.path.readNullable[Boolean] and
-        TrustResidentInUkPage.path.read[Boolean]
-      )(NonMigratingTrustDetails.apply _)
+    if (userAnswers.migratingFromNonTaxableToTaxable) {
+      // TODO - needs implementing
+      JsError("Not implemented yet")
+    } else {
+      val reads: Reads[NonMigratingTrustDetails] = (
+        OwnsUkLandOrPropertyPage.path.read[Boolean] and
+          RecordedOnEeaRegisterPage.path.read[Boolean] and
+          BusinessRelationshipInUkPage.path.readNullable[Boolean] and
+          TrustResidentInUkPage.path.read[Boolean]
+        )(NonMigratingTrustDetails.apply _)
 
-    userAnswers.data.validate[NonMigratingTrustDetails](reads)
+      userAnswers.data.validate[NonMigratingTrustDetails](reads)
+    }
   }
 
 }
