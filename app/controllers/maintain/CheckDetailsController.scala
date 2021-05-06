@@ -24,7 +24,6 @@ import models.{MigratingTrustDetails, NonMigratingTrustDetails}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.SessionLogging
 import utils.print.TrustDetailsPrintHelper
@@ -64,7 +63,7 @@ class CheckDetailsController @Inject()(
           (for {
             _ <- trustDetails match {
               case x: NonMigratingTrustDetails => connector.setNonMigratingTrustDetails(identifier, x)
-              case x: MigratingTrustDetails => Future.successful(HttpResponse(OK, "")) // TODO - call setMigratingTrustDetails once mapper updated
+              case x: MigratingTrustDetails => connector.setMigratingTrustDetails(identifier, x)
             }
             _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
           } yield {
