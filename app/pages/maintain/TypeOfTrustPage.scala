@@ -16,14 +16,30 @@
 
 package pages.maintain
 
-import models.TypeOfTrust
+import models.TypeOfTrust._
+import models.{TypeOfTrust, UserAnswers}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object TypeOfTrustPage extends QuestionPage[TypeOfTrust] {
 
   override def path: JsPath = basePath \ toString
 
   override def toString: String = "typeOfTrust"
+
+  override def cleanup(value: Option[TypeOfTrust], userAnswers: UserAnswers): Try[UserAnswers] = {
+    value match {
+      case Some(typeOfTrust) => userAnswers
+        .removePageIfConditionMet(SetUpInAdditionToWillTrustPage, typeOfTrust != DeedOfVariationTrustOrFamilyArrangement)
+        .flatMap(_.removePageIfConditionMet(WhyDeedOfVariationCreatedPage, typeOfTrust != DeedOfVariationTrustOrFamilyArrangement))
+        .flatMap(_.removePageIfConditionMet(HoldoverReliefClaimedPage, typeOfTrust != InterVivosSettlement))
+        .flatMap(_.removePageIfConditionMet(EfrbsYesNoPage, typeOfTrust != EmploymentRelated))
+        .flatMap(_.removePageIfConditionMet(EfrbsStartDatePage, typeOfTrust != EmploymentRelated))
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+  }
 
 }

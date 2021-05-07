@@ -44,8 +44,8 @@ object TrustDetailsType {
   implicit val trustDetailsTypeFormat: Format[TrustDetailsType] = Json.format[TrustDetailsType]
 }
 
-case class ResidentialStatusType(uk: Option[UkType],
-                                 nonUK: Option[NonUKType])
+case class ResidentialStatusType(uk: Option[UkType] = None,
+                                 nonUK: Option[NonUKType] = None)
 
 object ResidentialStatusType {
   implicit val residentialStatusTypeFormat: Format[ResidentialStatusType] = Json.format[ResidentialStatusType]
@@ -61,7 +61,7 @@ object UkType {
 case class NonUKType(sch5atcgga92: Boolean,
                      s218ihta84: Option[Boolean],
                      agentS218IHTA84: Option[Boolean],
-                     trusteeStatus: Option[String])
+                     trusteeStatus: Option[String] = None)
 
 object NonUKType {
   implicit val nonUKTypeFormat: Format[NonUKType] = Json.format[NonUKType]
@@ -89,7 +89,7 @@ object NonMigratingTrustDetails {
  */
 case class MigratingTrustDetails(lawCountry: Option[String],
                                  administrationCountry: String,
-                                 residentialStatus: Option[ResidentialStatusType],
+                                 residentialStatus: ResidentialStatusType,
                                  trustUKRelation: Option[Boolean],
                                  trustUKResident: Boolean,
                                  typeOfTrust: TypeOfTrust,

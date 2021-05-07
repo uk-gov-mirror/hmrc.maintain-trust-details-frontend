@@ -16,6 +16,7 @@
 
 package pages.maintain
 
+import models.DeedOfVariation.ReplacedWillTrust
 import pages.behaviours.PageBehaviours
 
 class SetUpInAdditionToWillTrustPageSpec extends PageBehaviours {
@@ -27,5 +28,17 @@ class SetUpInAdditionToWillTrustPageSpec extends PageBehaviours {
     beSettable[Boolean](SetUpInAdditionToWillTrustPage)
 
     beRemovable[Boolean](SetUpInAdditionToWillTrustPage)
+
+    "implement cleanup logic" when {
+      "YES selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+
+        val cleanAnswers = userAnswers.set(SetUpInAdditionToWillTrustPage, true).success.value
+
+        cleanAnswers.get(WhyDeedOfVariationCreatedPage) mustBe None
+      }
+    }
   }
 }

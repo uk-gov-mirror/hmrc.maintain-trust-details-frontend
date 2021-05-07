@@ -16,13 +16,30 @@
 
 package pages.maintain
 
+import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object SetUpAfterSettlorDiedPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = basePath \ toString
 
   override def toString: String = "setUpAfterSettlorDied"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
+    value match {
+      case Some(true) => userAnswers
+        .remove(TypeOfTrustPage)
+        .flatMap(_.remove(SetUpInAdditionToWillTrustPage))
+        .flatMap(_.remove(WhyDeedOfVariationCreatedPage))
+        .flatMap(_.remove(HoldoverReliefClaimedPage))
+        .flatMap(_.remove(EfrbsYesNoPage))
+        .flatMap(_.remove(EfrbsStartDatePage))
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+  }
 
 }
