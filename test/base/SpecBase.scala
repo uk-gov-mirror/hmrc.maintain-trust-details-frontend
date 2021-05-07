@@ -38,7 +38,9 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = internalId,
-    identifier = identifier
+    identifier = identifier,
+    migratingFromNonTaxableToTaxable = false,
+    registeredWithDeceasedSettlor = true
   )
 
   val bodyParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]

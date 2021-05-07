@@ -51,12 +51,22 @@ class IndexController @Inject()(
         is5mldEnabled <- featureFlagService.is5mldEnabled()
         trustDetails <- connector.getTrustDetails(identifier)
         taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
+        registeredWithDeceasedSettlor <- connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
         ua <- Future.fromTry {
           request.userAnswers match {
-            case Some(userAnswers) =>
-              Success(userAnswers.copy(migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable))
-            case None =>
-              extractor(UserAnswers(request.user.internalId, identifier, taxableMigrationFlag.migratingFromNonTaxableToTaxable), trustDetails)
+            case Some(userAnswers) if userAnswers.migratingFromNonTaxableToTaxable == taxableMigrationFlag.migratingFromNonTaxableToTaxable =>
+              infoLog("User is on the same type of journey as before. Persisting answers.", Some(identifier))
+              Success(userAnswers)
+            case _ =>
+              extractor(
+                answers = UserAnswers(
+                  internalId = request.user.internalId,
+                  identifier = identifier,
+                  migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
+                  registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
+                ),
+                trustDetails = trustDetails
+              )
           }
         }
         _ <- cacheRepository.set(ua)
