@@ -23,6 +23,7 @@ import controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.net.{URI, URLEncoder}
+import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -74,6 +75,20 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   lazy val countdownLength: String = config.get[String]("timeout.countdown")
   lazy val timeoutLength: String = config.get[String]("timeout.length")
+
+  private def getDate(entry: String): LocalDate = {
+
+    def getInt(path: String): Int = config.get[Int](path)
+
+    LocalDate.of(
+      getInt(s"dates.$entry.year"),
+      getInt(s"dates.$entry.month"),
+      getInt(s"dates.$entry.day")
+    )
+  }
+
+  lazy val minDate: LocalDate = getDate("minimum")
+  lazy val maxDate: LocalDate = getDate("maximum")
 
   def helplineUrl(implicit messages: Messages): String = {
     val path = messages.lang.code match {
