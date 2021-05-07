@@ -99,11 +99,10 @@ class TrustDetailsMapper extends Logging {
     }
 
     lazy val typeOfTrustReads: Reads[TypeOfTrust] = {
-      TypeOfTrustPage.path.readNullable[TypeOfTrust].flatMap {
-        case Some(DeedOfVariationTrustOrFamilyArrangement) if registeredWithDeceasedSettlor => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
-        case Some(DeedOfVariationTrustOrFamilyArrangement) => Reads(_ => JsSuccess(DeedOfVariationTrustOrFamilyArrangement))
-        case Some(value) => Reads(_ => JsSuccess(value))
-        case None => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
+      if (registeredWithDeceasedSettlor) {
+        Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
+      } else {
+        TypeOfTrustPage.path.read[TypeOfTrust]
       }
     }
 
