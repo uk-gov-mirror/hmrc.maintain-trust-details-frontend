@@ -41,28 +41,17 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   }
 
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
-    case RecordedOnEeaRegisterPage => trustUKResidentPage
-    case SetUpAfterSettlorDiedPage => fromSetUpAfterSettlorDiedPage
+    case RecordedOnEeaRegisterPage => navigateToCyaIfUkResidentTrust
+    case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
   }
 
-  private def trustUKResidentPage(ua: UserAnswers): Call = {
+  private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {
     if (ua.get(TrustResidentInUkPage).contains(true)) {
       CheckDetailsController.onPageLoad()
     } else {
       BusinessRelationshipInUkController.onPageLoad()
-    }
-  }
-
-  private def fromSetUpAfterSettlorDiedPage(ua: UserAnswers): Call = {
-    ua.get(SetUpAfterSettlorDiedPage) match {
-      case Some(true) =>
-        WhereTrusteesBasedController.onPageLoad()
-      case Some(false) =>
-        TypeOfTrustController.onPageLoad()
-      case _ =>
-        SessionExpiredController.onPageLoad()
     }
   }
 
