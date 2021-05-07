@@ -27,7 +27,12 @@ import play.api.libs.json._
 
 trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues {
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR")
+  val emptyUserAnswers: UserAnswers = UserAnswers(
+    internalId = "id",
+    identifier = "UTRUTRUTR",
+    migratingFromNonTaxableToTaxable = false,
+    registeredWithDeceasedSettlor = true
+  )
 
   class BeRetrievable[A] {
     def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {

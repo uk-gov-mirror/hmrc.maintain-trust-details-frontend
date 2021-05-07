@@ -51,22 +51,36 @@ class IndexController @Inject()(
         is5mldEnabled <- featureFlagService.is5mldEnabled()
         trustDetails <- connector.getTrustDetails(identifier)
         taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
+        registeredWithDeceasedSettlor <- connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
         ua <- Future.fromTry {
           request.userAnswers match {
-            case Some(userAnswers) =>
-              Success(userAnswers.copy(migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable))
-            case None =>
-              extractor(UserAnswers(request.user.internalId, identifier, taxableMigrationFlag.migratingFromNonTaxableToTaxable), trustDetails)
+            case Some(userAnswers) if userAnswers.migratingFromNonTaxableToTaxable == taxableMigrationFlag.migratingFromNonTaxableToTaxable =>
+              infoLog("User is on the same type of journey as before. Persisting answers.", Some(identifier))
+              Success(userAnswers)
+            case _ =>
+              extractor(
+                answers = UserAnswers(
+                  internalId = request.user.internalId,
+                  identifier = identifier,
+                  migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
+                  registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
+                ),
+                trustDetails = trustDetails
+              )
           }
         }
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
-          // TODO - use taxableMigrationFlag to determine where to navigate to
           if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
-            Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
+            if (taxableMigrationFlag.migratingFromNonTaxableToTaxable) {
+              // TODO - navigate to GovernedByUkLawController once built
+              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            } else {
+              Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
+            }
           }
         } else {
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))

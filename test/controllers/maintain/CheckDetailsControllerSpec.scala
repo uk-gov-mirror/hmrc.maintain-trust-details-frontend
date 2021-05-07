@@ -20,10 +20,12 @@ import base.SpecBase
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import mappers.TrustDetailsMapper
 import models.TypeOfTrust.WillTrustOrIntestacyTrust
-import models.{MigratingTrustDetails, NonMigratingTrustDetails, ResidentialStatusType, UkType}
+import models.{MigratingTrustDetails, NonMigratingTrustDetails, ResidentialStatusType, UkType, UserAnswers}
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
+import pages.maintain.AnswersCompletedPage
 import play.api.inject.bind
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.test.FakeRequest
@@ -48,6 +50,9 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
     reset(mockTrustsStoreConnector)
     when(mockTrustsStoreConnector.setTaskComplete(any())(any(), any()))
       .thenReturn(Future.successful(HttpResponse(OK, "")))
+
+    reset(playbackRepository)
+    when(playbackRepository.set(any())).thenReturn(Future.successful(true))
   }
 
   private val migratingTrustDetails = MigratingTrustDetails(
@@ -132,6 +137,10 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           verify(mockTrustConnector).setNonMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
 
+          val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+          verify(playbackRepository).set(uaCaptor.capture)
+          uaCaptor.getValue.get(AnswersCompletedPage).get mustBe true
+
           application.stop()
         }
 
@@ -164,6 +173,10 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
           redirectLocation(result).value mustEqual onwardRoute
 
           verify(mockTrustConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
+
+          val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+          verify(playbackRepository).set(uaCaptor.capture)
+          uaCaptor.getValue.get(AnswersCompletedPage).get mustBe true
 
           application.stop()
         }

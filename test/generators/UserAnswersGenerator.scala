@@ -17,6 +17,7 @@
 package generators
 
 import models.UserAnswers
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
 import pages._
@@ -31,19 +32,21 @@ trait UserAnswersGenerator extends TryValues {
 
   implicit lazy val arbitraryUserData: Arbitrary[UserAnswers] = {
 
-    import models._
-
     Arbitrary {
       for {
-        id      <- nonEmptyString
+        id <- nonEmptyString
         utr <- nonEmptyString
-        data    <- generators match {
+        migratingFromNonTaxableToTaxable <- arbitrary[Boolean]
+        registeredWithDeceasedSettlor <- arbitrary[Boolean]
+        data <- generators match {
           case Nil => Gen.const(Map[QuestionPage[_], JsValue]())
           case _   => Gen.mapOf(oneOf(generators))
         }
       } yield UserAnswers (
         internalId = id,
         identifier = utr,
+        migratingFromNonTaxableToTaxable = migratingFromNonTaxableToTaxable,
+        registeredWithDeceasedSettlor = registeredWithDeceasedSettlor,
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>
             obj.setObject(path.path, value).get
