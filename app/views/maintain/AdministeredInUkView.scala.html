@@ -25,10 +25,10 @@
 
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("generalAdminInTheUk.title")}"
+    title = s"${errorPrefix(form)} ${messages("administeredInUk.title")}"
 ) {
 
-    @formHelper(action = GeneralAdminInTheUkController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = AdministeredInUkController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -36,7 +36,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            legend = messages("generalAdminInTheUk.heading"),
+            legend = messages("administeredInUk.heading"),
             headingIsLegend = true,
             additionalContent = None
         )

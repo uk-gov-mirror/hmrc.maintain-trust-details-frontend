@@ -19,7 +19,7 @@ package controllers.maintain
 import controllers.actions.StandardActionSets
 import forms.TypeOfTrustFormProvider
 import javax.inject.Inject
-import models.{Enumerable, TypeOfTrust}
+import models.TypeOfTrust
 import navigation.Navigator
 import pages.maintain.TypeOfTrustPage
 import play.api.Logging
@@ -40,7 +40,7 @@ class TypeOfTrustController @Inject()(
                                        formProvider: TypeOfTrustFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: TypeOfTrustView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging with Enumerable.Implicits {
+                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[TypeOfTrust] = formProvider()
 
@@ -66,7 +66,6 @@ class TypeOfTrustController @Inject()(
             updatedAnswers <- Future.fromTry(request.userAnswers.set(TypeOfTrustPage, value))
             _              <- repository.set(updatedAnswers)
           } yield {
-            logger.info(s"--------------- onSubmit ${updatedAnswers.get(TypeOfTrustPage)}")
             Redirect(navigator.nextPage(TypeOfTrustPage, updatedAnswers))
           }
         }

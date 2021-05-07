@@ -68,7 +68,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
 
       "General Admin in the Uk page" when {
-        val page = GeneralAdminInTheUkPage
+        val page = AdministeredInUkPage
 
         "Yes -> Set up after settlor died page" in {
           val answers = baseAnswers

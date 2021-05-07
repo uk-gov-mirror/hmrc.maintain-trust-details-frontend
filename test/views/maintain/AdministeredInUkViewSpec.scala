@@ -21,17 +21,17 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.maintain.{GeneralAdminInTheUkView, SetUpAfterSettlorDiedView}
+import views.html.maintain.AdministeredInUkView
 
-class GeneralAdminInTheUkViewSpec extends YesNoViewBehaviours {
+class AdministeredInUkViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "generalAdminInTheUk"
+  val messageKeyPrefix = "administeredInUk"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-  "GeneralAdminInTheUk view" must {
+  "AdministeredInUk view" must {
 
-    val view = viewFor[GeneralAdminInTheUkView](Some(emptyUserAnswers))
+    val view = viewFor[AdministeredInUkView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)
@@ -40,7 +40,7 @@ class GeneralAdminInTheUkViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.GeneralAdminInTheUkController.onSubmit().url)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AdministeredInUkController.onSubmit().url)
 
     behave like pageWithASubmitButton(applyView(form))
   }

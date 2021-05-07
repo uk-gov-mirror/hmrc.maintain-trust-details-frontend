@@ -20,31 +20,31 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.GeneralAdminInTheUkPage
+import pages.maintain.AdministeredInUkPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.GeneralAdminInTheUkView
+import views.html.maintain.AdministeredInUkView
 
-class GeneralAdminInTheUkControllerSpec extends SpecBase with MockitoSugar {
+class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("generalAdminInTheUk")
+  val form: Form[Boolean] = formProvider.withPrefix("administeredInUk")
 
-  lazy val generalAdminRoute: String = routes.GeneralAdminInTheUkController.onPageLoad().url
+  lazy val administeredInUkRoute: String = routes.AdministeredInUkController.onPageLoad().url
 
-  "GeneralAdminInTheUk Controller" must {
+  "AdministeredInUk Controller" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, generalAdminRoute)
+      val request = FakeRequest(GET, administeredInUkRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[GeneralAdminInTheUkView]
+      val view = application.injector.instanceOf[AdministeredInUkView]
 
       status(result) mustEqual OK
 
@@ -56,13 +56,13 @@ class GeneralAdminInTheUkControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(GeneralAdminInTheUkPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(AdministeredInUkPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, generalAdminRoute)
+      val request = FakeRequest(GET, administeredInUkRoute)
 
-      val view = application.injector.instanceOf[GeneralAdminInTheUkView]
+      val view = application.injector.instanceOf[AdministeredInUkView]
 
       val result = route(application, request).value
 
@@ -81,7 +81,7 @@ class GeneralAdminInTheUkControllerSpec extends SpecBase with MockitoSugar {
           .overrides(bind[Navigator].toInstance(fakeNavigator))
           .build()
 
-      val request = FakeRequest(POST, generalAdminRoute)
+      val request = FakeRequest(POST, administeredInUkRoute)
         .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
@@ -99,12 +99,12 @@ class GeneralAdminInTheUkControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, generalAdminRoute)
+        FakeRequest(POST, administeredInUkRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[GeneralAdminInTheUkView]
+      val view = application.injector.instanceOf[AdministeredInUkView]
 
       val result = route(application, request).value
 
@@ -120,7 +120,7 @@ class GeneralAdminInTheUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, generalAdminRoute)
+      val request = FakeRequest(GET, administeredInUkRoute)
 
       val result = route(application, request).value
 
@@ -136,7 +136,7 @@ class GeneralAdminInTheUkControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, generalAdminRoute)
+        FakeRequest(POST, administeredInUkRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value

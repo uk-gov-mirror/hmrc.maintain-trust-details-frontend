@@ -69,10 +69,10 @@ businessRelationshipInUk.paragraph2 = Professional advice means the services of 
 checkDetails.title = Check trust details
 checkDetails.heading = Check trust details
 
-generalAdminInTheUk.title = Is the trust’s general administration done in the UK?
-generalAdminInTheUk.heading = Is the trust’s general administration done in the UK?
-generalAdminInTheUk.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
-generalAdminInTheUk.error.required = Select yes if the trust’s general administration is done in the UK?
+administeredInUk.title = Is the trust’s general administration done in the UK?
+administeredInUk.heading = Is the trust’s general administration done in the UK?
+administeredInUk.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
+administeredInUk.error.required = Select yes if the trust’s general administration is done in the UK?
 
 setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?

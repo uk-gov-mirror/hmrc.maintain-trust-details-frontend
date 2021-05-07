@@ -29,8 +29,8 @@ POST       /business-relationship-yes-no        controllers.maintain.BusinessRel
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
-GET        /admin-in-the-uk                     controllers.maintain.GeneralAdminInTheUkController.onPageLoad()
-POST       /admin-in-the-uk                     controllers.maintain.GeneralAdminInTheUkController.onSubmit()
+GET        /admin-in-uk-yes-no                  controllers.maintain.AdministeredInUkController.onPageLoad()
+POST       /admin-in-uk-yes-no                  controllers.maintain.AdministeredInUkController.onSubmit()
 
 GET        /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
 POST       /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()

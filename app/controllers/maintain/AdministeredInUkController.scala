@@ -20,32 +20,32 @@ import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.maintain.GeneralAdminInTheUkPage
+import pages.maintain.AdministeredInUkPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.GeneralAdminInTheUkView
+import views.html.maintain.AdministeredInUkView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GeneralAdminInTheUkController @Inject()(
+class AdministeredInUkController @Inject()(
                                                  override val messagesApi: MessagesApi,
                                                  yesNoFormProvider: YesNoFormProvider,
                                                  repository: PlaybackRepository,
                                                  navigator: Navigator,
                                                  actions: StandardActionSets,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                 view: GeneralAdminInTheUkView
+                                                 view: AdministeredInUkView
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("generalAdminInTheUk")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUk")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(GeneralAdminInTheUkPage) match {
+      val preparedForm = request.userAnswers.get(AdministeredInUkPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,10 +62,10 @@ class GeneralAdminInTheUkController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(GeneralAdminInTheUkPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdministeredInUkPage, value))
             _ <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(GeneralAdminInTheUkPage, updatedAnswers))
+            Redirect(navigator.nextPage(AdministeredInUkPage, updatedAnswers))
           }
         }
       )
