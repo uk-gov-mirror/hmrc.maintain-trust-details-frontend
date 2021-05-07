@@ -27,7 +27,7 @@ import models.http.TaxableMigrationFlag
 import models._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsBoolean, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -63,6 +63,7 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
   private def getTrustMigrationFlagUrl(identifier: String) = s"/trusts/$identifier/taxable-migration/migrating-to-taxable"
   private def setMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/migrating-trust-details"
   private def setNonMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/non-migrating-trust-details"
+  private def wasTrustRegisteredWithDeceasedSettlorUrl(identifier: String) = s"/trusts/trust-details/$identifier/has-deceased-settlor"
 
   "trust connector" must {
 
@@ -350,6 +351,34 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
       )
 
       result.futureValue.status mustBe OK
+
+      application.stop()
+    }
+
+    "wasTrustRegisteredWithDeceasedSettlor" in {
+
+      val json = JsBoolean(true)
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsConnector]
+
+      server.stubFor(
+        get(urlEqualTo(wasTrustRegisteredWithDeceasedSettlorUrl(identifier)))
+          .willReturn(okJson(json.toString))
+      )
+
+      val result = connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
+
+      whenReady(result) { r =>
+        r mustBe true
+      }
 
       application.stop()
     }
