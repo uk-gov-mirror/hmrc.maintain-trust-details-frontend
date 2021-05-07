@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
+import play.api.libs.json._
 import viewmodels.RadioOption
 
 sealed trait TypeOfTrust {
@@ -62,7 +62,7 @@ object TypeOfTrust {
   implicit val writes: Writes[TypeOfTrust] = Writes(x => JsString(x.asString))
 
   val values: List[TypeOfTrust] = List(
-    //WillTrustOrIntestacyTrust,
+    WillTrustOrIntestacyTrust,
     InterVivosSettlement,
     DeedOfVariationTrustOrFamilyArrangement,
     EmploymentRelated,
@@ -70,10 +70,9 @@ object TypeOfTrust {
     HeritageMaintenanceFund
   )
 
-  val options: List[RadioOption] = values.map {
-    value =>
-      RadioOption("typeOfTrust", value.toString)
-  }
+  val options: List[RadioOption] = values
+    .filterNot(_ == WillTrustOrIntestacyTrust)
+    .map(value => RadioOption("typeOfTrust", value.toString))
 
   implicit val enumerable: Enumerable[TypeOfTrust] =
     Enumerable(values.map(v => v.toString -> v): _*)

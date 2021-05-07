@@ -16,6 +16,7 @@
 
 package models
 
+import pages.QuestionPage
 import play.api.Logging
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json._
@@ -85,6 +86,14 @@ case class UserAnswers(internalId: String,
       _ => Success(this),
       result => Success(result)
     )
+  }
+
+  def removePageIfConditionMet[T](page: QuestionPage[T], condition: Boolean): Try[UserAnswers] = {
+    if (condition) {
+      this.remove(page)
+    } else {
+      Success(this)
+    }
   }
 
 }

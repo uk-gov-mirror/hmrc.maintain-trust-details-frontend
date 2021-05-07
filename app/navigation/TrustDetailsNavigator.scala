@@ -16,10 +16,13 @@
 
 package navigation
 
+import controllers.maintain.routes._
+import controllers.routes.SessionExpiredController
 import models.{TypeOfTrust, UserAnswers}
 import pages.Page
-import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, SetUpAfterSettlorDiedPage, TrustResidentInUkPage, TypeOfTrustPage}
+import pages.maintain._
 import play.api.mvc.Call
+
 import javax.inject.Inject
 
 class TrustDetailsNavigator @Inject()() extends Navigator {
@@ -27,55 +30,43 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   override def nextPage(page: Page, userAnswers: UserAnswers): Call =
     routes()(page)(userAnswers)
 
+  private def routes(): PartialFunction[Page, UserAnswers => Call] =
+    simpleNavigation() orElse
+      conditionalNavigation()
+
   private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = {
-    case OwnsUkLandOrPropertyPage => _ => controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad()
-    case RecordedOnEeaRegisterPage => ua => trustUKResidentPage(ua)
-    case BusinessRelationshipInUkPage => _ => controllers.maintain.routes.CheckDetailsController.onPageLoad()
-    case SetUpAfterSettlorDiedPage => ua => fromSetUpAfterSettlorDiedPage(ua)
-    case TypeOfTrustPage => ua => fromTypeOfTrustPage(ua)
+    case OwnsUkLandOrPropertyPage => _ => RecordedOnEeaRegisterController.onPageLoad()
+    case BusinessRelationshipInUkPage => _ => CheckDetailsController.onPageLoad()
+    case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => WhereTrusteesBasedController.onPageLoad()
   }
 
+  private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
+    case RecordedOnEeaRegisterPage => navigateToCyaIfUkResidentTrust
+    case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
+    case TypeOfTrustPage => fromTypeOfTrustPage
+    case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
+  }
 
-  def routes(): PartialFunction[Page, UserAnswers => Call] =
-    simpleNavigation()
-
-
-  private def trustUKResidentPage(ua: UserAnswers): Call = {
+  private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {
     if (ua.get(TrustResidentInUkPage).contains(true)) {
-      controllers.maintain.routes.CheckDetailsController.onPageLoad()
+      CheckDetailsController.onPageLoad()
     } else {
-      controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad()
-    }
-  }
-
-  private def fromSetUpAfterSettlorDiedPage(ua: UserAnswers): Call = {
-    ua.get(SetUpAfterSettlorDiedPage) match {
-      case Some(true) =>
-        controllers.maintain.routes.ResidentInTheUkController.onPageLoad()
-      case Some(false) =>
-        controllers.maintain.routes.TypeOfTrustController.onPageLoad()
-      case _ =>
-        controllers.routes.SessionExpiredController.onPageLoad()
+      BusinessRelationshipInUkController.onPageLoad()
     }
   }
 
   private def fromTypeOfTrustPage(ua: UserAnswers): Call = {
-    //ToDo Add Navigation to the relevant pages
     ua.get(TypeOfTrustPage) match {
       case Some(TypeOfTrust.InterVivosSettlement) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad()
+        HoldoverReliefClaimedController.onPageLoad()
       case Some(TypeOfTrust.EmploymentRelated) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad()
+        EfrbsYesNoController.onPageLoad()
       case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad()
-      case Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad()
-      case Some(TypeOfTrust.HeritageMaintenanceFund) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad()
-      case Some(TypeOfTrust.WillTrustOrIntestacyTrust) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad()
+        controllers.routes.FeatureNotAvailableController.onPageLoad() // TODO - redirect to 'set up in addition to will trust y/n'
+      case Some(TypeOfTrust.WillTrustOrIntestacyTrust) | Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) | Some(TypeOfTrust.HeritageMaintenanceFund) =>
+        WhereTrusteesBasedController.onPageLoad()
       case _ =>
-        controllers.routes.SessionExpiredController.onPageLoad()
+        SessionExpiredController.onPageLoad()
     }
   }
 }

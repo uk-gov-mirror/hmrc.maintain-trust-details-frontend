@@ -50,9 +50,11 @@ class TrustDetailsMapper extends Logging {
 
     lazy val residentialStatusReads: Reads[ResidentialStatusType] = {
 
-      def combineReads(ukReads: Reads[Option[UkType]], nonUkReads: Reads[Option[NonUKType]]): Reads[ResidentialStatusType] = {
-        (ukReads and nonUkReads)(ResidentialStatusType.apply _)
-      }
+      def combineReads(ukReads: Reads[Option[UkType]], nonUkReads: Reads[Option[NonUKType]]): Reads[ResidentialStatusType] = (
+        ukReads and
+          nonUkReads
+        )(ResidentialStatusType.apply _)
+
 
       lazy val ukReads: Reads[ResidentialStatusType] = {
         lazy val reads: Reads[Option[UkType]] = (

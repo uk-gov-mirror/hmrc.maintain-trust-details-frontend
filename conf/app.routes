@@ -35,6 +35,15 @@ POST       /after-settlor-died                  controllers.maintain.SetUpAfterS
 GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
 POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
 
-GET        /resident-in-the-uk                  controllers.maintain.ResidentInTheUkController.onPageLoad()
+GET        /holdover-relief-claimed             controllers.maintain.HoldoverReliefClaimedController.onPageLoad()
+POST       /holdover-relief-claimed             controllers.maintain.HoldoverReliefClaimedController.onSubmit()
+
+GET        /efrbs-yes-no                        controllers.maintain.EfrbsYesNoController.onPageLoad()
+POST       /efrbs-yes-no                        controllers.maintain.EfrbsYesNoController.onSubmit()
+
+GET        /efrbs-start-date                    controllers.maintain.EfrbsStartDateController.onPageLoad()
+POST       /efrbs-start-date                    controllers.maintain.EfrbsStartDateController.onSubmit()
+
+GET        /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onPageLoad()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

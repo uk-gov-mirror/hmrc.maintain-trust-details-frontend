@@ -83,3 +83,27 @@ typeOfTrust.employment-related = A trust for the employees of a company
 typeOfTrust.flat-or-sinking-fund = A trust for a building or building with tenants
 typeOfTrust.heritage = A trust for a the repair of historic buildings
 typeOfTrust.error.required = Select the type of trust the settlor created
+
+holdoverReliefClaimed.title = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
+holdoverReliefClaimed.heading = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
+holdoverReliefClaimed.checkYourAnswersLabel = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
+holdoverReliefClaimed.error.required = Select yes if Gift Hold-Over Relief was claimed on any of the trust’s assets
+holdoverReliefClaimed.paragraph1 = Gift Hold-Over Relief can be claimed on business assets that were:
+holdoverReliefClaimed.bullet1 = given away
+holdoverReliefClaimed.bullet2 = sold for less than what they were worth
+
+efrbsYesNo.title = Is this an employer-financed retirement benefits scheme?
+efrbsYesNo.heading = Is this an employer-financed retirement benefits scheme?
+efrbsYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
+efrbsYesNo.error.required = Select yes if this is an employer-financed retirement benefits scheme
+
+efrbsStartDate.title = When did the employer-financed retirement benefits scheme start?
+efrbsStartDate.heading = When did the employer-financed retirement benefits scheme start?
+efrbsStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
+efrbsStartDate.error.required.all = Enter the date that the employer-financed retirement benefits scheme started
+efrbsStartDate.error.required.two = The date that the employer-financed retirement benefits scheme started must include a {0} and a {1}
+efrbsStartDate.error.required = The date that the employer-financed retirement benefits scheme started must include a {0}
+efrbsStartDate.error.invalid = Enter a real date that the employer-financed retirement benefits scheme started
+efrbsStartDate.error.future = The date that the employer-financed retirement benefits scheme started must be today or in the past
+efrbsStartDate.error.past = The date that the employer-financed retirement benefits scheme started must be after 31 December 1499
+efrbsStartDate.hint = For example, 31 3 1980

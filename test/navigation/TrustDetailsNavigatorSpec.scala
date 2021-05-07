@@ -19,7 +19,7 @@ package navigation
 import base.SpecBase
 import models.TypeOfTrust
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, SetUpAfterSettlorDiedPage, TrustResidentInUkPage, TypeOfTrustPage}
+import pages.maintain._
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -29,15 +29,17 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
     "maintaining" must {
 
-      "TrustOwnUKLandOrProperty page -> TrustEEAYesNo page" in {
-        navigator.nextPage(OwnsUkLandOrPropertyPage, emptyUserAnswers)
+      val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = false)
+
+      "Owns UK land or property page -> Recorded on EEA register page" in {
+        navigator.nextPage(OwnsUkLandOrPropertyPage, baseAnswers)
           .mustBe(controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad())
       }
 
-      "TrustEEAYesNo page" when {
+      "Recorded on EEA register page" when {
         "UK resident trust" must {
           "-> CYA page" in {
-            val answers = emptyUserAnswers
+            val answers = baseAnswers
               .set(TrustResidentInUkPage, true).success.value
 
             navigator.nextPage(RecordedOnEeaRegisterPage, answers)
@@ -45,8 +47,8 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
           }
         }
         "non-UK resident trust" must {
-          "-> BusinessRelationshipYesNo page" in {
-            val answers = emptyUserAnswers
+          "-> Business relationship in UK page" in {
+            val answers = baseAnswers
               .set(TrustResidentInUkPage, false).success.value
 
             navigator.nextPage(RecordedOnEeaRegisterPage, answers)
@@ -55,90 +57,126 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "BusinessRelationshipYesNo page -> CYA page" in {
-        navigator.nextPage(BusinessRelationshipInUkPage, emptyUserAnswers)
+      "Business relationship in UK page -> CYA page" in {
+        navigator.nextPage(BusinessRelationshipInUkPage, baseAnswers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
       }
+    }
 
+    "migrating" must {
 
-      "SetUpAfterSettlorDied page" when {
-        "Yes -> Trustees in the UK page" in {
-          val answers = emptyUserAnswers
-            .set(SetUpAfterSettlorDiedPage, true).success.value
+      val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
 
-          navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
-            .mustBe(controllers.maintain.routes.ResidentInTheUkController.onPageLoad())
+      "Set up after settlor died page" when {
+
+        val page = SetUpAfterSettlorDiedPage
+
+        "Yes -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
 
-        "No -> TypeOfTrust page" in {
-          val answers = emptyUserAnswers
-            .set(SetUpAfterSettlorDiedPage, false).success.value
+        "No -> Type of trust page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
 
-          navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
+          navigator.nextPage(page, answers)
             .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
         }
 
         "No Data -> Session Expired page" in {
-          navigator.nextPage(SetUpAfterSettlorDiedPage, emptyUserAnswers)
+          navigator.nextPage(page, baseAnswers)
             .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
         }
       }
 
-      //ToDo Change to Trustees in the UK Controller
-      "TypeOfTrust page" when {
+      "Type of trust page" when {
 
-        "DeedOfVariation -> DeedOfVariation page" in {
-          val answers = emptyUserAnswers
-            .set(TypeOfTrustPage, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
+        val page = TypeOfTrustPage
 
-          navigator.nextPage(TypeOfTrustPage, answers)
+        "DeedOfVariationTrustOrFamilyArrangement -> Set up in addition to will trust page" in {
+          val answers = baseAnswers
+            .set(page, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
+
+          navigator.nextPage(page, answers)
             .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
         }
 
-        "WillTrust -> Feature Not Available page" in {
-          val answers = emptyUserAnswers
-            .set(TypeOfTrustPage, TypeOfTrust.WillTrustOrIntestacyTrust).success.value
+        "HeritageMaintenanceFund -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, TypeOfTrust.HeritageMaintenanceFund).success.value
 
-          navigator.nextPage(TypeOfTrustPage, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
 
-        "Heritage -> Heritage page" in {
-          val answers = emptyUserAnswers
-            .set(TypeOfTrustPage, TypeOfTrust.HeritageMaintenanceFund).success.value
+        "FlatManagementCompanyOrSinkingFund -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, TypeOfTrust.FlatManagementCompanyOrSinkingFund).success.value
 
-          navigator.nextPage(TypeOfTrustPage, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
 
-        "Flat Management -> Flat Management page" in {
-          val answers = emptyUserAnswers
-            .set(TypeOfTrustPage, TypeOfTrust.FlatManagementCompanyOrSinkingFund).success.value
+        "EmploymentRelated -> EFRBS yes/no page" in {
+          val answers = baseAnswers
+            .set(page, TypeOfTrust.EmploymentRelated).success.value
 
-          navigator.nextPage(TypeOfTrustPage, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.EfrbsYesNoController.onPageLoad())
         }
 
-        "EmploymentRelated -> EmploymentRelated page" in {
-          val answers = emptyUserAnswers
-            .set(TypeOfTrustPage, TypeOfTrust.EmploymentRelated).success.value
+        "InterVivosSettlement -> Holdover relief claimed page" in {
+          val answers = baseAnswers
+            .set(page, TypeOfTrust.InterVivosSettlement).success.value
 
-          navigator.nextPage(TypeOfTrustPage, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
-        }
-
-        "InterVivos -> InterVivos page" in {
-          val answers = emptyUserAnswers
-            .set(TypeOfTrustPage, TypeOfTrust.InterVivosSettlement).success.value
-
-          navigator.nextPage(TypeOfTrustPage, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.HoldoverReliefClaimedController.onPageLoad())
         }
 
         "No Data -> Session Expired page" in {
-          navigator.nextPage(TypeOfTrustPage, emptyUserAnswers)
+          navigator.nextPage(page, baseAnswers)
             .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
         }
+      }
+
+      "Holdover relief claimed page -> Where trustees based page" in {
+        navigator.nextPage(HoldoverReliefClaimedPage, baseAnswers)
+          .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+      }
+
+      "EFRBS yes/no page" when {
+
+        val page = EfrbsYesNoPage
+
+        "Yes -> EFRBS start date page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.EfrbsStartDateController.onPageLoad())
+        }
+
+        "No -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "EFRBS start date page -> Where trustees based page" in {
+        navigator.nextPage(EfrbsStartDatePage, baseAnswers)
+          .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
       }
     }
   }
