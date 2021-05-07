@@ -29,4 +29,12 @@ POST       /business-relationship-yes-no        controllers.maintain.BusinessRel
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
+GET        /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
+POST       /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()
+
+GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
+POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
+
+GET        /resident-in-the-uk                  controllers.maintain.ResidentInTheUkController.onPageLoad()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

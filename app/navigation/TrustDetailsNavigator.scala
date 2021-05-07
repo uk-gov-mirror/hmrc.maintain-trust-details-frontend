@@ -16,11 +16,10 @@
 
 package navigation
 
-import models.UserAnswers
+import models.{TypeOfTrust, UserAnswers}
 import pages.Page
-import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, TrustResidentInUkPage}
+import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, SetUpAfterSettlorDiedPage, TrustResidentInUkPage, TypeOfTrustPage}
 import play.api.mvc.Call
-
 import javax.inject.Inject
 
 class TrustDetailsNavigator @Inject()() extends Navigator {
@@ -32,6 +31,8 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case OwnsUkLandOrPropertyPage => _ => controllers.maintain.routes.RecordedOnEeaRegisterController.onPageLoad()
     case RecordedOnEeaRegisterPage => ua => trustUKResidentPage(ua)
     case BusinessRelationshipInUkPage => _ => controllers.maintain.routes.CheckDetailsController.onPageLoad()
+    case SetUpAfterSettlorDiedPage => ua => fromSetUpAfterSettlorDiedPage(ua)
+    case TypeOfTrustPage => ua => fromTypeOfTrustPage(ua)
   }
 
 
@@ -44,6 +45,37 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       controllers.maintain.routes.CheckDetailsController.onPageLoad()
     } else {
       controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad()
+    }
+  }
+
+  private def fromSetUpAfterSettlorDiedPage(ua: UserAnswers): Call = {
+    ua.get(SetUpAfterSettlorDiedPage) match {
+      case Some(true) =>
+        controllers.maintain.routes.ResidentInTheUkController.onPageLoad()
+      case Some(false) =>
+        controllers.maintain.routes.TypeOfTrustController.onPageLoad()
+      case _ =>
+        controllers.routes.SessionExpiredController.onPageLoad()
+    }
+  }
+
+  private def fromTypeOfTrustPage(ua: UserAnswers): Call = {
+    //ToDo Add Navigation to the relevant pages
+    ua.get(TypeOfTrustPage) match {
+      case Some(TypeOfTrust.InterVivosSettlement) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+      case Some(TypeOfTrust.EmploymentRelated) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+      case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+      case Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+      case Some(TypeOfTrust.HeritageMaintenanceFund) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+      case Some(TypeOfTrust.WillTrustOrIntestacyTrust) =>
+        controllers.routes.FeatureNotAvailableController.onPageLoad()
+      case _ =>
+        controllers.routes.SessionExpiredController.onPageLoad()
     }
   }
 }

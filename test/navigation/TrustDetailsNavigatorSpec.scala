@@ -17,8 +17,9 @@
 package navigation
 
 import base.SpecBase
+import models.TypeOfTrust
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage, TrustResidentInUkPage}
+import pages.maintain.{BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage, SetUpAfterSettlorDiedPage, TrustResidentInUkPage, TypeOfTrustPage}
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
@@ -57,6 +58,87 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       "BusinessRelationshipYesNo page -> CYA page" in {
         navigator.nextPage(BusinessRelationshipInUkPage, emptyUserAnswers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      }
+
+
+      "SetUpAfterSettlorDied page" when {
+        "Yes -> Trustees in the UK page" in {
+          val answers = emptyUserAnswers
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+
+          navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
+            .mustBe(controllers.maintain.routes.ResidentInTheUkController.onPageLoad())
+        }
+
+        "No -> TypeOfTrust page" in {
+          val answers = emptyUserAnswers
+            .set(SetUpAfterSettlorDiedPage, false).success.value
+
+          navigator.nextPage(SetUpAfterSettlorDiedPage, answers)
+            .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(SetUpAfterSettlorDiedPage, emptyUserAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      //ToDo Change to Trustees in the UK Controller
+      "TypeOfTrust page" when {
+
+        "DeedOfVariation -> DeedOfVariation page" in {
+          val answers = emptyUserAnswers
+            .set(TypeOfTrustPage, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
+
+          navigator.nextPage(TypeOfTrustPage, answers)
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+        }
+
+        "WillTrust -> Feature Not Available page" in {
+          val answers = emptyUserAnswers
+            .set(TypeOfTrustPage, TypeOfTrust.WillTrustOrIntestacyTrust).success.value
+
+          navigator.nextPage(TypeOfTrustPage, answers)
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+        }
+
+        "Heritage -> Heritage page" in {
+          val answers = emptyUserAnswers
+            .set(TypeOfTrustPage, TypeOfTrust.HeritageMaintenanceFund).success.value
+
+          navigator.nextPage(TypeOfTrustPage, answers)
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+        }
+
+        "Flat Management -> Flat Management page" in {
+          val answers = emptyUserAnswers
+            .set(TypeOfTrustPage, TypeOfTrust.FlatManagementCompanyOrSinkingFund).success.value
+
+          navigator.nextPage(TypeOfTrustPage, answers)
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+        }
+
+        "EmploymentRelated -> EmploymentRelated page" in {
+          val answers = emptyUserAnswers
+            .set(TypeOfTrustPage, TypeOfTrust.EmploymentRelated).success.value
+
+          navigator.nextPage(TypeOfTrustPage, answers)
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+        }
+
+        "InterVivos -> InterVivos page" in {
+          val answers = emptyUserAnswers
+            .set(TypeOfTrustPage, TypeOfTrust.InterVivosSettlement).success.value
+
+          navigator.nextPage(TypeOfTrustPage, answers)
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(TypeOfTrustPage, emptyUserAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
       }
     }
   }
