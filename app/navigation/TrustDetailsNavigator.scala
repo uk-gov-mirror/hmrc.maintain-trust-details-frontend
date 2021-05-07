@@ -45,6 +45,11 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
+    case GeneralAdminInTheUkPage => yesNoNav(_,
+      GeneralAdminInTheUkPage,
+      SetUpAfterSettlorDiedController.onPageLoad(),
+      SetUpAfterSettlorDiedController.onPageLoad() //ToDo This needs to redirect to the No Page
+    )
   }
 
   private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {

@@ -19,34 +19,33 @@ package controllers.maintain
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
-import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
-import pages.maintain.{SetUpAfterSettlorDiedPage, TypeOfTrustPage}
+import pages.maintain.GeneralAdminInTheUkPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.SetUpAfterSettlorDiedView
+import views.html.maintain.GeneralAdminInTheUkView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SetUpAfterSettlorDiedController @Inject()(
+class GeneralAdminInTheUkController @Inject()(
                                                  override val messagesApi: MessagesApi,
                                                  yesNoFormProvider: YesNoFormProvider,
                                                  repository: PlaybackRepository,
                                                  navigator: Navigator,
                                                  actions: StandardActionSets,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                 view: SetUpAfterSettlorDiedView
+                                                 view: GeneralAdminInTheUkView
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("setUpAfterSettlorDied")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("generalAdminInTheUk")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(SetUpAfterSettlorDiedPage) match {
+      val preparedForm = request.userAnswers.get(GeneralAdminInTheUkPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -61,23 +60,16 @@ class SetUpAfterSettlorDiedController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
 
-        hasSettlorDied => {
+        value => {
           for {
-            answersWithSetUpValue <- Future.fromTry(request.userAnswers.set(SetUpAfterSettlorDiedPage, hasSettlorDied))
-            updatedAnswers <- addDefaultTypeOfTrust(hasSettlorDied, answersWithSetUpValue)
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(GeneralAdminInTheUkPage, value))
             _ <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(SetUpAfterSettlorDiedPage, updatedAnswers))
+            Redirect(navigator.nextPage(GeneralAdminInTheUkPage, updatedAnswers))
           }
         }
       )
   }
 
-  def addDefaultTypeOfTrust(hasSettlorDied: Boolean, userAnswers: UserAnswers): Future[UserAnswers] = {
-    if (hasSettlorDied) {
-      Future.fromTry(userAnswers.set(TypeOfTrustPage, TypeOfTrust.WillTrustOrIntestacyTrust))
-    } else {
-      Future.successful(userAnswers)
-    }
-  }
+
 }

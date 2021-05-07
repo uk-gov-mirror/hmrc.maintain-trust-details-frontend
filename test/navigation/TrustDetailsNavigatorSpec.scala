@@ -67,6 +67,31 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
       val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
 
+      "General Admin in the Uk page" when {
+        val page = GeneralAdminInTheUkPage
+
+        "Yes -> Set up after settlor died page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+        }
+
+        "No -> What country is the trust administered in page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
       "Set up after settlor died page" when {
 
         val page = SetUpAfterSettlorDiedPage
