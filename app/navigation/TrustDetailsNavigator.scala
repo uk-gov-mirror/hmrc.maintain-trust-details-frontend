@@ -62,7 +62,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       case Some(TypeOfTrust.EmploymentRelated) =>
         EfrbsYesNoController.onPageLoad()
       case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad() // TODO - redirect to 'set up after settlor died y/n'
+        controllers.routes.FeatureNotAvailableController.onPageLoad() // TODO - redirect to 'set up in addition to will trust y/n'
       case Some(TypeOfTrust.WillTrustOrIntestacyTrust) | Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) | Some(TypeOfTrust.HeritageMaintenanceFund) =>
         WhereTrusteesBasedController.onPageLoad()
       case _ =>
