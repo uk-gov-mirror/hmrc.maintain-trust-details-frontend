@@ -169,13 +169,13 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
 
         "No Data -> Session Expired page" in {
-          navigator.nextPage(page, emptyUserAnswers)
+          navigator.nextPage(page, baseAnswers)
             .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
         }
       }
 
       "EFRBS start date page -> Where trustees based page" in {
-        navigator.nextPage(EfrbsStartDatePage, emptyUserAnswers)
+        navigator.nextPage(EfrbsStartDatePage, baseAnswers)
           .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
       }
     }
