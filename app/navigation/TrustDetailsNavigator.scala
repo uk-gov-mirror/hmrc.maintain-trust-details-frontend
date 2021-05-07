@@ -19,16 +19,18 @@ package navigation
 import controllers.maintain.routes._
 import controllers.routes.SessionExpiredController
 import models.{TypeOfTrust, UserAnswers}
-import pages.Page
+import pages.{Page, QuestionPage}
 import pages.maintain._
 import play.api.mvc.Call
-
 import javax.inject.Inject
+import play.api.Logging
 
-class TrustDetailsNavigator @Inject()() extends Navigator {
+class TrustDetailsNavigator @Inject()() extends Navigator with Logging {
 
-  override def nextPage(page: Page, userAnswers: UserAnswers): Call =
+  override def nextPage(page: Page, userAnswers: UserAnswers): Call = {
+    logger.info(s"--------------- nextPage TypeOfTrustPage ${userAnswers.get(TypeOfTrustPage)}")
     routes()(page)(userAnswers)
+  }
 
   private def routes(): PartialFunction[Page, UserAnswers => Call] =
     simpleNavigation() orElse
@@ -45,11 +47,18 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
-    case GeneralAdminInTheUkPage => yesNoNav(_,
+    case GeneralAdminInTheUkPage => yesNoTestNav(_,
       GeneralAdminInTheUkPage,
       SetUpAfterSettlorDiedController.onPageLoad(),
       SetUpAfterSettlorDiedController.onPageLoad() //ToDo This needs to redirect to the No Page
     )
+  }
+
+  def yesNoTestNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
+    logger.info(s"--------------- yesNoTestNav ${ua.get(GeneralAdminInTheUkPage)}")
+    ua.get(fromPage)
+      .map(if (_) yesCall else noCall)
+      .getOrElse(controllers.routes.SessionExpiredController.onPageLoad())
   }
 
   private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {
@@ -61,6 +70,8 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   }
 
   private def fromTypeOfTrustPage(ua: UserAnswers): Call = {
+    logger.info(s"--------------- GeneralAdminInTheUkPage ${ua.get(GeneralAdminInTheUkPage)}")
+    logger.info(s"--------------- fromTypeOfTrustPage ${ua.get(TypeOfTrustPage)}")
     ua.get(TypeOfTrustPage) match {
       case Some(TypeOfTrust.InterVivosSettlement) =>
         HoldoverReliefClaimedController.onPageLoad()
