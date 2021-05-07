@@ -35,7 +35,6 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case TypeOfTrustPage => ua => fromTypeOfTrustPage(ua)
   }
 
-
   def routes(): PartialFunction[Page, UserAnswers => Call] =
     simpleNavigation()
 
@@ -51,7 +50,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   private def fromSetUpAfterSettlorDiedPage(ua: UserAnswers): Call = {
     ua.get(SetUpAfterSettlorDiedPage) match {
       case Some(true) =>
-        controllers.maintain.routes.ResidentInTheUkController.onPageLoad()
+        controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad()
       case Some(false) =>
         controllers.maintain.routes.TypeOfTrustController.onPageLoad()
       case _ =>
