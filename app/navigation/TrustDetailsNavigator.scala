@@ -23,9 +23,8 @@ import pages.Page
 import pages.maintain._
 import play.api.mvc.Call
 import javax.inject.Inject
-import play.api.Logging
 
-class TrustDetailsNavigator @Inject()() extends Navigator with Logging {
+class TrustDetailsNavigator @Inject()() extends Navigator {
 
   override def nextPage(page: Page, userAnswers: UserAnswers): Call = {
     routes()(page)(userAnswers)

@@ -22,7 +22,6 @@ import javax.inject.Inject
 import models.TypeOfTrust
 import navigation.Navigator
 import pages.maintain.TypeOfTrustPage
-import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -40,7 +39,7 @@ class TypeOfTrustController @Inject()(
                                        formProvider: TypeOfTrustFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: TypeOfTrustView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val form: Form[TypeOfTrust] = formProvider()
 
