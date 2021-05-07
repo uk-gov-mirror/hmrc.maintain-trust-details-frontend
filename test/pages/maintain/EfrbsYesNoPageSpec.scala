@@ -18,6 +18,8 @@ package pages.maintain
 
 import pages.behaviours.PageBehaviours
 
+import java.time.LocalDate
+
 class EfrbsYesNoPageSpec extends PageBehaviours {
 
   "EfrbsYesNoPage" must {
@@ -27,5 +29,18 @@ class EfrbsYesNoPageSpec extends PageBehaviours {
     beSettable[Boolean](EfrbsYesNoPage)
 
     beRemovable[Boolean](EfrbsYesNoPage)
+
+    "implement cleanup logic" when {
+      "NO selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(EfrbsYesNoPage, true).success.value
+          .set(EfrbsStartDatePage, LocalDate.parse("1996-02-03")).success.value
+
+        val cleanAnswers = userAnswers.set(EfrbsYesNoPage, false).success.value
+
+        cleanAnswers.get(EfrbsStartDatePage) mustBe None
+      }
+    }
   }
 }

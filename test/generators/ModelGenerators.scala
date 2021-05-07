@@ -18,7 +18,6 @@ package generators
 
 import models.DeedOfVariation._
 import models.TrusteesBased._
-import models.TypeOfTrust._
 import models.http.TaxableMigrationFlag
 import models.{DeedOfVariation, TrusteesBased, TypeOfTrust}
 import org.scalacheck.Arbitrary.arbitrary
@@ -40,14 +39,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryTypeOfTrust: Arbitrary[TypeOfTrust] = {
     Arbitrary {
-      Gen.oneOf(
-        WillTrustOrIntestacyTrust,
-        DeedOfVariationTrustOrFamilyArrangement,
-        InterVivosSettlement,
-        EmploymentRelated,
-        HeritageMaintenanceFund,
-        FlatManagementCompanyOrSinkingFund
-      )
+      Gen.oneOf(TypeOfTrust.values)
     }
   }
 
