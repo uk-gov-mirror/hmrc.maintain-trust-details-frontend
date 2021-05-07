@@ -33,13 +33,13 @@ class TrustDetailsMapper extends Logging {
   def apply(userAnswers: UserAnswers): JsResult[TrustDetails] = {
 
     if (userAnswers.migratingFromNonTaxableToTaxable) {
-      userAnswers.data.validate[MigratingTrustDetails](migratingTrustDetailsReads)
+      userAnswers.data.validate[MigratingTrustDetails](migratingTrustDetailsReads(userAnswers.registeredWithDeceasedSettlor))
     } else {
       userAnswers.data.validate[NonMigratingTrustDetails](nonMigratingTrustDetailsReads)
     }
   }
 
-  private lazy val migratingTrustDetailsReads: Reads[MigratingTrustDetails] = {
+  private def migratingTrustDetailsReads(registeredWithDeceasedSettlor: Boolean): Reads[MigratingTrustDetails] = {
 
     lazy val administrationCountryReads: Reads[String] = {
       AdministrationCountryPage.path.readNullable[String].flatMap {
@@ -100,20 +100,22 @@ class TrustDetailsMapper extends Logging {
 
     lazy val typeOfTrustReads: Reads[TypeOfTrust] = {
       TypeOfTrustPage.path.readNullable[TypeOfTrust].flatMap {
-        case Some(DeedOfVariationTrustOrFamilyArrangement) => SetUpInAdditionToWillTrustPage.path.read[Boolean].flatMap {
-          case true => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
-          case false => Reads(_ => JsSuccess(DeedOfVariationTrustOrFamilyArrangement))
-        }
+        case Some(DeedOfVariationTrustOrFamilyArrangement) if registeredWithDeceasedSettlor => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
+        case Some(DeedOfVariationTrustOrFamilyArrangement) => Reads(_ => JsSuccess(DeedOfVariationTrustOrFamilyArrangement))
         case Some(value) => Reads(_ => JsSuccess(value))
         case None => Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
       }
     }
 
     lazy val deedOfVariationReads: Reads[Option[DeedOfVariation]] = {
-      SetUpInAdditionToWillTrustPage.path.readNullable[Boolean].flatMap {
-        case Some(true) => Reads(_ => JsSuccess(Some(AdditionToWillTrust)))
-        case Some(false) => WhyDeedOfVariationCreatedPage.path.read[DeedOfVariation].map(Some(_))
-        case None => Reads(_ => JsSuccess(None))
+      SetUpAfterSettlorDiedPage.path.readNullable[Boolean].flatMap {
+        case Some(false) if registeredWithDeceasedSettlor => Reads(_ => JsSuccess(Some(AdditionToWillTrust)))
+        case None if !registeredWithDeceasedSettlor => WhyDeedOfVariationCreatedPage.path.read[DeedOfVariation].map(Some(_))
+        case _ => SetUpInAdditionToWillTrustPage.path.readNullable[Boolean].flatMap {
+          case Some(true) => Reads(_ => JsSuccess(Some(AdditionToWillTrust)))
+          case Some(false) => WhyDeedOfVariationCreatedPage.path.read[DeedOfVariation].map(Some(_))
+          case None => Reads(_ => JsSuccess(None))
+        }
       }
     }
 
