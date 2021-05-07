@@ -72,4 +72,9 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
     http.PUT[NonMigratingTrustDetails, HttpResponse](url, value)
   }
 
+  def wasTrustRegisteredWithDeceasedSettlor(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Boolean] = {
+    val url = s"$baseUrl/$identifier/has-deceased-settlor"
+    http.GET[Boolean](url)
+  }
+
 }

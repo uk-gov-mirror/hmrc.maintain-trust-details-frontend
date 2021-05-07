@@ -17,19 +17,23 @@
 package utils
 
 import models.{TrustDetailsType, UserAnswers}
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
+import pages.maintain.{AnswersCompletedPage, BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage}
 
 class UserAnswersStatus {
 
   def areAnswersSubmittable(ua: UserAnswers, trustDetails: TrustDetailsType): Boolean = {
-    (
-      ua.get(OwnsUkLandOrPropertyPage).isDefined && ua.get(RecordedOnEeaRegisterPage).isDefined,
-      ua.get(BusinessRelationshipInUkPage).isDefined,
-      trustDetails.ukResident
-    ) match {
-      case (false, _, _) => false
-      case (true, false, false) => false
-      case _ => true
+    if (ua.migratingFromNonTaxableToTaxable) {
+      ua.get(AnswersCompletedPage).contains(true)
+    } else {
+      (
+        ua.get(OwnsUkLandOrPropertyPage).isDefined && ua.get(RecordedOnEeaRegisterPage).isDefined,
+        ua.get(BusinessRelationshipInUkPage).isDefined,
+        trustDetails.ukResident
+      ) match {
+        case (false, _, _) => false
+        case (true, false, false) => false
+        case _ => true
+      }
     }
   }
 }

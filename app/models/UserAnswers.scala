@@ -28,7 +28,8 @@ import scala.util.{Failure, Success, Try}
 
 case class UserAnswers(internalId: String,
                        identifier: String,
-                       migratingFromNonTaxableToTaxable: Boolean = false,
+                       migratingFromNonTaxableToTaxable: Boolean,
+                       registeredWithDeceasedSettlor: Boolean,
                        data: JsObject = Json.obj(),
                        updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
@@ -104,6 +105,7 @@ object UserAnswers {
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
       (__ \ "migratingFromNonTaxableToTaxable").readWithDefault[Boolean](false) and
+      (__ \ "registeredWithDeceasedSettlor").read[Boolean] and
       (__ \ "data").read[JsObject] and
       (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
     )(UserAnswers.apply _)
@@ -112,6 +114,7 @@ object UserAnswers {
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
       (__ \ "migratingFromNonTaxableToTaxable").write[Boolean] and
+      (__ \ "registeredWithDeceasedSettlor").write[Boolean] and
       (__ \ "data").write[JsObject] and
       (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
     )(unlift(UserAnswers.unapply))
