@@ -18,21 +18,35 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
+import org.mockito.ArgumentCaptor
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{reset, verify, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.SetUpAfterSettlorDiedPage
+import pages.maintain.{SetUpAfterSettlorDiedPage, TypeOfTrustPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.SetUpAfterSettlorDiedView
 
-class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+
+class SetUpAfterSettlorDiedControllerSpec extends SpecBase with BeforeAndAfterEach with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("setUpAfterSettlorDied")
 
   lazy val setUpAfterSettlorDiedRoute: String = routes.SetUpAfterSettlorDiedController.onPageLoad().url
+
+  override def beforeEach(): Unit = {
+    reset(playbackRepository)
+    when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+  }
+
 
   "SetUpAfterSettlorDiedController" must {
 
@@ -74,7 +88,32 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" in {
+
+    "redirect to the next page setting the type of trust if the settlor has died" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[Navigator].toInstance(fakeNavigator))
+          .build()
+
+      val request = FakeRequest(POST, setUpAfterSettlorDiedRoute)
+        .withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      val capturedAnswers = uaCaptor.getValue
+      capturedAnswers.get(SetUpAfterSettlorDiedPage) mustBe Some(true)
+      capturedAnswers.get(TypeOfTrustPage) mustBe Some(TypeOfTrust.WillTrustOrIntestacyTrust)
+      application.stop()
+    }
+
+    "redirect to the next page without setting the type of trust if the settlor has not died" in {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -89,6 +128,12 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      val capturedAnswers = uaCaptor.getValue
+      capturedAnswers.get(SetUpAfterSettlorDiedPage) mustBe Some(false)
+      capturedAnswers.get(TypeOfTrustPage) mustBe None
 
       application.stop()
     }

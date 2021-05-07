@@ -19,11 +19,12 @@ package controllers.maintain
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
+import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
-import pages.maintain.SetUpAfterSettlorDiedPage
+import pages.maintain.{SetUpAfterSettlorDiedPage, TypeOfTrustPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.maintain.SetUpAfterSettlorDiedView
@@ -60,12 +61,23 @@ class SetUpAfterSettlorDiedController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
 
-        value => {
+        hasSettlorDied => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(SetUpAfterSettlorDiedPage, value))
-            _              <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(SetUpAfterSettlorDiedPage, updatedAnswers))
+            answersWithSetUpValue <- Future.fromTry(request.userAnswers.set(SetUpAfterSettlorDiedPage, hasSettlorDied))
+            updatedAnswers <- addDefaultTypeOfTrust(hasSettlorDied, answersWithSetUpValue)
+            _ <- repository.set(updatedAnswers)
+          } yield {
+            Redirect(navigator.nextPage(SetUpAfterSettlorDiedPage, updatedAnswers))
+          }
         }
       )
+  }
+
+  def addDefaultTypeOfTrust(hasSettlorDied: Boolean, userAnswers: UserAnswers): Future[UserAnswers] = {
+    if (hasSettlorDied) {
+      Future.fromTry(userAnswers.set(TypeOfTrustPage, TypeOfTrust.WillTrustOrIntestacyTrust))
+    } else {
+      Future.successful(userAnswers)
+    }
   }
 }
