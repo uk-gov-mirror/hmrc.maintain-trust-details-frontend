@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import models.TypeOfTrust
+import models.{DeedOfVariation, TypeOfTrust}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.maintain._
 
@@ -165,6 +165,27 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
             .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Why Deed of Variation Created page" when {
+
+        val page = WhyDeedOfVariationCreatedPage
+
+        "To replace a will trust -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, DeedOfVariation.ReplacedWillTrust).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+        }
+
+        "To replace an absolute interest over will -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, DeedOfVariation.PreviouslyAbsoluteInterestUnderWill).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
       }
 

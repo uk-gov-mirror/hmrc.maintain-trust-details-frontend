@@ -38,6 +38,9 @@ POST       /after-settlor-died                  controllers.maintain.SetUpAfterS
 GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
 POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
 
+GET        /why-deed-of-variation               controllers.maintain.WhyDeedOfVariationCreatedController.onPageLoad()
+POST       /why-deed-of-variation               controllers.maintain.WhyDeedOfVariationCreatedController.onSubmit()
+
 GET        /holdover-relief-claimed             controllers.maintain.HoldoverReliefClaimedController.onPageLoad()
 POST       /holdover-relief-claimed             controllers.maintain.HoldoverReliefClaimedController.onSubmit()
 

@@ -38,6 +38,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case OwnsUkLandOrPropertyPage => _ => RecordedOnEeaRegisterController.onPageLoad()
     case BusinessRelationshipInUkPage => _ => CheckDetailsController.onPageLoad()
     case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => WhereTrusteesBasedController.onPageLoad()
+    case WhyDeedOfVariationCreatedPage => _ => WhereTrusteesBasedController.onPageLoad()
   }
 
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {

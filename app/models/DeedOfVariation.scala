@@ -17,6 +17,7 @@
 package models
 
 import play.api.libs.json.{JsError, JsString, JsSuccess, Reads, Writes}
+import viewmodels.RadioOption
 
 sealed trait DeedOfVariation {
   val asString: String
@@ -24,15 +25,15 @@ sealed trait DeedOfVariation {
 
 object DeedOfVariation {
 
-  case object PreviouslyAbsoluteInterestUnderWill extends DeedOfVariation {
+  case object PreviouslyAbsoluteInterestUnderWill extends WithName("replace-absolute-interest") with DeedOfVariation {
     override val asString: String = "Previously there was only an absolute interest under the will"
   }
 
-  case object ReplacedWillTrust extends DeedOfVariation {
+  case object ReplacedWillTrust extends WithName("replace-will-trust") with DeedOfVariation {
     override val asString: String = "Replaced the will trust"
   }
 
-  case object AdditionToWillTrust extends DeedOfVariation {
+  case object AdditionToWillTrust extends WithName("add-will-trust") with DeedOfVariation {
     override val asString: String = "Addition to the will trust"
   }
 
@@ -45,4 +46,16 @@ object DeedOfVariation {
 
   implicit val writes: Writes[DeedOfVariation] = Writes(x => JsString(x.asString))
 
+  val values: List[DeedOfVariation] = List(
+    ReplacedWillTrust,
+    PreviouslyAbsoluteInterestUnderWill,
+    AdditionToWillTrust
+  )
+
+  val options: List[RadioOption] = values
+    .filterNot(_ == AdditionToWillTrust)
+    .map(value => RadioOption("deedOfVariation", value.toString))
+
+  implicit val enumerable: Enumerable[DeedOfVariation] =
+    Enumerable(values.map(v => v.toString -> v): _*)
 }
