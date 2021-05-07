@@ -62,11 +62,15 @@ class IndexController @Inject()(
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
-          // TODO - use taxableMigrationFlag to determine where to navigate to
           if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
-            Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
+            if (taxableMigrationFlag.migratingFromNonTaxableToTaxable) {
+              // TODO - navigate to GovernedByUkLawController once built
+              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            } else {
+              Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
+            }
           }
         } else {
           warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))

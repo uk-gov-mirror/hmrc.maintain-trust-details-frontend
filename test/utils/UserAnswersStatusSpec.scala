@@ -18,7 +18,7 @@ package utils
 
 import base.SpecBase
 import models.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
+import pages.maintain.{AnswersCompletedPage, BusinessRelationshipInUkPage, OwnsUkLandOrPropertyPage, RecordedOnEeaRegisterPage}
 
 import java.time.LocalDate
 
@@ -34,13 +34,15 @@ class UserAnswersStatusSpec extends SpecBase {
 
       "not doing non-tax-to-tax migration" must {
 
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = false)
+
         "return true" when {
 
           "taxable" when {
 
             "uk resident" in {
 
-              val userAnswers = emptyUserAnswers
+              val userAnswers = baseAnswers
                 .set(OwnsUkLandOrPropertyPage, true).success.value
                 .set(RecordedOnEeaRegisterPage, true).success.value
 
@@ -64,7 +66,7 @@ class UserAnswersStatusSpec extends SpecBase {
 
             "non-uk resident" in {
 
-              val userAnswers = emptyUserAnswers
+              val userAnswers = baseAnswers
                 .set(OwnsUkLandOrPropertyPage, true).success.value
                 .set(RecordedOnEeaRegisterPage, true).success.value
                 .set(BusinessRelationshipInUkPage, true).success.value
@@ -92,7 +94,7 @@ class UserAnswersStatusSpec extends SpecBase {
 
             "uk resident" in {
 
-              val userAnswers = emptyUserAnswers
+              val userAnswers = baseAnswers
                 .set(OwnsUkLandOrPropertyPage, true).success.value
                 .set(RecordedOnEeaRegisterPage, true).success.value
 
@@ -116,7 +118,7 @@ class UserAnswersStatusSpec extends SpecBase {
 
             "non-uk resident" in {
 
-              val userAnswers = emptyUserAnswers
+              val userAnswers = baseAnswers
                 .set(OwnsUkLandOrPropertyPage, true).success.value
                 .set(RecordedOnEeaRegisterPage, true).success.value
                 .set(BusinessRelationshipInUkPage, true).success.value
@@ -145,7 +147,7 @@ class UserAnswersStatusSpec extends SpecBase {
 
           "TrustOwnUKLandOrPropertyPage and TrustEEAYesNoPage not answered" in {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
 
             val trustDetails = TrustDetailsType(
               startDate = startDate,
@@ -167,7 +169,7 @@ class UserAnswersStatusSpec extends SpecBase {
 
           "BusinessRelationshipYesNoPage not answered and non-UK resident" when {
 
-            val userAnswers = emptyUserAnswers
+            val userAnswers = baseAnswers
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(RecordedOnEeaRegisterPage, true).success.value
 
@@ -210,6 +212,54 @@ class UserAnswersStatusSpec extends SpecBase {
 
               userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
             }
+          }
+        }
+      }
+
+      "doing non-tax-to-tax migration" must {
+
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
+
+        val trustDetails = TrustDetailsType(
+          startDate = startDate,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = None,
+          trustUKProperty = None,
+          trustRecorded = None,
+          trustUKRelation = None,
+          trustUKResident = None,
+          typeOfTrust = None,
+          deedOfVariation = None,
+          interVivos = None,
+          efrbsStartDate = None
+        )
+
+        "return true" when {
+          "AnswersCompletedPage contains true" in {
+
+            val userAnswers = baseAnswers
+              .set(AnswersCompletedPage, true).success.value
+
+            userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe true
+          }
+        }
+
+        "return false" when {
+
+          "AnswersCompletedPage contains false" in {
+
+            val userAnswers = baseAnswers
+              .set(AnswersCompletedPage, false).success.value
+
+            userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
+          }
+
+          "AnswersCompletedPage is undefined" in {
+
+            val userAnswers = baseAnswers
+
+            userAnswersStatus.areAnswersSubmittable(userAnswers, trustDetails) mustBe false
           }
         }
       }

@@ -176,44 +176,83 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
             }
           }
 
-          "not in submittable state" must {
-            "redirect to TrustOwnUKLandOrPropertyController" in {
+          "not in submittable state" when {
 
-              forAll(arbitrary[TaxableMigrationFlag]) {
-                taxableMigrationFlag =>
+            "migrating from non-taxable to taxable" must {
+              "redirect to GovernedByUkLawController" in {
 
-                  beforeEach()
+                when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                  .thenReturn(Future.successful(true))
 
-                  when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
-                    .thenReturn(Future.successful(true))
+                when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                  .thenReturn(Future.successful(TaxableMigrationFlag(Some(true))))
 
-                  when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
-                    .thenReturn(Future.successful(taxableMigrationFlag))
+                when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                  .thenReturn(false)
 
-                  when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
-                    .thenReturn(false)
+                val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                  .overrides(
+                    bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                    bind[TrustsConnector].toInstance(mockTrustsConnector),
+                    bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                    bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                  ).build()
 
-                  val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-                    .overrides(
-                      bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-                      bind[TrustsConnector].toInstance(mockTrustsConnector),
-                      bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                      bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
-                    ).build()
+                val request = FakeRequest(GET, onPageLoad)
 
-                  val request = FakeRequest(GET, onPageLoad)
+                val result = route(application, request).value
 
-                  val result = route(application, request).value
+                status(result) mustEqual SEE_OTHER
 
-                  status(result) mustEqual SEE_OTHER
+                redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
-                  redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
+                verify(mockExtractor, never()).apply(any(), any())
 
-                  verify(mockExtractor, never()).apply(any(), any())
+                val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+                verify(playbackRepository).set(uaCaptor.capture)
+                uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe true
+              }
+            }
 
-                  val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-                  verify(playbackRepository).set(uaCaptor.capture)
-                  uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+            "not migrating" must {
+              "redirect to BeforeYouContinueController" in {
+
+                forAll(arbitrary[TaxableMigrationFlag].suchThat(!_.value.contains(true))) {
+                  taxableMigrationFlag =>
+
+                    beforeEach()
+
+                    when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                      .thenReturn(Future.successful(true))
+
+                    when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                      .thenReturn(Future.successful(taxableMigrationFlag))
+
+                    when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                      .thenReturn(false)
+
+                    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+                      .overrides(
+                        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                        bind[TrustsConnector].toInstance(mockTrustsConnector),
+                        bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                        bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                      ).build()
+
+                    val request = FakeRequest(GET, onPageLoad)
+
+                    val result = route(application, request).value
+
+                    status(result) mustEqual SEE_OTHER
+
+                    redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
+
+                    verify(mockExtractor, never()).apply(any(), any())
+
+                    val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+                    verify(playbackRepository).set(uaCaptor.capture)
+                    uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+                }
               }
             }
           }
