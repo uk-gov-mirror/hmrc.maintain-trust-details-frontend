@@ -27,5 +27,19 @@ class PreviouslyResidentOffshorePageSpec extends PageBehaviours {
     beSettable[Boolean](PreviouslyResidentOffshorePage)
 
     beRemovable[Boolean](PreviouslyResidentOffshorePage)
+
+    "implement cleanup logic" when {
+
+      "NO selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(PreviouslyResidentOffshorePage, true).success.value
+          .set(PreviouslyResidentOffshoreCountryPage, "FR").success.value
+
+        val cleanAnswers = userAnswers.set(PreviouslyResidentOffshorePage, false).success.value
+
+        cleanAnswers.get(PreviouslyResidentOffshoreCountryPage) mustBe None
+      }
+    }
   }
 }

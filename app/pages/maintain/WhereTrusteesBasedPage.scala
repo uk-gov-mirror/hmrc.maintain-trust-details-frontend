@@ -16,14 +16,35 @@
 
 package pages.maintain
 
-import models.TrusteesBased
+import models.TrusteesBased._
+import models.{TrusteesBased, UserAnswers}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object WhereTrusteesBasedPage extends QuestionPage[TrusteesBased] {
 
   override def path: JsPath = basePath \ toString
 
   override def toString: String = "whereTrusteesBased"
+
+  override def cleanup(value: Option[TrusteesBased], userAnswers: UserAnswers): Try[UserAnswers] = {
+    value match {
+      case Some(AllTrusteesUkBased) => userAnswers
+        .remove(SettlorsUkBasedPage)
+        .flatMap(_.remove(BusinessRelationshipInUkPage))
+        .flatMap(_.remove(SettlorBenefitsFromAssetsPage))
+        .flatMap(_.remove(ForPurposeOfSection218Page))
+        .flatMap(_.remove(AgentCreatedTrustPage))
+      case Some(NoTrusteesUkBased) => userAnswers
+        .remove(SettlorsUkBasedPage)
+        .flatMap(_.remove(CreatedUnderScotsLawPage))
+        .flatMap(_.remove(PreviouslyResidentOffshorePage))
+        .flatMap(_.remove(PreviouslyResidentOffshoreCountryPage))
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+  }
 
 }

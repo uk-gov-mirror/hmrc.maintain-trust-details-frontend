@@ -27,5 +27,19 @@ class AdministeredInUkPageSpec extends PageBehaviours {
     beSettable[Boolean](AdministeredInUkPage)
 
     beRemovable[Boolean](AdministeredInUkPage)
+
+    "implement cleanup logic" when {
+
+      "YES selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(AdministeredInUkPage, false).success.value
+          .set(AdministrationCountryPage, "FR").success.value
+
+        val cleanAnswers = userAnswers.set(AdministeredInUkPage, true).success.value
+
+        cleanAnswers.get(AdministrationCountryPage) mustBe None
+      }
+    }
   }
 }
