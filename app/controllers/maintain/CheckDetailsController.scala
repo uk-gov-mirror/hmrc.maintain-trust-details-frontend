@@ -21,11 +21,9 @@ import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
 import mappers.TrustDetailsMapper
 import models.{MigratingTrustDetails, NonMigratingTrustDetails}
-import pages.maintain.AnswersCompletedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.SessionLogging
 import utils.print.TrustDetailsPrintHelper
@@ -37,7 +35,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CheckDetailsController @Inject()(
                                         override val messagesApi: MessagesApi,
-                                        repository: PlaybackRepository,
                                         standardActionSets: StandardActionSets,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: CheckDetailsView,
@@ -69,8 +66,6 @@ class CheckDetailsController @Inject()(
               case x: MigratingTrustDetails => connector.setMigratingTrustDetails(identifier, x)
             }
             _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
-            updatedAnswers <- Future.fromTry(userAnswers.set(AnswersCompletedPage, true))
-            _ <- repository.set(updatedAnswers)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
           }).recover {

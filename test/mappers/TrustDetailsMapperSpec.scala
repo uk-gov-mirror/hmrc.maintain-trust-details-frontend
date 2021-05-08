@@ -420,9 +420,9 @@ class TrustDetailsMapperSpec extends SpecBase {
               .set(RecordedOnEeaRegisterPage, true).success.value
               .set(TrustResidentInUkPage, false).success.value
 
-            val result = mapper(userAnswers)
+            val result = mapper.areAnswersSubmittable(userAnswers)
 
-            result.isSuccess mustBe false
+            result mustBe false
           }
 
           "TrustEEAYesNoPage not populated" in {
@@ -431,9 +431,9 @@ class TrustDetailsMapperSpec extends SpecBase {
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(TrustResidentInUkPage, false).success.value
 
-            val result = mapper(userAnswers)
+            val result = mapper.areAnswersSubmittable(userAnswers)
 
-            result.isSuccess mustBe false
+            result mustBe false
           }
 
           "TrustUKResidentPage not populated" in {
@@ -442,10 +442,166 @@ class TrustDetailsMapperSpec extends SpecBase {
               .set(OwnsUkLandOrPropertyPage, true).success.value
               .set(RecordedOnEeaRegisterPage, true).success.value
 
-            val result = mapper(userAnswers)
+            val result = mapper.areAnswersSubmittable(userAnswers)
 
-            result.isSuccess mustBe false
+            result mustBe false
           }
+        }
+
+        "non-UK resident trust and BusinessRelationshipInUkPage undefined" in {
+
+          val userAnswers = baseAnswers
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
+            .set(TrustResidentInUkPage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+      }
+
+      "migrating" when {
+
+        val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
+
+        "GovernedByUkLawPage false and GoverningCountryPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+            .set(GovernedByUkLawPage, false).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
+            .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "AdministeredInUkPage false and AdministrationCountryPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, false).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
+            .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "TypeOfTrustPage InterVivosSettlement and HoldoverReliefClaimedPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(TypeOfTrustPage, InterVivosSettlement).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "TypeOfTrustPage EmploymentRelated and EfrbsYesNoPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(TypeOfTrustPage, EmploymentRelated).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "EfrbsYesNoPage true and EfrbsStartDate undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(TypeOfTrustPage, EmploymentRelated).success.value
+            .set(EfrbsYesNoPage, true).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "WhereTrusteesBasedPage InternationalAndUkBasedTrustees and SettlorsUkBasedPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "PreviouslyResidentOffshorePage true and PreviouslyResidentOffshoreCountryPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
+            .set(CreatedUnderScotsLawPage, true).success.value
+            .set(PreviouslyResidentOffshorePage, true).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "SettlorBenefitsFromAssetsPage false and ForPurposeOfSection218Page undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(SettlorBenefitsFromAssetsPage, false).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
+        }
+
+        "ForPurposeOfSection218Page true and AgentCreatedTrustPage undefined" in {
+
+          val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+            .set(GovernedByUkLawPage, true).success.value
+            .set(AdministeredInUkPage, true).success.value
+            .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
+            .set(BusinessRelationshipInUkPage, true).success.value
+            .set(SettlorBenefitsFromAssetsPage, false).success.value
+            .set(ForPurposeOfSection218Page, true).success.value
+
+          val result = mapper.areAnswersSubmittable(userAnswers)
+
+          result mustBe false
         }
       }
     }
