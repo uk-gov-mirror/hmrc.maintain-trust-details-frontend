@@ -27,5 +27,19 @@ class GovernedByUkLawPageSpec extends PageBehaviours {
     beSettable[Boolean](GovernedByUkLawPage)
 
     beRemovable[Boolean](GovernedByUkLawPage)
+
+    "implement cleanup logic" when {
+
+      "YES selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(GovernedByUkLawPage, false).success.value
+          .set(GoverningCountryPage, "FR").success.value
+
+        val cleanAnswers = userAnswers.set(GovernedByUkLawPage, true).success.value
+
+        cleanAnswers.get(GoverningCountryPage) mustBe None
+      }
+    }
   }
 }

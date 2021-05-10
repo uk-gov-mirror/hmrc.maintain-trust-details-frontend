@@ -21,8 +21,9 @@ import connectors.TrustsConnector
 import controllers.Assets.SEE_OTHER
 import extractors.TrustDetailsExtractor
 import generators.ModelGenerators
-import models.{TrustDetailsType, UserAnswers}
+import mappers.TrustDetailsMapper
 import models.http.TaxableMigrationFlag
+import models.{TrustDetailsType, UserAnswers}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, reset, verify, when}
@@ -33,7 +34,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.FeatureFlagService
-import utils.UserAnswersStatus
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -183,7 +183,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
         "value of migratingFromNonTaxableToTaxable has not changed" must {
           "not call extractor" when {
 
-            val mockUserAnswersStatus = mock[UserAnswersStatus]
+            val mockMapper = mock[TrustDetailsMapper]
 
             "in submittable state" must {
               "redirect to CheckDetailsController" in {
@@ -202,7 +202,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                     when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
                       .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
-                    when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                    when(mockMapper.areAnswersSubmittable(any()))
                       .thenReturn(true)
 
                     val application = applicationBuilder(
@@ -214,7 +214,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                       bind[FeatureFlagService].toInstance(mockFeatureFlagService),
                       bind[TrustsConnector].toInstance(mockTrustsConnector),
                       bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                      bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                      bind[TrustDetailsMapper].toInstance(mockMapper)
                     ).build()
 
                     val request = FakeRequest(GET, onPageLoad)
@@ -254,7 +254,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                       when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
                         .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
-                      when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                      when(mockMapper.areAnswersSubmittable(any()))
                         .thenReturn(false)
 
                       val application = applicationBuilder(
@@ -266,7 +266,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                         bind[FeatureFlagService].toInstance(mockFeatureFlagService),
                         bind[TrustsConnector].toInstance(mockTrustsConnector),
                         bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                        bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                        bind[TrustDetailsMapper].toInstance(mockMapper)
                       ).build()
 
                       val request = FakeRequest(GET, onPageLoad)
@@ -304,7 +304,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                       when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
                         .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
-                      when(mockUserAnswersStatus.areAnswersSubmittable(any(), any()))
+                      when(mockMapper.areAnswersSubmittable(any()))
                         .thenReturn(false)
 
                       val application = applicationBuilder(
@@ -316,7 +316,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                         bind[FeatureFlagService].toInstance(mockFeatureFlagService),
                         bind[TrustsConnector].toInstance(mockTrustsConnector),
                         bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                        bind[UserAnswersStatus].toInstance(mockUserAnswersStatus)
+                        bind[TrustDetailsMapper].toInstance(mockMapper)
                       ).build()
 
                       val request = FakeRequest(GET, onPageLoad)

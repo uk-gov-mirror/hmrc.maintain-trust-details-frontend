@@ -27,5 +27,21 @@ class SettlorBenefitsFromAssetsPageSpec extends PageBehaviours {
     beSettable[Boolean](SettlorBenefitsFromAssetsPage)
 
     beRemovable[Boolean](SettlorBenefitsFromAssetsPage)
+
+    "implement cleanup logic" when {
+
+      "YES selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(SettlorBenefitsFromAssetsPage, false).success.value
+          .set(ForPurposeOfSection218Page, true).success.value
+          .set(AgentCreatedTrustPage, true).success.value
+
+        val cleanAnswers = userAnswers.set(SettlorBenefitsFromAssetsPage, true).success.value
+
+        cleanAnswers.get(ForPurposeOfSection218Page) mustBe None
+        cleanAnswers.get(AgentCreatedTrustPage) mustBe None
+      }
+    }
   }
 }

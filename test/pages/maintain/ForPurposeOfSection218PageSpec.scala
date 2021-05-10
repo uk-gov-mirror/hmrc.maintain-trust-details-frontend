@@ -27,5 +27,19 @@ class ForPurposeOfSection218PageSpec extends PageBehaviours {
     beSettable[Boolean](ForPurposeOfSection218Page)
 
     beRemovable[Boolean](ForPurposeOfSection218Page)
+
+    "implement cleanup logic" when {
+
+      "NO selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(ForPurposeOfSection218Page, true).success.value
+          .set(AgentCreatedTrustPage, true).success.value
+
+        val cleanAnswers = userAnswers.set(ForPurposeOfSection218Page, false).success.value
+
+        cleanAnswers.get(AgentCreatedTrustPage) mustBe None
+      }
+    }
   }
 }
