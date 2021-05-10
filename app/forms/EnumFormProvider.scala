@@ -18,13 +18,13 @@ package forms
 
 import com.google.inject.Inject
 import forms.mappings.Mappings
-import models.TypeOfTrust
+import models.Enumerable
 import play.api.data.Form
 
-class TypeOfTrustFormProvider @Inject() extends Mappings {
+class EnumFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[TypeOfTrust] =
+  def apply[T](prefix: String)(implicit enum: Enumerable[T]): Form[T] =
     Form(
-      "value" -> enumerable[TypeOfTrust]("typeOfTrust.error.required")
+      "value" -> enumerable[T](s"$prefix.error.required")
     )
 }

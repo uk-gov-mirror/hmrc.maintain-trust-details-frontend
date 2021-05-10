@@ -16,18 +16,18 @@
 
 package views.maintain
 
-import forms.WhyDeedOfVariationCreatedFormProvider
+import forms.EnumFormProvider
 import models.DeedOfVariation
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import views.behaviours.ViewBehaviours
+import views.behaviours.EnumViewBehaviours
 import views.html.maintain.WhyDeedOfVariationCreatedView
 
-class WhyDeedOfVariationCreatedViewSpec extends ViewBehaviours {
+class WhyDeedOfVariationCreatedViewSpec extends EnumViewBehaviours[DeedOfVariation] {
 
   val messageKeyPrefix = "whyDeedOfVariationCreated"
 
-  val form = new WhyDeedOfVariationCreatedFormProvider()()
+  val form: Form[DeedOfVariation] = new EnumFormProvider()(messageKeyPrefix)
 
   "WhyDeedOfVariationCreatedView" when {
 
@@ -42,33 +42,6 @@ class WhyDeedOfVariationCreatedViewSpec extends ViewBehaviours {
 
     behave like pageWithASubmitButton(applyView(form))
 
-    "render radio buttons with hint text" in {
-
-      val doc = asDocument(applyView(form))
-
-      for (option <- DeedOfVariation.options) {
-        assertContainsRadioButton(doc, option.id, "value", option.value, isChecked = false)
-      }
-    }
-
-    "render selected radio button" when {
-
-      for (option <- DeedOfVariation.options) {
-
-        s"value is '${option.value}'" must {
-
-          s"have the '${option.value}' radio button selected" in {
-
-            val doc = asDocument(applyView(form.bind(Map("value" -> s"${option.value}"))))
-
-            assertContainsRadioButton(doc, option.id, "value", option.value, isChecked = true)
-
-            for (unselectedOption <- DeedOfVariation.options.filterNot(_ == option)) {
-              assertContainsRadioButton(doc, unselectedOption.id, "value", unselectedOption.value, isChecked = false)
-            }
-          }
-        }
-      }
-    }
+    behave like pageWithRadioOptions(form, applyView, DeedOfVariation.options)
   }
 }

@@ -17,7 +17,7 @@
 package controllers.maintain
 
 import base.SpecBase
-import forms.TypeOfTrustFormProvider
+import forms.EnumFormProvider
 import models.TypeOfTrust
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
@@ -30,7 +30,7 @@ import views.html.maintain.TypeOfTrustView
 
 class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
 
-  val form: Form[TypeOfTrust] = new TypeOfTrustFormProvider()()
+  val form: Form[TypeOfTrust] = new EnumFormProvider()("typeOfTrust")
 
   lazy val typeOfTrustRoute: String = routes.TypeOfTrustController.onPageLoad().url
 

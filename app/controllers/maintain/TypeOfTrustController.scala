@@ -17,8 +17,7 @@
 package controllers.maintain
 
 import controllers.actions.StandardActionSets
-import forms.TypeOfTrustFormProvider
-import javax.inject.Inject
+import forms.EnumFormProvider
 import models.TypeOfTrust
 import navigation.Navigator
 import pages.maintain.TypeOfTrustPage
@@ -29,6 +28,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.maintain.TypeOfTrustView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TypeOfTrustController @Inject()(
@@ -36,12 +36,12 @@ class TypeOfTrustController @Inject()(
                                        standardActionSets: StandardActionSets,
                                        repository: PlaybackRepository,
                                        navigator: Navigator,
-                                       formProvider: TypeOfTrustFormProvider,
+                                       formProvider: EnumFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: TypeOfTrustView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[TypeOfTrust] = formProvider()
+  private val form: Form[TypeOfTrust] = formProvider("typeOfTrust")
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
     implicit request =>

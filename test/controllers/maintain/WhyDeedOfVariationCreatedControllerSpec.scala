@@ -17,7 +17,7 @@
 package controllers.maintain
 
 import base.SpecBase
-import forms.WhyDeedOfVariationCreatedFormProvider
+import forms.EnumFormProvider
 import models.DeedOfVariation
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
@@ -30,7 +30,7 @@ import views.html.maintain.WhyDeedOfVariationCreatedView
 
 class WhyDeedOfVariationCreatedControllerSpec extends SpecBase with MockitoSugar {
 
-  val form: Form[DeedOfVariation] = new WhyDeedOfVariationCreatedFormProvider()()
+  val form: Form[DeedOfVariation] = new EnumFormProvider()("whyDeedOfVariationCreated")
 
   lazy val deedOfVariationRoute: String = routes.WhyDeedOfVariationCreatedController.onPageLoad().url
 
