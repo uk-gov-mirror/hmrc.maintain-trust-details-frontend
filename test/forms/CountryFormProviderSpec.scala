@@ -30,32 +30,32 @@ class CountryFormProviderSpec extends StringFieldBehaviours {
 
   val form: Form[String] = new CountryFormProvider().withPrefix(messagePrefix)
 
-  ".value" must {
+  "CountryFormProvider" must {
 
     val fieldName = "value"
 
     behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
+      form = form,
+      fieldName = fieldName,
+      validDataGenerator = stringsWithMaxLength(maxLength)
     )
 
     behave like fieldWithMaxLength(
-      form,
-      fieldName,
+      form = form,
+      fieldName = fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(
-      form,
-      fieldName,
+      form = form,
+      fieldName = fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
 
     behave like fieldWithRegexpWithGenerator(
-      form,
-      fieldName,
+      form = form,
+      fieldName = fieldName,
       regexp = regexp,
       generator = stringsWithMaxLength(maxLength),
       error = FormError(fieldName, invalidKey, Seq(regexp))

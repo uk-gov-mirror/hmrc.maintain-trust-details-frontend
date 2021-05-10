@@ -16,25 +16,25 @@
 
 package forms
 
+import forms.behaviours.OptionFieldBehaviours
+import models.TypeOfTrust
 import play.api.data.{Form, FormError}
-import forms.behaviours.BooleanFieldBehaviours
 
-class YesNoFormProviderSpec extends BooleanFieldBehaviours {
+class EnumFormProviderSpec extends OptionFieldBehaviours {
 
-  val messagePrefix = "yesNo"
-  val requiredKey = s"$messagePrefix.error.required"
-  val invalidKey = "error.boolean"
+  val prefix = "typeOfTrust"
+  val form: Form[TypeOfTrust] = new EnumFormProvider()(prefix)
 
-  val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messagePrefix)
-
-  "YesNoFormProvider" must {
+  "EnumFormProvider" must {
 
     val fieldName = "value"
+    val requiredKey = s"$prefix.error.required"
 
-    behave like booleanField(
+    behave like optionsField[TypeOfTrust](
       form = form,
       fieldName = fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues = TypeOfTrust.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(
@@ -43,5 +43,4 @@ class YesNoFormProviderSpec extends BooleanFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
-
 }
