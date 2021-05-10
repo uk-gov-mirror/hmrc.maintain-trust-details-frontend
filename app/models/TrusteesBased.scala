@@ -16,17 +16,22 @@
 
 package models
 
+import viewmodels.RadioOption
+
 sealed trait TrusteesBased
 
 object TrusteesBased extends Enumerable.Implicits {
 
-  case object AllTrusteesUkBased extends TrusteesBased
-  case object InternationalAndUkBasedTrustees extends TrusteesBased
-  case object NoTrusteesUkBased extends TrusteesBased
+  case object AllTrusteesUkBased extends WithName("all-uk-based") with TrusteesBased
+  case object NoTrusteesUkBased extends WithName("none-uk-based") with TrusteesBased
+  case object InternationalAndUkBasedTrustees extends WithName("some-uk-based") with TrusteesBased
 
   val values: List[TrusteesBased] = List(
-    AllTrusteesUkBased, InternationalAndUkBasedTrustees, NoTrusteesUkBased
+    AllTrusteesUkBased, NoTrusteesUkBased, InternationalAndUkBasedTrustees
   )
+
+  val options: List[RadioOption] = values
+    .map(value => RadioOption("whereTrusteesBased", value.toString))
 
   implicit val enumerable: Enumerable[TrusteesBased] = Enumerable(values.map(v => v.toString -> v): _*)
 

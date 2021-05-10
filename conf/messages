@@ -119,6 +119,13 @@ typeOfTrust.flat-or-sinking-fund = A trust for a building or building with tenan
 typeOfTrust.heritage = A trust for a the repair of historic buildings
 typeOfTrust.error.required = Select the type of trust the settlor created
 
+whyDeedOfVariationCreated.title = Why was the deed of variation created?
+whyDeedOfVariationCreated.heading = Why was the deed of variation created?
+whyDeedOfVariationCreated.replace-will-trust = To replace a will trust
+whyDeedOfVariationCreated.replace-absolute-interest = To replace an absolute interest over a will
+whyDeedOfVariationCreated.add-will-trust =
+whyDeedOfVariationCreated.error.required = Select the reason that the deed of variation was created
+
 holdoverReliefClaimed.title = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
 holdoverReliefClaimed.heading = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
 holdoverReliefClaimed.checkYourAnswersLabel = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
@@ -143,9 +150,6 @@ efrbsStartDate.error.future = The date that the employer-financed retirement ben
 efrbsStartDate.error.past = The date that the employer-financed retirement benefits scheme started must be after 31 December 1499
 efrbsStartDate.hint = For example, 31 3 1980
 
-whyDeedOfVariationCreated.title = Why was the deed of variation created?
-whyDeedOfVariationCreated.heading = Why was the deed of variation created?
-whyDeedOfVariationCreated.replace-will-trust = To replace a will trust
-whyDeedOfVariationCreated.replace-absolute-interest = To replace an absolute interest over a will
-whyDeedOfVariationCreated.add-will-trust =
-whyDeedOfVariationCreated.error.required = Select the reason that the deed of variation was created
+whereTrusteesBased.all-uk-based = All the trustees are based in the UK
+whereTrusteesBased.none-uk-based = None of the trustees are based in the UK
+whereTrusteesBased.some-uk-based = The trust contains trustees based in and outside the UK

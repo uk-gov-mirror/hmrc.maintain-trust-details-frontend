@@ -77,7 +77,6 @@ class IndexController @Inject()(
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
             if (taxableMigrationFlag.migratingFromNonTaxableToTaxable) {
-              // TODO - navigate to GovernedByUkLawController once built
               Redirect(controllers.maintain.routes.GovernedByUkLawController.onPageLoad())
             } else {
               Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
