@@ -27,5 +27,40 @@ class SettlorsUkBasedPageSpec extends PageBehaviours {
     beSettable[Boolean](SettlorsUkBasedPage)
 
     beRemovable[Boolean](SettlorsUkBasedPage)
+
+    "implement cleanup logic" when {
+
+      "YES selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(SettlorsUkBasedPage, false).success.value
+          .set(BusinessRelationshipInUkPage, true).success.value
+          .set(SettlorBenefitsFromAssetsPage, false).success.value
+          .set(ForPurposeOfSection218Page, true).success.value
+          .set(AgentCreatedTrustPage, true).success.value
+
+        val cleanAnswers = userAnswers.set(SettlorsUkBasedPage, true).success.value
+
+        cleanAnswers.get(BusinessRelationshipInUkPage) mustBe None
+        cleanAnswers.get(SettlorBenefitsFromAssetsPage) mustBe None
+        cleanAnswers.get(ForPurposeOfSection218Page) mustBe None
+        cleanAnswers.get(AgentCreatedTrustPage) mustBe None
+      }
+
+      "NO selected" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(SettlorsUkBasedPage, true).success.value
+          .set(CreatedUnderScotsLawPage, true).success.value
+          .set(PreviouslyResidentOffshorePage, true).success.value
+          .set(PreviouslyResidentOffshoreCountryPage, "FR").success.value
+
+        val cleanAnswers = userAnswers.set(SettlorsUkBasedPage, false).success.value
+
+        cleanAnswers.get(CreatedUnderScotsLawPage) mustBe None
+        cleanAnswers.get(PreviouslyResidentOffshorePage) mustBe None
+        cleanAnswers.get(PreviouslyResidentOffshoreCountryPage) mustBe None
+      }
+    }
   }
 }

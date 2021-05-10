@@ -20,12 +20,13 @@ import config.{AppConfig, ErrorHandler}
 import connectors.TrustsConnector
 import controllers.actions.StandardActionSets
 import extractors.TrustDetailsExtractor
+import mappers.TrustDetailsMapper
 import models.UserAnswers
 import play.api.mvc._
 import repositories.PlaybackRepository
 import services.FeatureFlagService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.{SessionLogging, UserAnswersStatus}
+import utils.SessionLogging
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +41,7 @@ class IndexController @Inject()(
                                  appConfig: AppConfig,
                                  connector: TrustsConnector,
                                  extractor: TrustDetailsExtractor,
-                                 userAnswersStatus: UserAnswersStatus,
+                                 mapper: TrustDetailsMapper,
                                  errorHandler: ErrorHandler
                                )(implicit ec: ExecutionContext) extends FrontendController(mcc) with SessionLogging {
 
@@ -72,7 +73,7 @@ class IndexController @Inject()(
         _ <- cacheRepository.set(ua)
       } yield {
         if (is5mldEnabled) {
-          if (userAnswersStatus.areAnswersSubmittable(ua, trustDetails)) {
+          if (mapper.areAnswersSubmittable(ua)) {
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
             if (taxableMigrationFlag.migratingFromNonTaxableToTaxable) {
