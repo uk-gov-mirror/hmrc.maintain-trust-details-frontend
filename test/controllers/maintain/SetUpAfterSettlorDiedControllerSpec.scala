@@ -18,14 +18,12 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
-import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
-import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.{SetUpAfterSettlorDiedPage, TypeOfTrustPage}
+import pages.maintain.SetUpAfterSettlorDiedPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest

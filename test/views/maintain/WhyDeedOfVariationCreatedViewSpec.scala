@@ -17,7 +17,7 @@
 package views.maintain
 
 import forms.WhyDeedOfVariationCreatedFormProvider
-import models.TypeOfTrust
+import models.DeedOfVariation
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
@@ -46,14 +46,14 @@ class WhyDeedOfVariationCreatedViewSpec extends ViewBehaviours {
 
       val doc = asDocument(applyView(form))
 
-      for (option <- TypeOfTrust.options) {
+      for (option <- DeedOfVariation.options) {
         assertContainsRadioButton(doc, option.id, "value", option.value, isChecked = false)
       }
     }
 
     "render selected radio button" when {
 
-      for (option <- TypeOfTrust.options) {
+      for (option <- DeedOfVariation.options) {
 
         s"value is '${option.value}'" must {
 
@@ -63,7 +63,7 @@ class WhyDeedOfVariationCreatedViewSpec extends ViewBehaviours {
 
             assertContainsRadioButton(doc, option.id, "value", option.value, isChecked = true)
 
-            for (unselectedOption <- TypeOfTrust.options.filterNot(_ == option)) {
+            for (unselectedOption <- DeedOfVariation.options.filterNot(_ == option)) {
               assertContainsRadioButton(doc, unselectedOption.id, "value", unselectedOption.value, isChecked = false)
             }
           }
