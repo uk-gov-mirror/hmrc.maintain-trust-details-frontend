@@ -20,32 +20,32 @@ import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
 import navigation.Navigator
-import pages.maintain.SetUpAfterSettlorDiedPage
+import pages.maintain.SetUpInAdditionToWillTrustPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.SetUpAfterSettlorDiedView
+import views.html.maintain.SetUpInAdditionToWillTrustView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SetUpAfterSettlorDiedController @Inject()(
+class SetUpInAdditionToWillTrustController @Inject()(
                                                  override val messagesApi: MessagesApi,
                                                  yesNoFormProvider: YesNoFormProvider,
                                                  repository: PlaybackRepository,
                                                  navigator: Navigator,
                                                  actions: StandardActionSets,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                 view: SetUpAfterSettlorDiedView
+                                                 view: SetUpInAdditionToWillTrustView
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("setUpAfterSettlorDied")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("setUpInAdditionToWillTrust")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(SetUpAfterSettlorDiedPage) match {
+      val preparedForm = request.userAnswers.get(SetUpInAdditionToWillTrustPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -60,12 +60,12 @@ class SetUpAfterSettlorDiedController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
 
-        hasSettlorDied => {
+        value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(SetUpAfterSettlorDiedPage, hasSettlorDied))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(SetUpInAdditionToWillTrustPage, value))
             _ <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(SetUpAfterSettlorDiedPage, updatedAnswers))
+            Redirect(navigator.nextPage(SetUpInAdditionToWillTrustPage, updatedAnswers))
           }
         }
       )

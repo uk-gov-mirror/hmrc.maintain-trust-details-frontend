@@ -17,34 +17,34 @@
 package controllers.maintain
 
 import base.SpecBase
-import forms.TypeOfTrustFormProvider
-import models.TypeOfTrust
+import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.TypeOfTrustPage
+import pages.maintain.AdministeredInUkPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.TypeOfTrustView
+import views.html.maintain.AdministeredInUkView
 
-class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
+class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
-  val form: Form[TypeOfTrust] = new TypeOfTrustFormProvider()()
+  val formProvider = new YesNoFormProvider()
+  val form: Form[Boolean] = formProvider.withPrefix("administeredInUk")
 
-  lazy val typeOfTrustRoute: String = routes.TypeOfTrustController.onPageLoad().url
+  lazy val administeredInUkRoute: String = routes.AdministeredInUkController.onPageLoad().url
 
-  "TypeOfTrustController" must {
+  "AdministeredInUk Controller" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, typeOfTrustRoute)
+      val request = FakeRequest(GET, administeredInUkRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[TypeOfTrustView]
+      val view = application.injector.instanceOf[AdministeredInUkView]
 
       status(result) mustEqual OK
 
@@ -56,20 +56,20 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, TypeOfTrust.InterVivosSettlement).success.value
+      val userAnswers = emptyUserAnswers.set(AdministeredInUkPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, typeOfTrustRoute)
+      val request = FakeRequest(GET, administeredInUkRoute)
 
-      val view = application.injector.instanceOf[TypeOfTrustView]
+      val view = application.injector.instanceOf[AdministeredInUkView]
 
       val result = route(application, request).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(TypeOfTrust.InterVivosSettlement))(request, messages).toString
+        view(form.fill(true))(request, messages).toString
 
       application.stop()
     }
@@ -81,8 +81,8 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
           .overrides(bind[Navigator].toInstance(fakeNavigator))
           .build()
 
-      val request = FakeRequest(POST, typeOfTrustRoute)
-        .withFormUrlEncodedBody(("value", TypeOfTrust.EmploymentRelated.toString))
+      val request = FakeRequest(POST, administeredInUkRoute)
+        .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
@@ -99,12 +99,12 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, typeOfTrustRoute)
+        FakeRequest(POST, administeredInUkRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[TypeOfTrustView]
+      val view = application.injector.instanceOf[AdministeredInUkView]
 
       val result = route(application, request).value
 
@@ -120,7 +120,7 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, typeOfTrustRoute)
+      val request = FakeRequest(GET, administeredInUkRoute)
 
       val result = route(application, request).value
 
@@ -136,7 +136,7 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, typeOfTrustRoute)
+        FakeRequest(POST, administeredInUkRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value

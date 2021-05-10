@@ -22,13 +22,13 @@ import models.{TypeOfTrust, UserAnswers}
 import pages.Page
 import pages.maintain._
 import play.api.mvc.Call
-
 import javax.inject.Inject
 
 class TrustDetailsNavigator @Inject()() extends Navigator {
 
-  override def nextPage(page: Page, userAnswers: UserAnswers): Call =
+  override def nextPage(page: Page, userAnswers: UserAnswers): Call = {
     routes()(page)(userAnswers)
+  }
 
   private def routes(): PartialFunction[Page, UserAnswers => Call] =
     simpleNavigation() orElse
@@ -38,6 +38,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case OwnsUkLandOrPropertyPage => _ => RecordedOnEeaRegisterController.onPageLoad()
     case BusinessRelationshipInUkPage => _ => CheckDetailsController.onPageLoad()
     case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => WhereTrusteesBasedController.onPageLoad()
+    case WhyDeedOfVariationCreatedPage => _ => WhereTrusteesBasedController.onPageLoad()
   }
 
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
@@ -45,6 +46,15 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
+    case SetUpInAdditionToWillTrustPage => yesNoNav(_,
+      SetUpInAdditionToWillTrustPage,
+      WhereTrusteesBasedController.onPageLoad(),
+      WhyDeedOfVariationCreatedController.onPageLoad())
+    case AdministeredInUkPage => yesNoNav(_,
+      AdministeredInUkPage,
+      SetUpAfterSettlorDiedController.onPageLoad(),
+      SetUpAfterSettlorDiedController.onPageLoad() //ToDo This needs to redirect to the No Page
+    )
   }
 
   private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {
@@ -62,7 +72,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       case Some(TypeOfTrust.EmploymentRelated) =>
         EfrbsYesNoController.onPageLoad()
       case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad() // TODO - redirect to 'set up in addition to will trust y/n'
+        SetUpInAdditionToWillTrustController.onPageLoad()
       case Some(TypeOfTrust.WillTrustOrIntestacyTrust) | Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) | Some(TypeOfTrust.HeritageMaintenanceFund) =>
         WhereTrusteesBasedController.onPageLoad()
       case _ =>

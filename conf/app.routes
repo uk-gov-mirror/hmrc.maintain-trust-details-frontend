@@ -29,11 +29,20 @@ POST       /business-relationship-yes-no        controllers.maintain.BusinessRel
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
+GET        /admin-in-uk-yes-no                  controllers.maintain.AdministeredInUkController.onPageLoad()
+POST       /admin-in-uk-yes-no                  controllers.maintain.AdministeredInUkController.onSubmit()
+
 GET        /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
 POST       /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()
 
 GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
 POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
+
+GET        /in-addition-to-will-trust           controllers.maintain.SetUpInAdditionToWillTrustController.onPageLoad()
+POST       /in-addition-to-will-trust           controllers.maintain.SetUpInAdditionToWillTrustController.onSubmit()
+
+GET        /why-deed-of-variation               controllers.maintain.WhyDeedOfVariationCreatedController.onPageLoad()
+POST       /why-deed-of-variation               controllers.maintain.WhyDeedOfVariationCreatedController.onSubmit()
 
 GET        /holdover-relief-claimed             controllers.maintain.HoldoverReliefClaimedController.onPageLoad()
 POST       /holdover-relief-claimed             controllers.maintain.HoldoverReliefClaimedController.onSubmit()

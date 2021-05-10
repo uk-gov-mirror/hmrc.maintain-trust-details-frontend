@@ -17,35 +17,35 @@
 package controllers.maintain
 
 import controllers.actions.StandardActionSets
-import forms.TypeOfTrustFormProvider
+import forms.WhyDeedOfVariationCreatedFormProvider
 import javax.inject.Inject
-import models.TypeOfTrust
+import models.DeedOfVariation
 import navigation.Navigator
-import pages.maintain.TypeOfTrustPage
+import pages.maintain.WhyDeedOfVariationCreatedPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.TypeOfTrustView
+import views.html.maintain.WhyDeedOfVariationCreatedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TypeOfTrustController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       standardActionSets: StandardActionSets,
-                                       repository: PlaybackRepository,
-                                       navigator: Navigator,
-                                       formProvider: TypeOfTrustFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TypeOfTrustView
+class WhyDeedOfVariationCreatedController @Inject()(
+                                           override val messagesApi: MessagesApi,
+                                           standardActionSets: StandardActionSets,
+                                           repository: PlaybackRepository,
+                                           navigator: Navigator,
+                                           formProvider: WhyDeedOfVariationCreatedFormProvider,
+                                           val controllerComponents: MessagesControllerComponents,
+                                           view: WhyDeedOfVariationCreatedView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[TypeOfTrust] = formProvider()
+  private val form: Form[DeedOfVariation] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
     implicit request =>
-      val preparedForm = request.userAnswers.get(TypeOfTrustPage) match {
+      val preparedForm = request.userAnswers.get(WhyDeedOfVariationCreatedPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,10 +62,10 @@ class TypeOfTrustController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(TypeOfTrustPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhyDeedOfVariationCreatedPage, value))
             _              <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(TypeOfTrustPage, updatedAnswers))
+            Redirect(navigator.nextPage(WhyDeedOfVariationCreatedPage, updatedAnswers))
           }
         }
       )
