@@ -89,7 +89,7 @@ class SetUpAfterSettlorDiedControllerSpec extends SpecBase with BeforeAndAfterEa
     }
 
 
-    "redirect to the next page setting the type of trust if the settlor has died" in {
+    "redirect to the next page setting when a valid answer is entered" in {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -104,36 +104,6 @@ class SetUpAfterSettlorDiedControllerSpec extends SpecBase with BeforeAndAfterEa
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
-
-      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-      verify(playbackRepository).set(uaCaptor.capture)
-      val capturedAnswers = uaCaptor.getValue
-      capturedAnswers.get(SetUpAfterSettlorDiedPage) mustBe Some(true)
-      capturedAnswers.get(TypeOfTrustPage) mustBe Some(TypeOfTrust.WillTrustOrIntestacyTrust)
-      application.stop()
-    }
-
-    "redirect to the next page without setting the type of trust if the settlor has not died" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[Navigator].toInstance(fakeNavigator))
-          .build()
-
-      val request = FakeRequest(POST, setUpAfterSettlorDiedRoute)
-        .withFormUrlEncodedBody(("value", "false"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
-
-      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-      verify(playbackRepository).set(uaCaptor.capture)
-      val capturedAnswers = uaCaptor.getValue
-      capturedAnswers.get(SetUpAfterSettlorDiedPage) mustBe Some(false)
-      capturedAnswers.get(TypeOfTrustPage) mustBe None
 
       application.stop()
     }

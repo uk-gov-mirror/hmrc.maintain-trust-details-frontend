@@ -105,7 +105,6 @@ class SetUpInAdditionToWillTrustControllerSpec extends SpecBase with BeforeAndAf
 
       redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
 
-      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
       application.stop()
     }
 

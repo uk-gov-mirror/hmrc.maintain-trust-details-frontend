@@ -19,9 +19,8 @@ package controllers.maintain
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import javax.inject.Inject
-import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
-import pages.maintain.{SetUpAfterSettlorDiedPage, TypeOfTrustPage}
+import pages.maintain.SetUpAfterSettlorDiedPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -63,21 +62,12 @@ class SetUpAfterSettlorDiedController @Inject()(
 
         hasSettlorDied => {
           for {
-            answersWithSetUpValue <- Future.fromTry(request.userAnswers.set(SetUpAfterSettlorDiedPage, hasSettlorDied))
-            updatedAnswers <- addDefaultTypeOfTrust(hasSettlorDied, answersWithSetUpValue)
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(SetUpAfterSettlorDiedPage, hasSettlorDied))
             _ <- repository.set(updatedAnswers)
           } yield {
             Redirect(navigator.nextPage(SetUpAfterSettlorDiedPage, updatedAnswers))
           }
         }
       )
-  }
-
-  def addDefaultTypeOfTrust(hasSettlorDied: Boolean, userAnswers: UserAnswers): Future[UserAnswers] = {
-    if (hasSettlorDied) {
-      Future.fromTry(userAnswers.set(TypeOfTrustPage, TypeOfTrust.WillTrustOrIntestacyTrust))
-    } else {
-      Future.successful(userAnswers)
-    }
   }
 }
