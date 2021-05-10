@@ -19,9 +19,6 @@ package controllers.maintain
 import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
-import org.mockito.Matchers.any
-import org.mockito.Mockito.{reset, when}
-import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.maintain.SetUpAfterSettlorDiedPage
 import play.api.data.Form
@@ -30,21 +27,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.SetUpAfterSettlorDiedView
 
-import scala.concurrent.Future
-
-
-class SetUpAfterSettlorDiedControllerSpec extends SpecBase with BeforeAndAfterEach with MockitoSugar {
+class SetUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("setUpAfterSettlorDied")
 
   lazy val setUpAfterSettlorDiedRoute: String = routes.SetUpAfterSettlorDiedController.onPageLoad().url
-
-  override def beforeEach(): Unit = {
-    reset(playbackRepository)
-    when(playbackRepository.set(any())).thenReturn(Future.successful(true))
-  }
-
 
   "SetUpAfterSettlorDiedController" must {
 
