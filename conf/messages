@@ -14,6 +14,8 @@ site.no = No
 site.continue = Continue
 site.edit = Change
 
+error.summary.title = There is a problem
+
 session_expired.title = For your security, we signed you out
 session_expired.heading = For your security, we signed you out
 session_expired.guidance = This is because you have been inactive on the service for 15 minutes.

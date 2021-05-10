@@ -54,7 +54,7 @@ object DeedOfVariation {
 
   val options: List[RadioOption] = values
     .filterNot(_ == AdditionToWillTrust)
-    .map(value => RadioOption("deedOfVariation", value.toString))
+    .map(value => RadioOption("whyDeedOfVariationCreated", value.toString))
 
   implicit val enumerable: Enumerable[DeedOfVariation] =
     Enumerable(values.map(v => v.toString -> v): _*)
