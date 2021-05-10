@@ -46,6 +46,10 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
+    case SetUpInAdditionToWillTrustPage => yesNoNav(_,
+      SetUpInAdditionToWillTrustPage,
+      WhereTrusteesBasedController.onPageLoad(),
+      WhyDeedOfVariationCreatedController.onPageLoad())
     case AdministeredInUkPage => yesNoNav(_,
       AdministeredInUkPage,
       SetUpAfterSettlorDiedController.onPageLoad(),
@@ -68,7 +72,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       case Some(TypeOfTrust.EmploymentRelated) =>
         EfrbsYesNoController.onPageLoad()
       case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
-        controllers.routes.FeatureNotAvailableController.onPageLoad() // TODO - redirect to 'set up in addition to will trust y/n'
+        SetUpInAdditionToWillTrustController.onPageLoad()
       case Some(TypeOfTrust.WillTrustOrIntestacyTrust) | Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) | Some(TypeOfTrust.HeritageMaintenanceFund) =>
         WhereTrusteesBasedController.onPageLoad()
       case _ =>
