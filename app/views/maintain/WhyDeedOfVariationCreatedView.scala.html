@@ -15,7 +15,7 @@
  *@
 
 @import controllers.maintain.routes._
-@import models.TypeOfTrust
+@import models.DeedOfVariation
 
 @this(
     main_template: MainTemplate,
@@ -38,7 +38,7 @@
             field = form("value"),
             legend = messages("whyDeedOfVariationCreated.heading"),
             headingIsLegend = true,
-            inputs = TypeOfTrust.options
+            inputs = DeedOfVariation.options
         )
 
         @components.submit_button()
