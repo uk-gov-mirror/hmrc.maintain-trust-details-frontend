@@ -205,32 +205,6 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "Is this in addition to a will trust page" when {
-
-        val page = SetUpInAdditionToWillTrustPage
-
-        "Yes -> Where trustees based page" in {
-          val answers = baseAnswers
-            .set(page, true).success.value
-
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
-        }
-
-        "No -> Why was the deed of variation created page" in {
-          val answers = baseAnswers
-            .set(page, false).success.value
-
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.WhyDeedOfVariationCreatedController.onPageLoad())
-        }
-
-        "No Data -> Session Expired page" in {
-          navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
-        }
-      }
-
       "Why Deed of Variation Created page" when {
 
         val page = WhyDeedOfVariationCreatedPage

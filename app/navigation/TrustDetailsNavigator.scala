@@ -47,11 +47,6 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     case SetUpAfterSettlorDiedPage => navigateAwayFromSetUpAfterSettlorDiedQuestion
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
-    case SetUpInAdditionToWillTrustPage => yesNoNav(
-      _,
-      SetUpInAdditionToWillTrustPage,
-      WhereTrusteesBasedController.onPageLoad(),
-      WhyDeedOfVariationCreatedController.onPageLoad())
     case AdministeredInUkPage => ua => yesNoNav(
       ua,
       AdministeredInUkPage,

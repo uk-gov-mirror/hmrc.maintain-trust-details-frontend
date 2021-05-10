@@ -116,11 +116,6 @@ efrbsStartDate.error.future = The date that the employer-financed retirement ben
 efrbsStartDate.error.past = The date that the employer-financed retirement benefits scheme started must be after 31 December 1499
 efrbsStartDate.hint = For example, 31 3 1980
 
-setUpInAdditionToWillTrust.title = Is this in addition to a will trust?
-setUpInAdditionToWillTrust.heading = Is this in addition to a will trust?
-setUpInAdditionToWillTrust.checkYourAnswersLabel = Is this in addition to a will trust?
-setUpInAdditionToWillTrust.error.required = Select yes if this is in addition to a will trust?
-
 whyDeedOfVariationCreated.title = Why was the deed of variation created?
 whyDeedOfVariationCreated.heading = Why was the deed of variation created?
 whyDeedOfVariationCreated.replace-will-trust = To replace a will trust
