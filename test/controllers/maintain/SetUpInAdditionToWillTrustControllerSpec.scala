@@ -18,35 +18,21 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
-import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
-import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
-import org.mockito.Mockito.{reset, verify, when}
-import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.{SetUpInAdditionToWillTrustPage, TypeOfTrustPage}
+import pages.maintain.SetUpInAdditionToWillTrustPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.maintain.SetUpInAdditionToWillTrustView
 
-import scala.concurrent.Future
-
-
-class SetUpInAdditionToWillTrustControllerSpec extends SpecBase with BeforeAndAfterEach with MockitoSugar {
+class SetUpInAdditionToWillTrustControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("setUpInAdditionToWillTrust")
 
   lazy val setUpInAdditionToWillTrustRoute: String = routes.SetUpInAdditionToWillTrustController.onPageLoad().url
-
-  override def beforeEach(): Unit = {
-    reset(playbackRepository)
-    when(playbackRepository.set(any())).thenReturn(Future.successful(true))
-  }
-
 
   "SetUpInAdditionToWillTrustController" must {
 

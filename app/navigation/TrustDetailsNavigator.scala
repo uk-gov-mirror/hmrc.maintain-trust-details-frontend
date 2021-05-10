@@ -17,11 +17,12 @@
 package navigation
 
 import controllers.maintain.routes._
-import controllers.routes.SessionExpiredController
+import controllers.routes.{FeatureNotAvailableController, SessionExpiredController}
 import models.{TypeOfTrust, UserAnswers}
 import pages.Page
 import pages.maintain._
 import play.api.mvc.Call
+
 import javax.inject.Inject
 
 class TrustDetailsNavigator @Inject()() extends Navigator {
@@ -43,18 +44,36 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
 
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
     case RecordedOnEeaRegisterPage => navigateToCyaIfUkResidentTrust
-    case SetUpAfterSettlorDiedPage => yesNoNav(_, SetUpAfterSettlorDiedPage, WhereTrusteesBasedController.onPageLoad(), TypeOfTrustController.onPageLoad())
+    case SetUpAfterSettlorDiedPage => navigateAwayFromSetUpAfterSettlorDiedQuestion
     case TypeOfTrustPage => fromTypeOfTrustPage
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
-    case SetUpInAdditionToWillTrustPage => yesNoNav(_,
+    case SetUpInAdditionToWillTrustPage => yesNoNav(
+      _,
       SetUpInAdditionToWillTrustPage,
       WhereTrusteesBasedController.onPageLoad(),
       WhyDeedOfVariationCreatedController.onPageLoad())
-    case AdministeredInUkPage => yesNoNav(_,
+    case AdministeredInUkPage => ua => yesNoNav(
+      ua,
       AdministeredInUkPage,
-      SetUpAfterSettlorDiedController.onPageLoad(),
-      SetUpAfterSettlorDiedController.onPageLoad() //ToDo This needs to redirect to the No Page
+      navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua),
+      FeatureNotAvailableController.onPageLoad() //ToDo This needs to redirect to the No Page
     )
+  }
+
+  private def navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua: UserAnswers): Call = {
+    if (ua.registeredWithDeceasedSettlor) {
+      SetUpAfterSettlorDiedController.onPageLoad()
+    } else {
+      TypeOfTrustController.onPageLoad()
+    }
+  }
+
+  private def navigateAwayFromSetUpAfterSettlorDiedQuestion(ua: UserAnswers): Call = {
+    if (ua.registeredWithDeceasedSettlor) {
+      WhereTrusteesBasedController.onPageLoad()
+    } else {
+      TypeOfTrustController.onPageLoad()
+    }
   }
 
   private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {
@@ -72,7 +91,11 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       case Some(TypeOfTrust.EmploymentRelated) =>
         EfrbsYesNoController.onPageLoad()
       case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
-        SetUpInAdditionToWillTrustController.onPageLoad()
+        if (ua.registeredWithDeceasedSettlor) {
+          WhereTrusteesBasedController.onPageLoad()
+        } else {
+          WhyDeedOfVariationCreatedController.onPageLoad()
+        }
       case Some(TypeOfTrust.WillTrustOrIntestacyTrust) | Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) | Some(TypeOfTrust.HeritageMaintenanceFund) =>
         WhereTrusteesBasedController.onPageLoad()
       case _ =>

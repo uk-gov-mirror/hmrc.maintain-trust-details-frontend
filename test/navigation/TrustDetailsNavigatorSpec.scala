@@ -70,12 +70,26 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       "General Admin in the Uk page" when {
         val page = AdministeredInUkPage
 
-        "Yes -> Set up after settlor died page" in {
-          val answers = baseAnswers
-            .set(page, true).success.value
+        "Yes" when {
+          "registered with deceased settlor" must {
+            "-> Set up after settlor died page" in {
+              val answers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+                .set(page, true).success.value
 
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+              navigator.nextPage(page, answers)
+                .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+            }
+          }
+
+          "not registered with deceased settlor" must {
+            "-> Type of trust page" in {
+              val answers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+                .set(page, true).success.value
+
+              navigator.nextPage(page, answers)
+                .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
+            }
+          }
         }
 
         "No -> What country is the trust administered in page" in {
@@ -83,7 +97,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .set(page, false).success.value
 
           navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
         }
 
         "No Data -> Session Expired page" in {
@@ -104,17 +118,26 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
 
-        "No -> Type of trust page" in {
-          val answers = baseAnswers
-            .set(page, false).success.value
+        "No" when {
+          "registered with deceased settlor" must {
+            "-> Where trustees based page" in {
+              val answers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+                .set(page, false).success.value
 
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
-        }
+              navigator.nextPage(page, answers)
+                .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+            }
+          }
 
-        "No Data -> Session Expired page" in {
-          navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+          "not registered with deceased settlor" must {
+            "-> Type of trust page" in {
+              val answers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+                .set(page, false).success.value
+
+              navigator.nextPage(page, answers)
+                .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
+            }
+          }
         }
       }
 
@@ -122,12 +145,26 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         val page = TypeOfTrustPage
 
-        "DeedOfVariationTrustOrFamilyArrangement -> Set up in addition to will trust page" in {
-          val answers = baseAnswers
-            .set(page, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
+        "DeedOfVariationTrustOrFamilyArrangement" when {
+          "registered with deceased settlor" must {
+            "-> Where trustees based page" in {
+              val answers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+                .set(page, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
 
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.SetUpInAdditionToWillTrustController.onPageLoad())
+              navigator.nextPage(page, answers)
+                .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+            }
+          }
+
+          "not registered with deceased settlor" must {
+            "-> Why was deed of variation created page" in {
+              val answers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+                .set(page, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
+
+              navigator.nextPage(page, answers)
+                .mustBe(controllers.maintain.routes.WhyDeedOfVariationCreatedController.onPageLoad())
+            }
+          }
         }
 
         "HeritageMaintenanceFund -> Where trustees based page" in {
@@ -168,7 +205,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "Is this in addiition to a will trust page" when {
+      "Is this in addition to a will trust page" when {
 
         val page = SetUpInAdditionToWillTrustPage
 
@@ -180,7 +217,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
 
-        "No -> Why was the deed of variation created" in {
+        "No -> Why was the deed of variation created page" in {
           val answers = baseAnswers
             .set(page, false).success.value
 
