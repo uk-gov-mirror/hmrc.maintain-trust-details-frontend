@@ -67,7 +67,37 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
       val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
 
-      "General Admin in the Uk page" when {
+      "Governed by UK law page" when {
+        val page = GovernedByUkLawPage
+
+        "Yes -> Administered in the UK page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.AdministeredInUkController.onPageLoad())
+        }
+
+        "No -> Governing country page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.GoverningCountryController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Governing country page -> Administered in the UK page" in {
+        navigator.nextPage(GoverningCountryPage, baseAnswers)
+          .mustBe(controllers.maintain.routes.AdministeredInUkController.onPageLoad())
+      }
+
+      "Administered in the UK page" when {
         val page = AdministeredInUkPage
 
         "Yes" when {
@@ -92,17 +122,40 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
           }
         }
 
-        "No -> What country is the trust administered in page" in {
+        "No -> Administration country page" in {
           val answers = baseAnswers
             .set(page, false).success.value
 
           navigator.nextPage(page, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            .mustBe(controllers.maintain.routes.AdministrationCountryController.onPageLoad())
         }
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
             .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Administration country page" when {
+
+        val page = AdministrationCountryPage
+
+        "registered with a deceased settlor" must {
+          "-> Set up after settlor died page" in {
+            val answers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
+
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+          }
+        }
+
+        "not registered with a deceased settlor" must {
+          "-> Type of trust page" in {
+            val answers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
+
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.TypeOfTrustController.onPageLoad())
+          }
         }
       }
 

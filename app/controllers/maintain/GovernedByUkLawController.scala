@@ -18,34 +18,34 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
-import javax.inject.Inject
 import navigation.Navigator
-import pages.maintain.AdministeredInUkPage
+import pages.maintain.GovernedByUkLawPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.AdministeredInUkView
+import views.html.maintain.GovernedByUkLawView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AdministeredInUkController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            yesNoFormProvider: YesNoFormProvider,
-                                            repository: PlaybackRepository,
-                                            navigator: Navigator,
-                                            actions: StandardActionSets,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            view: AdministeredInUkView
-                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class GovernedByUkLawController @Inject()(
+                                           override val messagesApi: MessagesApi,
+                                           yesNoFormProvider: YesNoFormProvider,
+                                           repository: PlaybackRepository,
+                                           navigator: Navigator,
+                                           actions: StandardActionSets,
+                                           val controllerComponents: MessagesControllerComponents,
+                                           view: GovernedByUkLawView
+                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUk")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("governedByUkLaw")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AdministeredInUkPage) match {
+      val preparedForm = request.userAnswers.get(GovernedByUkLawPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,10 +62,10 @@ class AdministeredInUkController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdministeredInUkPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(GovernedByUkLawPage, value))
             _ <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(AdministeredInUkPage, updatedAnswers))
+            Redirect(navigator.nextPage(GovernedByUkLawPage, updatedAnswers))
           }
         }
       )

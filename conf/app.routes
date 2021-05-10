@@ -29,8 +29,17 @@ POST       /business-relationship-yes-no        controllers.maintain.BusinessRel
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
+GET        /governed-by-uk-law                  controllers.maintain.GovernedByUkLawController.onPageLoad()
+POST       /administered-in-uk                  controllers.maintain.GovernedByUkLawController.onSubmit()
+
+GET        /governing-country                   controllers.maintain.GoverningCountryController.onPageLoad()
+POST       /governing-country                   controllers.maintain.GoverningCountryController.onSubmit()
+
 GET        /administered-in-uk                  controllers.maintain.AdministeredInUkController.onPageLoad()
 POST       /administered-in-uk                  controllers.maintain.AdministeredInUkController.onSubmit()
+
+GET        /administration-country              controllers.maintain.AdministrationCountryController.onPageLoad()
+POST       /administration-country              controllers.maintain.AdministrationCountryController.onSubmit()
 
 GET        /set-up-after-settlor-died           controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
 POST       /set-up-after-settlor-died           controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()

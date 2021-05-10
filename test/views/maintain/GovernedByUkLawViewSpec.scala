@@ -21,26 +21,26 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.maintain.AdministeredInUkView
+import views.html.maintain.GovernedByUkLawView
 
-class AdministeredInUkViewSpec extends YesNoViewBehaviours {
+class GovernedByUkLawViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "administeredInUk"
+  val messageKeyPrefix = "governedByUkLaw"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-  "AdministeredInUk view" must {
+  "GovernedByUkLawView" must {
 
-    val view = viewFor[AdministeredInUkView](Some(emptyUserAnswers))
+    val view = viewFor[GovernedByUkLawView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)
 
-    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1")
+    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2", "paragraph3")
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AdministeredInUkController.onSubmit().url)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.GovernedByUkLawController.onSubmit().url)
 
     behave like pageWithASubmitButton(applyView(form))
   }

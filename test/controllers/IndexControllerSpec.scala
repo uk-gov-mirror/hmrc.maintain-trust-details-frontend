@@ -275,7 +275,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                       status(result) mustEqual SEE_OTHER
 
-                      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+                      redirectLocation(result).value mustBe controllers.maintain.routes.GovernedByUkLawController.onPageLoad().url
 
                       verify(mockExtractor, never()).apply(any(), any())
 

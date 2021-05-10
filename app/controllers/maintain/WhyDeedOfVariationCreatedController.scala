@@ -32,14 +32,14 @@ import views.html.maintain.WhyDeedOfVariationCreatedView
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhyDeedOfVariationCreatedController @Inject()(
-                                           override val messagesApi: MessagesApi,
-                                           standardActionSets: StandardActionSets,
-                                           repository: PlaybackRepository,
-                                           navigator: Navigator,
-                                           formProvider: WhyDeedOfVariationCreatedFormProvider,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           view: WhyDeedOfVariationCreatedView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                     override val messagesApi: MessagesApi,
+                                                     standardActionSets: StandardActionSets,
+                                                     repository: PlaybackRepository,
+                                                     navigator: Navigator,
+                                                     formProvider: WhyDeedOfVariationCreatedFormProvider,
+                                                     val controllerComponents: MessagesControllerComponents,
+                                                     view: WhyDeedOfVariationCreatedView
+                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val form: Form[DeedOfVariation] = formProvider()
 

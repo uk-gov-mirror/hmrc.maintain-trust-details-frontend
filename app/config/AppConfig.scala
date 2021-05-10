@@ -90,6 +90,9 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val minDate: LocalDate = getDate("minimum")
   lazy val maxDate: LocalDate = getDate("maximum")
 
+  lazy val locationCanonicalList: String = config.get[String]("location.canonical.list.all")
+  lazy val locationCanonicalListCY: String = config.get[String]("location.canonical.list.allCY")
+
   def helplineUrl(implicit messages: Messages): String = {
     val path = messages.lang.code match {
       case `cy` => "urls.welshHelpline"

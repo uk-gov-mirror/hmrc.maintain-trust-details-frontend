@@ -20,31 +20,33 @@ import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.AdministeredInUkPage
+import pages.maintain.GovernedByUkLawPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.AdministeredInUkView
+import views.html.maintain.GovernedByUkLawView
 
-class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
+class GovernedByUkLawControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("administeredInUk")
+  val form: Form[Boolean] = formProvider.withPrefix("governedByUkLaw")
 
-  lazy val administeredInUkRoute: String = routes.AdministeredInUkController.onPageLoad().url
+  lazy val governedByUkLawRoute: String = routes.GovernedByUkLawController.onPageLoad().url
 
-  "AdministeredInUkController" must {
+  val validAnswer: Boolean = true
+
+  "GovernedByUkLawController" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, administeredInUkRoute)
+      val request = FakeRequest(GET, governedByUkLawRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[AdministeredInUkView]
+      val view = application.injector.instanceOf[GovernedByUkLawView]
 
       status(result) mustEqual OK
 
@@ -56,20 +58,20 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AdministeredInUkPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(GovernedByUkLawPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, administeredInUkRoute)
+      val request = FakeRequest(GET, governedByUkLawRoute)
 
-      val view = application.injector.instanceOf[AdministeredInUkView]
+      val view = application.injector.instanceOf[GovernedByUkLawView]
 
       val result = route(application, request).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(request, messages).toString
+        view(form.fill(validAnswer))(request, messages).toString
 
       application.stop()
     }
@@ -80,8 +82,8 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
         .overrides(bind[Navigator].toInstance(fakeNavigator))
         .build()
 
-      val request = FakeRequest(POST, administeredInUkRoute)
-        .withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, governedByUkLawRoute)
+        .withFormUrlEncodedBody(("value", validAnswer.toString))
 
       val result = route(application, request).value
 
@@ -97,12 +99,12 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(POST, administeredInUkRoute)
+      val request = FakeRequest(POST, governedByUkLawRoute)
         .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[AdministeredInUkView]
+      val view = application.injector.instanceOf[GovernedByUkLawView]
 
       val result = route(application, request).value
 
@@ -118,7 +120,7 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, administeredInUkRoute)
+      val request = FakeRequest(GET, governedByUkLawRoute)
 
       val result = route(application, request).value
 
@@ -133,8 +135,8 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(POST, administeredInUkRoute)
-        .withFormUrlEncodedBody(("value", "true"))
+      val request = FakeRequest(POST, governedByUkLawRoute)
+        .withFormUrlEncodedBody(("value", validAnswer.toString))
 
       val result = route(application, request).value
 

@@ -17,40 +17,42 @@
 package controllers.maintain
 
 import controllers.actions.StandardActionSets
-import forms.YesNoFormProvider
-import javax.inject.Inject
+import forms.CountryFormProvider
 import navigation.Navigator
-import pages.maintain.AdministeredInUkPage
+import pages.maintain.GoverningCountryPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.AdministeredInUkView
+import viewmodels.CountryOptions
+import views.html.maintain.GoverningCountryView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AdministeredInUkController @Inject()(
+class GoverningCountryController @Inject()(
                                             override val messagesApi: MessagesApi,
-                                            yesNoFormProvider: YesNoFormProvider,
+                                            formProvider: CountryFormProvider,
                                             repository: PlaybackRepository,
                                             navigator: Navigator,
                                             actions: StandardActionSets,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: AdministeredInUkView
+                                            view: GoverningCountryView,
+                                            countryOptions: CountryOptions
                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUk")
+  private val form: Form[String] = formProvider.withPrefix("governingCountry")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AdministeredInUkPage) match {
+      val preparedForm = request.userAnswers.get(GoverningCountryPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, countryOptions.nonUkOptions))
   }
 
   def onSubmit(): Action[AnyContent] = actions.identifiedUserWithData.async {
@@ -58,14 +60,14 @@ class AdministeredInUkController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, countryOptions.nonUkOptions))),
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdministeredInUkPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(GoverningCountryPage, value))
             _ <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(AdministeredInUkPage, updatedAnswers))
+            Redirect(navigator.nextPage(GoverningCountryPage, updatedAnswers))
           }
         }
       )

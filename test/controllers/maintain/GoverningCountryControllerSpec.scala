@@ -17,59 +17,64 @@
 package controllers.maintain
 
 import base.SpecBase
-import forms.YesNoFormProvider
+import forms.CountryFormProvider
 import navigation.Navigator
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.AdministeredInUkPage
+import pages.maintain.GoverningCountryPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.AdministeredInUkView
+import viewmodels.{CountryOptions, InputOption}
+import views.html.maintain.GoverningCountryView
 
-class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
+class GoverningCountryControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("administeredInUk")
+  val formProvider = new CountryFormProvider()
+  val form: Form[String] = formProvider.withPrefix("governingCountry")
 
-  lazy val administeredInUkRoute: String = routes.AdministeredInUkController.onPageLoad().url
+  lazy val governingCountryRoute: String = routes.GoverningCountryController.onPageLoad().url
 
-  "AdministeredInUkController" must {
+  val validAnswer: String = "FR"
+
+  val countryOptions: Seq[InputOption] = injector.instanceOf[CountryOptions].nonUkOptions
+
+  "GoverningCountryController" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, administeredInUkRoute)
+      val request = FakeRequest(GET, governingCountryRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[AdministeredInUkView]
+      val view = application.injector.instanceOf[GoverningCountryView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(request, messages).toString
+        view(form, countryOptions)(request, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AdministeredInUkPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(GoverningCountryPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, administeredInUkRoute)
+      val request = FakeRequest(GET, governingCountryRoute)
 
-      val view = application.injector.instanceOf[AdministeredInUkView]
+      val view = application.injector.instanceOf[GoverningCountryView]
 
       val result = route(application, request).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(request, messages).toString
+        view(form.fill(validAnswer), countryOptions)(request, messages).toString
 
       application.stop()
     }
@@ -80,8 +85,8 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
         .overrides(bind[Navigator].toInstance(fakeNavigator))
         .build()
 
-      val request = FakeRequest(POST, administeredInUkRoute)
-        .withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, governingCountryRoute)
+        .withFormUrlEncodedBody(("value", validAnswer))
 
       val result = route(application, request).value
 
@@ -97,19 +102,19 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(POST, administeredInUkRoute)
+      val request = FakeRequest(POST, governingCountryRoute)
         .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[AdministeredInUkView]
+      val view = application.injector.instanceOf[GoverningCountryView]
 
       val result = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm, countryOptions)(request, messages).toString
 
       application.stop()
     }
@@ -118,7 +123,7 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, administeredInUkRoute)
+      val request = FakeRequest(GET, governingCountryRoute)
 
       val result = route(application, request).value
 
@@ -133,8 +138,8 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(POST, administeredInUkRoute)
-        .withFormUrlEncodedBody(("value", "true"))
+      val request = FakeRequest(POST, governingCountryRoute)
+        .withFormUrlEncodedBody(("value", validAnswer))
 
       val result = route(application, request).value
 

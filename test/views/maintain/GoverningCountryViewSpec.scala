@@ -16,31 +16,33 @@
 
 package views.maintain
 
-import controllers.maintain.routes
-import forms.YesNoFormProvider
+import forms.CountryFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import views.behaviours.YesNoViewBehaviours
-import views.html.maintain.AdministeredInUkView
+import viewmodels.{CountryOptions, InputOption}
+import views.behaviours.SelectCountryViewBehaviours
+import views.html.maintain.GoverningCountryView
 
-class AdministeredInUkViewSpec extends YesNoViewBehaviours {
+class GoverningCountryViewSpec extends SelectCountryViewBehaviours {
 
-  val messageKeyPrefix = "administeredInUk"
+  val messageKeyPrefix = "governingCountry"
 
-  val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+  val form: Form[String] = new CountryFormProvider().withPrefix(messageKeyPrefix)
 
-  "AdministeredInUk view" must {
+  "GoverningCountryView" must {
 
-    val view = viewFor[AdministeredInUkView](Some(emptyUserAnswers))
+    val view = viewFor[GoverningCountryView](Some(emptyUserAnswers))
+
+    val countryOptions: Seq[InputOption] = app.injector.instanceOf[CountryOptions].nonUkOptions
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form)(fakeRequest, messages)
+      view.apply(form, countryOptions)(fakeRequest, messages)
 
-    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1")
+    behave like normalPage(applyView(form), messageKeyPrefix)
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AdministeredInUkController.onSubmit().url)
+    behave like selectCountryPage(form, applyView, messageKeyPrefix)
 
     behave like pageWithASubmitButton(applyView(form))
   }

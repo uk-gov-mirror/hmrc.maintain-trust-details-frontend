@@ -24,14 +24,16 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @content = {
-    <p>@messages("administeredInUk.paragraph1")</p>
+    <p>@messages("governedByUkLaw.paragraph1")</p>
+    <p>@messages("governedByUkLaw.paragraph2")</p>
+    <p>@messages("governedByUkLaw.paragraph3")</p>
 }
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("administeredInUk.title")}"
+    title = s"${errorPrefix(form)} ${messages("governedByUkLaw.title")}"
 ) {
 
-    @formHelper(action = AdministeredInUkController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = GovernedByUkLawController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -39,7 +41,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            legend = messages("administeredInUk.heading"),
+            legend = messages("governedByUkLaw.heading"),
             headingIsLegend = true,
             additionalContent = Some(content)
         )

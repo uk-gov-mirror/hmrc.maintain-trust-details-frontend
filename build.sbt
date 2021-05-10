@@ -44,7 +44,9 @@ lazy val microservice = Project(appName, file("."))
       "javascripts/maintaintrustdetailsfrontend-app.js" ->
         group(Seq(
           "javascripts/show-hide-content.js",
-          "javascripts/maintaintrustdetailsfrontend.js"
+          "javascripts/maintaintrustdetailsfrontend.js",
+          "javascripts/autocomplete.js",
+          "javascripts/libraries/location-autocomplete.min.js"
         ))
     ),
     // prevent removal of unused code which generates warning errors due to use of third-party libs

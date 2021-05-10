@@ -78,7 +78,7 @@ class IndexController @Inject()(
           } else {
             if (taxableMigrationFlag.migratingFromNonTaxableToTaxable) {
               // TODO - navigate to GovernedByUkLawController once built
-              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+              Redirect(controllers.maintain.routes.GovernedByUkLawController.onPageLoad())
             } else {
               Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
             }

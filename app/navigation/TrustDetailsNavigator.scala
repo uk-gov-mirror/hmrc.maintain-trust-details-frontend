@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.maintain.routes._
-import controllers.routes.{FeatureNotAvailableController, SessionExpiredController}
+import controllers.routes.SessionExpiredController
 import models.{TypeOfTrust, UserAnswers}
 import pages.Page
 import pages.maintain._
@@ -38,6 +38,8 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = {
     case OwnsUkLandOrPropertyPage => _ => RecordedOnEeaRegisterController.onPageLoad()
     case BusinessRelationshipInUkPage => _ => CheckDetailsController.onPageLoad()
+    case GoverningCountryPage => _ => AdministeredInUkController.onPageLoad()
+    case AdministrationCountryPage => navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor
     case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => WhereTrusteesBasedController.onPageLoad()
     case WhyDeedOfVariationCreatedPage => _ => WhereTrusteesBasedController.onPageLoad()
   }
@@ -45,14 +47,21 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
     case RecordedOnEeaRegisterPage => navigateToCyaIfUkResidentTrust
     case SetUpAfterSettlorDiedPage => navigateAwayFromSetUpAfterSettlorDiedQuestion
-    case TypeOfTrustPage => fromTypeOfTrustPage
-    case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
+
+    case GovernedByUkLawPage => ua => yesNoNav(
+      ua,
+      GovernedByUkLawPage,
+      AdministeredInUkController.onPageLoad(),
+      GoverningCountryController.onPageLoad()
+    )
     case AdministeredInUkPage => ua => yesNoNav(
       ua,
       AdministeredInUkPage,
       navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua),
-      FeatureNotAvailableController.onPageLoad() //ToDo This needs to redirect to the No Page
+      AdministrationCountryController.onPageLoad()
     )
+    case TypeOfTrustPage => fromTypeOfTrustPage
+    case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
   }
 
   private def navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua: UserAnswers): Call = {
