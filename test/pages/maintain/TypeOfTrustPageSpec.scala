@@ -71,12 +71,10 @@ class TypeOfTrustPageSpec extends PageBehaviours {
           typeOfTrust =>
 
             val userAnswers = emptyUserAnswers
-              .set(SetUpInAdditionToWillTrustPage, false).success.value
               .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
 
             val cleanAnswers = userAnswers.set(TypeOfTrustPage, typeOfTrust).success.value
 
-            cleanAnswers.get(SetUpInAdditionToWillTrustPage) mustBe None
             cleanAnswers.get(WhyDeedOfVariationCreatedPage) mustBe None
         }
       }

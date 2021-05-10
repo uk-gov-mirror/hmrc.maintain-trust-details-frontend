@@ -28,7 +28,7 @@
     title = s"${errorPrefix(form)}${messages("whyDeedOfVariationCreated.title")}"
 ) {
 
-    @formHelper(action = TypeOfTrustController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = WhyDeedOfVariationCreatedController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
