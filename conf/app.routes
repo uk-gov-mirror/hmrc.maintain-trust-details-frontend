@@ -30,7 +30,7 @@ GET        /check-details                       controllers.maintain.CheckDetail
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
 GET        /governed-by-uk-law                  controllers.maintain.GovernedByUkLawController.onPageLoad()
-POST       /administered-in-uk                  controllers.maintain.GovernedByUkLawController.onSubmit()
+POST       /governed-by-uk-law                  controllers.maintain.GovernedByUkLawController.onSubmit()
 
 GET        /governing-country                   controllers.maintain.GoverningCountryController.onPageLoad()
 POST       /governing-country                   controllers.maintain.GoverningCountryController.onSubmit()
