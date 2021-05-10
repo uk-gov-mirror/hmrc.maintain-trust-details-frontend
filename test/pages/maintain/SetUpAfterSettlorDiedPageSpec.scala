@@ -37,7 +37,6 @@ class SetUpAfterSettlorDiedPageSpec extends PageBehaviours {
 
         val userAnswers = emptyUserAnswers
           .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
-          .set(SetUpInAdditionToWillTrustPage, false).success.value
           .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
           .set(HoldoverReliefClaimedPage, true).success.value
           .set(EfrbsYesNoPage, true).success.value
@@ -46,7 +45,6 @@ class SetUpAfterSettlorDiedPageSpec extends PageBehaviours {
         val cleanAnswers = userAnswers.set(SetUpAfterSettlorDiedPage, true).success.value
 
         cleanAnswers.get(TypeOfTrustPage) mustBe None
-        cleanAnswers.get(SetUpInAdditionToWillTrustPage) mustBe None
         cleanAnswers.get(WhyDeedOfVariationCreatedPage) mustBe None
         cleanAnswers.get(HoldoverReliefClaimedPage) mustBe None
         cleanAnswers.get(EfrbsYesNoPage) mustBe None
