@@ -17,7 +17,7 @@
 package navigation
 
 import base.SpecBase
-import models.TypeOfTrust
+import models.{DeedOfVariation, TypeOfTrust}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.maintain._
 
@@ -67,6 +67,31 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
       val baseAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
 
+      "General Admin in the Uk page" when {
+        val page = AdministeredInUkPage
+
+        "Yes -> Set up after settlor died page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+        }
+
+        "No -> What country is the trust administered in page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.SetUpAfterSettlorDiedController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
       "Set up after settlor died page" when {
 
         val page = SetUpAfterSettlorDiedPage
@@ -102,7 +127,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .set(page, TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement).success.value
 
           navigator.nextPage(page, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            .mustBe(controllers.maintain.routes.SetUpInAdditionToWillTrustController.onPageLoad())
         }
 
         "HeritageMaintenanceFund -> Where trustees based page" in {
@@ -140,6 +165,53 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
             .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Is this in addiition to a will trust page" when {
+
+        val page = SetUpInAdditionToWillTrustPage
+
+        "Yes -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+        }
+
+        "No -> Why was the deed of variation created" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhyDeedOfVariationCreatedController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Why Deed of Variation Created page" when {
+
+        val page = WhyDeedOfVariationCreatedPage
+
+        "To replace a will trust -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, DeedOfVariation.ReplacedWillTrust).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
+        }
+
+        "To replace an absolute interest over will -> Where trustees based page" in {
+          val answers = baseAnswers
+            .set(page, DeedOfVariation.PreviouslyAbsoluteInterestUnderWill).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.WhereTrusteesBasedController.onPageLoad())
         }
       }
 

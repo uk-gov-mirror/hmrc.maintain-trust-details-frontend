@@ -70,6 +70,11 @@ businessRelationshipInUk.paragraph2 = Professional advice means the services of 
 checkDetails.title = Check trust details
 checkDetails.heading = Check trust details
 
+administeredInUk.title = Is the trust’s general administration done in the UK?
+administeredInUk.heading = Is the trust’s general administration done in the UK?
+administeredInUk.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
+administeredInUk.error.required = Select yes if the trust’s general administration is done in the UK?
+
 setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
@@ -108,3 +113,15 @@ efrbsStartDate.error.invalid = Enter a real date that the employer-financed reti
 efrbsStartDate.error.future = The date that the employer-financed retirement benefits scheme started must be today or in the past
 efrbsStartDate.error.past = The date that the employer-financed retirement benefits scheme started must be after 31 December 1499
 efrbsStartDate.hint = For example, 31 3 1980
+
+setUpInAdditionToWillTrust.title = Is this in addition to a will trust?
+setUpInAdditionToWillTrust.heading = Is this in addition to a will trust?
+setUpInAdditionToWillTrust.checkYourAnswersLabel = Is this in addition to a will trust?
+setUpInAdditionToWillTrust.error.required = Select yes if this is in addition to a will trust?
+
+whyDeedOfVariationCreated.title = Why was the deed of variation created?
+whyDeedOfVariationCreated.heading = Why was the deed of variation created?
+whyDeedOfVariationCreated.replace-will-trust = To replace a will trust
+whyDeedOfVariationCreated.replace-absolute-interest = To replace an absolute interest over a will
+whyDeedOfVariationCreated.add-will-trust =
+whyDeedOfVariationCreated.error.required = Select the reason that the deed of variation was created

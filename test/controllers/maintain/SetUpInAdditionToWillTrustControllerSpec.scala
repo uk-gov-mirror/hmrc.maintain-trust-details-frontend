@@ -18,33 +18,47 @@ package controllers.maintain
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import models.{TypeOfTrust, UserAnswers}
 import navigation.Navigator
+import org.mockito.ArgumentCaptor
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{reset, verify, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.maintain.SetUpAfterSettlorDiedPage
+import pages.maintain.{SetUpInAdditionToWillTrustPage, TypeOfTrustPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.maintain.SetUpAfterSettlorDiedView
+import views.html.maintain.SetUpInAdditionToWillTrustView
 
-class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+
+class SetUpInAdditionToWillTrustControllerSpec extends SpecBase with BeforeAndAfterEach with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("setUpAfterSettlorDied")
+  val form: Form[Boolean] = formProvider.withPrefix("setUpInAdditionToWillTrust")
 
-  lazy val setUpAfterSettlorDiedRoute: String = routes.SetUpAfterSettlorDiedController.onPageLoad().url
+  lazy val setUpInAdditionToWillTrustRoute: String = routes.SetUpInAdditionToWillTrustController.onPageLoad().url
 
-  "SetUpAfterSettlorDiedController" must {
+  override def beforeEach(): Unit = {
+    reset(playbackRepository)
+    when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+  }
+
+
+  "SetUpInAdditionToWillTrustController" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, setUpAfterSettlorDiedRoute)
+      val request = FakeRequest(GET, setUpInAdditionToWillTrustRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[SetUpAfterSettlorDiedView]
+      val view = application.injector.instanceOf[SetUpInAdditionToWillTrustView]
 
       status(result) mustEqual OK
 
@@ -56,13 +70,13 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(SetUpAfterSettlorDiedPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(SetUpInAdditionToWillTrustPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, setUpAfterSettlorDiedRoute)
+      val request = FakeRequest(GET, setUpInAdditionToWillTrustRoute)
 
-      val view = application.injector.instanceOf[SetUpAfterSettlorDiedView]
+      val view = application.injector.instanceOf[SetUpInAdditionToWillTrustView]
 
       val result = route(application, request).value
 
@@ -74,15 +88,16 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" in {
+
+    "redirect to the next page setting if we have a valid answer" in {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(bind[Navigator].toInstance(fakeNavigator))
           .build()
 
-      val request = FakeRequest(POST, setUpAfterSettlorDiedRoute)
-        .withFormUrlEncodedBody(("value", "false"))
+      val request = FakeRequest(POST, setUpInAdditionToWillTrustRoute)
+        .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
 
@@ -93,18 +108,17 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, setUpAfterSettlorDiedRoute)
+        FakeRequest(POST, setUpInAdditionToWillTrustRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[SetUpAfterSettlorDiedView]
+      val view = application.injector.instanceOf[SetUpInAdditionToWillTrustView]
 
       val result = route(application, request).value
 
@@ -120,7 +134,7 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, setUpAfterSettlorDiedRoute)
+      val request = FakeRequest(GET, setUpInAdditionToWillTrustRoute)
 
       val result = route(application, request).value
 
@@ -136,7 +150,7 @@ class SeUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, setUpAfterSettlorDiedRoute)
+        FakeRequest(POST, setUpInAdditionToWillTrustRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value

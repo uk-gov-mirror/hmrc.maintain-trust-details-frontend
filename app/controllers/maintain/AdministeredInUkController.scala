@@ -17,35 +17,35 @@
 package controllers.maintain
 
 import controllers.actions.StandardActionSets
-import forms.TypeOfTrustFormProvider
+import forms.YesNoFormProvider
 import javax.inject.Inject
-import models.TypeOfTrust
 import navigation.Navigator
-import pages.maintain.TypeOfTrustPage
+import pages.maintain.AdministeredInUkPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.TypeOfTrustView
+import views.html.maintain.AdministeredInUkView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TypeOfTrustController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       standardActionSets: StandardActionSets,
-                                       repository: PlaybackRepository,
-                                       navigator: Navigator,
-                                       formProvider: TypeOfTrustFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: TypeOfTrustView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class AdministeredInUkController @Inject()(
+                                                 override val messagesApi: MessagesApi,
+                                                 yesNoFormProvider: YesNoFormProvider,
+                                                 repository: PlaybackRepository,
+                                                 navigator: Navigator,
+                                                 actions: StandardActionSets,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: AdministeredInUkView
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[TypeOfTrust] = formProvider()
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUk")
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
+  def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
-      val preparedForm = request.userAnswers.get(TypeOfTrustPage) match {
+
+      val preparedForm = request.userAnswers.get(AdministeredInUkPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -53,7 +53,7 @@ class TypeOfTrustController @Inject()(
       Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
+  def onSubmit(): Action[AnyContent] = actions.identifiedUserWithData.async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -62,12 +62,14 @@ class TypeOfTrustController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(TypeOfTrustPage, value))
-            _              <- repository.set(updatedAnswers)
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AdministeredInUkPage, value))
+            _ <- repository.set(updatedAnswers)
           } yield {
-            Redirect(navigator.nextPage(TypeOfTrustPage, updatedAnswers))
+            Redirect(navigator.nextPage(AdministeredInUkPage, updatedAnswers))
           }
         }
       )
   }
+
+
 }
