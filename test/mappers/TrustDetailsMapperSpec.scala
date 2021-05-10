@@ -117,8 +117,6 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, false).success.value
-            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
-            .set(SetUpInAdditionToWillTrustPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, false).success.value
             .set(PreviouslyResidentOffshorePage, true).success.value
@@ -145,9 +143,7 @@ class TrustDetailsMapperSpec extends SpecBase {
           val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
-            .set(SetUpAfterSettlorDiedPage, false).success.value
             .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
-            .set(SetUpInAdditionToWillTrustPage, false).success.value
             .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, false).success.value
@@ -175,7 +171,6 @@ class TrustDetailsMapperSpec extends SpecBase {
           val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
-            .set(SetUpAfterSettlorDiedPage, false).success.value
             .set(TypeOfTrustPage, InterVivosSettlement).success.value
             .set(HoldoverReliefClaimedPage, true).success.value
             .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
@@ -206,7 +201,6 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GoverningCountryPage, country).success.value
             .set(AdministeredInUkPage, false).success.value
             .set(AdministrationCountryPage, country).success.value
-            .set(SetUpAfterSettlorDiedPage, false).success.value
             .set(TypeOfTrustPage, EmploymentRelated).success.value
             .set(EfrbsYesNoPage, true).success.value
             .set(EfrbsStartDatePage, date).success.value
@@ -238,7 +232,6 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GoverningCountryPage, country).success.value
             .set(AdministeredInUkPage, false).success.value
             .set(AdministrationCountryPage, country).success.value
-            .set(SetUpAfterSettlorDiedPage, false).success.value
             .set(TypeOfTrustPage, EmploymentRelated).success.value
             .set(EfrbsYesNoPage, false).success.value
             .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
@@ -269,7 +262,6 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GoverningCountryPage, country).success.value
             .set(AdministeredInUkPage, false).success.value
             .set(AdministrationCountryPage, country).success.value
-            .set(SetUpAfterSettlorDiedPage, false).success.value
             .set(TypeOfTrustPage, FlatManagementCompanyOrSinkingFund).success.value
             .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
@@ -299,7 +291,6 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GoverningCountryPage, country).success.value
             .set(AdministeredInUkPage, false).success.value
             .set(AdministrationCountryPage, country).success.value
-            .set(SetUpAfterSettlorDiedPage, false).success.value
             .set(TypeOfTrustPage, HeritageMaintenanceFund).success.value
             .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
@@ -320,88 +311,6 @@ class TrustDetailsMapperSpec extends SpecBase {
             interVivos = None,
             efrbsStartDate = None
           ))
-        }
-
-        "registered with deceased settlor" when {
-
-          "SetUpAfterSettlorDiedPage is true" in {
-
-            val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
-              .set(GovernedByUkLawPage, true).success.value
-              .set(AdministeredInUkPage, true).success.value
-              .set(SetUpAfterSettlorDiedPage, true).success.value
-              .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
-              .set(CreatedUnderScotsLawPage, true).success.value
-              .set(PreviouslyResidentOffshorePage, false).success.value
-
-            val result = mapper(userAnswers)
-
-            result mustBe JsSuccess(MigratingTrustDetails(
-              lawCountry = None,
-              administrationCountry = GB,
-              residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
-              trustUKRelation = None,
-              trustUKResident = true,
-              typeOfTrust = WillTrustOrIntestacyTrust,
-              deedOfVariation = None,
-              interVivos = None,
-              efrbsStartDate = None
-            ))
-          }
-
-          "SetUpAfterSettlorDiedPage is false (infers TypeOfTrustPage and SetUpInAdditionToWillTrustPage)" in {
-
-            val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = true)
-              .set(GovernedByUkLawPage, true).success.value
-              .set(AdministeredInUkPage, true).success.value
-              .set(SetUpAfterSettlorDiedPage, false).success.value
-              .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
-              .set(CreatedUnderScotsLawPage, true).success.value
-              .set(PreviouslyResidentOffshorePage, false).success.value
-
-            val result = mapper(userAnswers)
-
-            result mustBe JsSuccess(MigratingTrustDetails(
-              lawCountry = None,
-              administrationCountry = GB,
-              residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
-              trustUKRelation = None,
-              trustUKResident = true,
-              typeOfTrust = WillTrustOrIntestacyTrust,
-              deedOfVariation = Some(AdditionToWillTrust),
-              interVivos = None,
-              efrbsStartDate = None
-            ))
-          }
-        }
-
-        "not registered with deceased settlor" when {
-
-          "DeedOfVariationTrustOrFamilyArrangement (infers SetUpAfterSettlorDiedPage and SetUpInAdditionToWillTrustPage)" in {
-
-            val userAnswers = baseAnswers.copy(registeredWithDeceasedSettlor = false)
-              .set(GovernedByUkLawPage, true).success.value
-              .set(AdministeredInUkPage, true).success.value
-              .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
-              .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
-              .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
-              .set(CreatedUnderScotsLawPage, true).success.value
-              .set(PreviouslyResidentOffshorePage, false).success.value
-
-            val result = mapper(userAnswers)
-
-            result mustBe JsSuccess(MigratingTrustDetails(
-              lawCountry = None,
-              administrationCountry = GB,
-              residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
-              trustUKRelation = None,
-              trustUKResident = true,
-              typeOfTrust = DeedOfVariationTrustOrFamilyArrangement,
-              deedOfVariation = Some(ReplacedWillTrust),
-              interVivos = None,
-              efrbsStartDate = None
-            ))
-          }
         }
       }
     }

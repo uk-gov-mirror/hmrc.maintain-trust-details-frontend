@@ -145,11 +145,7 @@ class TrustDetailsMapper {
           case DeedOfVariationTrustOrFamilyArrangement => WhyDeedOfVariationCreatedPage.path.read[DeedOfVariation].map(Some(_))
           case _ => Reads(_ => JsSuccess(None))
         }
-        case _ => SetUpInAdditionToWillTrustPage.path.readNullable[Boolean].flatMap {
-          case Some(true) => Reads(_ => JsSuccess(Some(AdditionToWillTrust)))
-          case Some(false) => WhyDeedOfVariationCreatedPage.path.read[DeedOfVariation].map(Some(_))
-          case None => Reads(_ => JsSuccess(None))
-        }
+        case _ => Reads(_ => JsSuccess(None))
       }
     }
 
