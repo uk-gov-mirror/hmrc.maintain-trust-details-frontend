@@ -72,10 +72,33 @@ businessRelationshipInUk.paragraph2 = Professional advice means the services of 
 checkDetails.title = Check trust details
 checkDetails.heading = Check trust details
 
-administeredInUk.title = Is the trust’s general administration done in the UK?
-administeredInUk.heading = Is the trust’s general administration done in the UK?
-administeredInUk.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
-administeredInUk.error.required = Select yes if the trust’s general administration is done in the UK?
+governedByUkLaw.title = Is the trust governed by UK law?
+governedByUkLaw.heading = Is the trust governed by UK law?
+governedByUkLaw.checkYourAnswersLabel = Is the trust governed by UK law?
+governedByUkLaw.error.required = Select yes if the trust is governed by UK law
+governedByUkLaw.paragraph1 = Trusts are usually governed by the laws of the country they were created in.
+governedByUkLaw.paragraph2 = Sometimes the trust deed will specify which country governs the trust.
+governedByUkLaw.paragraph3 = If the trust was created in Scotland, select yes.
+
+governingCountry.title = What country governs the trust?
+governingCountry.heading = What country governs the trust?
+governingCountry.checkYourAnswersLabel = What country governs the trust?
+governingCountry.error.required = Enter the country that governs the trust
+governingCountry.error.length = The country that governs the trust must be 100 characters or less
+governingCountry.error.invalidCharacters = The country that governs the trust must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
+administeredInUk.title = Does the trust’s general administration take place in the UK?
+administeredInUk.heading = Does the trust’s general administration take place in the UK?
+administeredInUk.checkYourAnswersLabel = Does the trust’s general administration take place in the UK?
+administeredInUk.error.required = Select yes if the trust’s general administration takes place in the UK?
+administeredInUk.paragraph1 = The trust’s general administration usually takes place in the country where the managing trustees are resident.
+
+administrationCountry.title = In what country is the trust administered?
+administrationCountry.heading = In what country is the trust administered?
+administrationCountry.checkYourAnswersLabel = In what country is the trust administered?
+administrationCountry.error.required = Enter the country that the trust is administered in
+administrationCountry.error.length = The country that the trust is administered in must be 100 characters or less
+administrationCountry.error.invalidCharacters = The country that the trust  is administered in must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
 
 setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?
