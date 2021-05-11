@@ -116,7 +116,7 @@ typeOfTrust.inter-vivos = A trust created during their lifetime to give or trans
 typeOfTrust.deed-of-variation = A trust through a Deed of Variation or family agreement
 typeOfTrust.employment-related = A trust for the employees of a company
 typeOfTrust.flat-or-sinking-fund = A trust for a building or building with tenants
-typeOfTrust.heritage = A trust for a the repair of historic buildings
+typeOfTrust.heritage = A trust for the repair of historic buildings
 typeOfTrust.error.required = Select the type of trust the settlor created
 
 whyDeedOfVariationCreated.title = Why was the deed of variation created?
