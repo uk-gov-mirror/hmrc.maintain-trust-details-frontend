@@ -60,5 +60,6 @@ GET        /efrbs-start-date                    controllers.maintain.EfrbsStartD
 POST       /efrbs-start-date                    controllers.maintain.EfrbsStartDateController.onSubmit()
 
 GET        /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onPageLoad()
+POST       /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onSubmit()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

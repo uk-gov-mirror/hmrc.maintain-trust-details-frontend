@@ -15,7 +15,7 @@
  *@
 
 @import controllers.maintain.routes._
-@import models.DeedOfVariation
+@import models.TrusteesBased
 
 @this(
     main_template: MainTemplate,
@@ -25,10 +25,10 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("whyDeedOfVariationCreated.title")}"
+    title = s"${errorPrefix(form)} ${messages("whereTrusteesBased.title")}"
 ) {
 
-    @formHelper(action = WhyDeedOfVariationCreatedController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = WhereTrusteesBasedController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -36,9 +36,9 @@
 
         @components.input_radio(
             field = form("value"),
-            legend = messages("whyDeedOfVariationCreated.heading"),
+            legend = messages("whereTrusteesBased.heading"),
             headingIsLegend = true,
-            inputs = DeedOfVariation.options
+            inputs = TrusteesBased.options
         )
 
         @components.submit_button()
