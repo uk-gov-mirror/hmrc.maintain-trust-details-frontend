@@ -52,7 +52,7 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
         bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUk", Some(BusinessRelationshipInUkController.onPageLoad().url)),
         bound.yesNoQuestion(SettlorBenefitsFromAssetsPage, "settlorBenefitsFromAssets", Some(SettlorBenefitsFromAssetsController.onPageLoad().url)),
         bound.yesNoQuestion(ForPurposeOfSection218Page, "forPurposeOfSection218", Some(ForPurposeOfSection218Controller.onPageLoad().url)),
-        bound.yesNoQuestion(AgentCreatedTrustPage, "agentCreatedTrust", Some(AgentCreatedTrustController.onPageLoad().url)),
+        bound.yesNoQuestion(AgentCreatedTrustPage, "agentCreatedTrust", Some(AgentCreatedTrustController.onPageLoad().url))
       )
     } else {
       Seq(
