@@ -62,6 +62,9 @@ POST       /efrbs-start-date                    controllers.maintain.EfrbsStartD
 GET        /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onPageLoad()
 POST       /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onSubmit()
 
+GET        /where-settlors-based                controllers.maintain.SettlorsUkBasedController.onPageLoad()
+POST       /where-settlors-based                controllers.maintain.SettlorsUkBasedController.onSubmit()
+
 GET        /resident-country                    controllers.maintain.PreviouslyResidentOffshoreCountryController.onPageLoad()
 POST       /resident-country                    controllers.maintain.PreviouslyResidentOffshoreCountryController.onSubmit()
 
