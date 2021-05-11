@@ -17,7 +17,7 @@
 package navigation
 
 import controllers.maintain.routes._
-import controllers.routes.{FeatureNotAvailableController, SessionExpiredController}
+import controllers.routes.SessionExpiredController
 import models.TrusteesBased._
 import models.TypeOfTrust._
 import models.UserAnswers
@@ -39,32 +39,27 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
 
   private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = {
     case OwnsUkLandOrPropertyPage => _ => RecordedOnEeaRegisterController.onPageLoad()
-    case BusinessRelationshipInUkPage => _ => CheckDetailsController.onPageLoad()
+    case BusinessRelationshipInUkPage => navigateAwayFromBusinessRelationshipInUkQuestion
     case GoverningCountryPage => _ => AdministeredInUkController.onPageLoad()
     case AdministrationCountryPage => navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor
     case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => firstQuestionAfterTrustTypeQuestions
     case WhyDeedOfVariationCreatedPage => _ => firstQuestionAfterTrustTypeQuestions
+    case CreatedUnderScotsLawPage => _ => PreviouslyResidentOffshoreController.onPageLoad()
+    case PreviouslyResidentOffshoreCountryPage | AgentCreatedTrustPage => _ => CheckDetailsController.onPageLoad()
   }
 
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
     case RecordedOnEeaRegisterPage => navigateAwayFromRecordedOnEeaRegisterQuestion
     case SetUpAfterSettlorDiedPage => navigateAwayFromSetUpAfterSettlorDiedQuestion
-
-    case GovernedByUkLawPage => ua => yesNoNav(
-      ua,
-      GovernedByUkLawPage,
-      AdministeredInUkController.onPageLoad(),
-      GoverningCountryController.onPageLoad()
-    )
-    case AdministeredInUkPage => ua => yesNoNav(
-      ua,
-      AdministeredInUkPage,
-      navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua),
-      AdministrationCountryController.onPageLoad()
-    )
+    case GovernedByUkLawPage => yesNoNav(_, GovernedByUkLawPage, AdministeredInUkController.onPageLoad(), GoverningCountryController.onPageLoad())
+    case AdministeredInUkPage => ua => yesNoNav(ua, AdministeredInUkPage, navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua), AdministrationCountryController.onPageLoad())
     case TypeOfTrustPage => navigateAwayFromTypeOfTrustQuestion
     case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), firstQuestionAfterTrustTypeQuestions)
     case WhereTrusteesBasedPage => navigateAwayFromWhereTrusteesBasedQuestion
+    case SettlorsUkBasedPage => yesNoNav(_, SettlorsUkBasedPage, CreatedUnderScotsLawController.onPageLoad(), BusinessRelationshipInUkController.onPageLoad())
+    case PreviouslyResidentOffshorePage => yesNoNav(_, PreviouslyResidentOffshorePage, PreviouslyResidentOffshoreCountryController.onPageLoad(), CheckDetailsController.onPageLoad())
+    case SettlorBenefitsFromAssetsPage => yesNoNav(_, SettlorBenefitsFromAssetsPage, CheckDetailsController.onPageLoad(), ForPurposeOfSection218Controller.onPageLoad())
+    case ForPurposeOfSection218Page => yesNoNav(_, ForPurposeOfSection218Page, AgentCreatedTrustController.onPageLoad(), CheckDetailsController.onPageLoad())
   }
 
   private def navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua: UserAnswers): Call = {
@@ -95,6 +90,14 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
     }
   }
 
+  private def navigateAwayFromBusinessRelationshipInUkQuestion(ua: UserAnswers): Call = {
+    if (ua.migratingFromNonTaxableToTaxable) {
+      SettlorBenefitsFromAssetsController.onPageLoad()
+    } else {
+      CheckDetailsController.onPageLoad()
+    }
+  }
+
   private def navigateAwayFromTypeOfTrustQuestion(ua: UserAnswers): Call = {
     ua.get(TypeOfTrustPage) match {
       case Some(InterVivosSettlement) =>
@@ -116,9 +119,9 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
 
   private def navigateAwayFromWhereTrusteesBasedQuestion(ua: UserAnswers): Call = {
     ua.get(WhereTrusteesBasedPage) match {
-      case Some(AllTrusteesUkBased) => FeatureNotAvailableController.onPageLoad()
-      case Some(NoTrusteesUkBased) => FeatureNotAvailableController.onPageLoad()
-      case Some(InternationalAndUkBasedTrustees) => FeatureNotAvailableController.onPageLoad()
+      case Some(AllTrusteesUkBased) => CreatedUnderScotsLawController.onPageLoad()
+      case Some(NoTrusteesUkBased) => BusinessRelationshipInUkController.onPageLoad()
+      case Some(InternationalAndUkBasedTrustees) => SettlorsUkBasedController.onPageLoad()
       case _ => SessionExpiredController.onPageLoad()
     }
   }

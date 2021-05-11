@@ -335,7 +335,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .set(page, AllTrusteesUkBased).success.value
 
           navigator.nextPage(page, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            .mustBe(controllers.maintain.routes.CreatedUnderScotsLawController.onPageLoad())
         }
 
         "None UK-based -> Business relationship in UK page" in {
@@ -343,7 +343,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .set(page, NoTrusteesUkBased).success.value
 
           navigator.nextPage(page, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            .mustBe(controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad())
         }
 
         "Some Uk-based -> Settlors UK based page" in {
@@ -351,8 +351,132 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .set(page, InternationalAndUkBasedTrustees).success.value
 
           navigator.nextPage(page, answers)
-            .mustBe(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            .mustBe(controllers.maintain.routes.SettlorsUkBasedController.onPageLoad())
         }
+      }
+
+      "Settlors UK based page" when {
+
+        val page = SettlorsUkBasedPage
+
+        "Yes -> Created under Scots Law page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.CreatedUnderScotsLawController.onPageLoad())
+        }
+
+        "No -> Business relationship in UK page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.BusinessRelationshipInUkController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Created under Scots Law page -> Previously resident offshore page" in {
+        navigator.nextPage(CreatedUnderScotsLawPage, baseAnswers)
+          .mustBe(controllers.maintain.routes.PreviouslyResidentOffshoreController.onPageLoad())
+      }
+
+      "Previously resident offshore page" when {
+
+        val page = PreviouslyResidentOffshorePage
+
+        "Yes -> Where previously based page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.PreviouslyResidentOffshoreCountryController.onPageLoad())
+        }
+
+        "No -> CYA page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Where previously based page -> CYA page" in {
+        navigator.nextPage(PreviouslyResidentOffshoreCountryPage, baseAnswers)
+          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      }
+
+      "Business relationship in UK page -> Settlor benefits from assets page" in {
+        navigator.nextPage(BusinessRelationshipInUkPage, baseAnswers)
+          .mustBe(controllers.maintain.routes.SettlorBenefitsFromAssetsController.onPageLoad())
+      }
+
+      "Settlor benefits from assets page" when {
+
+        val page = SettlorBenefitsFromAssetsPage
+
+        "Yes -> CYA page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+        }
+
+        "No -> For purpose of section 218 page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.ForPurposeOfSection218Controller.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "For purpose of section 218 page" when {
+
+        val page = ForPurposeOfSection218Page
+
+        "Yes -> Agent created trust page" in {
+          val answers = baseAnswers
+            .set(page, true).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.AgentCreatedTrustController.onPageLoad())
+        }
+
+        "No -> CYA page" in {
+          val answers = baseAnswers
+            .set(page, false).success.value
+
+          navigator.nextPage(page, answers)
+            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+        }
+
+        "No Data -> Session Expired page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+        }
+      }
+
+      "Agent created trust page -> CYA page" in {
+        navigator.nextPage(AgentCreatedTrustPage, baseAnswers)
+          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
       }
     }
   }
