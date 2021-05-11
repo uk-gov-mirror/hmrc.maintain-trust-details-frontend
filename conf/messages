@@ -76,7 +76,7 @@ businessRelationshipInUk.paragraph2 = Professional advice means the services of 
 checkDetails.title = Check trust details
 checkDetails.heading = Check trust details
 
-startDate.title = When was the trust created?
+startDate.checkYourAnswersLabel = When was the trust created?
 
 governedByUkLaw.title = Is the trust governed by UK law?
 governedByUkLaw.heading = Is the trust governed by UK law?
