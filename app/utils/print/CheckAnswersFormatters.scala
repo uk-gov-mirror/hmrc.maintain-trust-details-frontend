@@ -16,14 +16,13 @@
 
 package utils.print
 
-import org.joda.time.{LocalDate => JodaDate}
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
 import uk.gov.hmrc.play.language.LanguageUtils
 import viewmodels.CountryOptions
 
-import java.time.{LocalDate => JavaDate}
+import java.time.LocalDate
 import javax.inject.Inject
 
 class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
@@ -37,9 +36,8 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
     }
   }
 
-  def formatDate(date: JavaDate)(implicit messages: Messages): Html = {
-    val convertedDate: JodaDate = new JodaDate(date.getYear, date.getMonthValue, date.getDayOfMonth)
-    escape(languageUtils.Dates.formatDate(convertedDate))
+  def formatDate(date: LocalDate)(implicit messages: Messages): Html = {
+    escape(languageUtils.Dates.formatDate(date))
   }
 
   def country(code: String)(implicit messages: Messages): Html = {

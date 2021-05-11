@@ -35,28 +35,28 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
 
     def yesNoQuestion(query: Gettable[Boolean],
                      labelKey: String,
-                     changeUrl: String): Option[AnswerRow] = {
+                     changeUrl: Option[String]): Option[AnswerRow] = {
       val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
       question(query, labelKey, format, changeUrl)
     }
 
     def countryQuestion(query: Gettable[String],
                         labelKey: String,
-                        changeUrl: String): Option[AnswerRow] = {
+                        changeUrl: Option[String]): Option[AnswerRow] = {
       val format = (x: String) => checkAnswersFormatters.country(x)
       question(query, labelKey, format, changeUrl)
     }
 
     def dateQuestion(query: Gettable[LocalDate],
                      labelKey: String,
-                     changeUrl: String): Option[AnswerRow] = {
+                     changeUrl: Option[String]): Option[AnswerRow] = {
       val format = (x: LocalDate) => checkAnswersFormatters.formatDate(x)
       question(query, labelKey, format, changeUrl)
     }
 
     def enumQuestion[T](query: Gettable[T],
                         labelKey: String,
-                        changeUrl: String)(implicit rds: Reads[T]): Option[AnswerRow] = {
+                        changeUrl: Option[String])(implicit rds: Reads[T]): Option[AnswerRow] = {
       val format = (x: T) => checkAnswersFormatters.formatEnum(labelKey, x)
       question(query, labelKey, format, changeUrl)
     }
@@ -64,13 +64,13 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     private def question[T](query: Gettable[T],
                             labelKey: String,
                             format: T => Html,
-                            changeUrl: String)
+                            changeUrl: Option[String])
                            (implicit rds: Reads[T]): Option[AnswerRow] = {
       userAnswers.get(query) map { x =>
         AnswerRow(
           label = messages(s"$labelKey.checkYourAnswersLabel"),
           answer = format(x),
-          changeUrl = Some(changeUrl)
+          changeUrl = changeUrl
         )
       }
     }

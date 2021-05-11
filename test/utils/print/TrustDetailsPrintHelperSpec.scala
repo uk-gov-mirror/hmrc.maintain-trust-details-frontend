@@ -37,6 +37,7 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
 
       "migrating from non-taxable to taxable" in {
         val userAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
+          .set(StartDatePage, LocalDate.parse("2000-01-01")).success.value
           .set(GovernedByUkLawPage, false).success.value
           .set(GoverningCountryPage, "DE").success.value
           .set(AdministeredInUkPage, false).success.value
@@ -64,6 +65,7 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
         result mustEqual AnswerSection(
           headingKey = None,
           rows = Seq(
+            AnswerRow(messages("startDate.checkYourAnswersLabel"), Html("1 January 2000"), None),
             AnswerRow(messages("governedByUkLaw.checkYourAnswersLabel"), Html("No"), Some(GovernedByUkLawController.onPageLoad().url)),
             AnswerRow(messages("governingCountry.checkYourAnswersLabel"), Html("Germany"), Some(GoverningCountryController.onPageLoad().url)),
             AnswerRow(messages("administeredInUk.checkYourAnswersLabel"), Html("No"), Some(AdministeredInUkController.onPageLoad().url)),
@@ -77,14 +79,14 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
             AnswerRow(messages("ownsUkLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
             AnswerRow(messages("recordedOnEeaRegister.checkYourAnswersLabel"), Html("Yes"), Some(RecordedOnEeaRegisterController.onPageLoad().url)),
             AnswerRow(messages("whereTrusteesBased.checkYourAnswersLabel"), Html("All the trustees are based in the UK"), Some(WhereTrusteesBasedController.onPageLoad().url)),
-            //AnswerRow(messages("settlorsUkBased.checkYourAnswersLabel"), Html("Yes"), Some(SettlorsUkBasedController.onPageLoad().url)),
-            //AnswerRow(messages("createdUnderScotsLaw.checkYourAnswersLabel"), Html("Yes"), Some(CreatedUnderScotsLawController.onPageLoad().url)),
-            //AnswerRow(messages("previouslyResidentOffshore.checkYourAnswersLabel"), Html("Yes"), Some(PreviouslyResidentOffshoreController.onPageLoad().url)),
-            //AnswerRow(messages("previouslyResidentOffshoreCountry.checkYourAnswersLabel"), Html("United States of America"), Some(PreviouslyResidentOffshoreCountryController.onPageLoad().url)),
-            AnswerRow(messages("businessRelationshipInUk.checkYourAnswersLabel"), Html("Yes"), Some(BusinessRelationshipInUkController.onPageLoad().url))
-            //AnswerRow(messages("settlorBenefitsFromAssets.checkYourAnswersLabel"), Html("No"), Some(SettlorBenefitsFromAssetsController.onPageLoad().url)),
-            //AnswerRow(messages("forPurposeOfSection218.checkYourAnswersLabel"), Html("Yes"), Some(ForPurposeOfSection218Controller.onPageLoad().url)),
-            //AnswerRow(messages("agentCreatedTrust.checkYourAnswersLabel"), Html("Yes"), Some(AgentCreatedTrustController.onPageLoad().url))
+            AnswerRow(messages("settlorsUkBased.checkYourAnswersLabel"), Html("Yes"), Some(SettlorsUkBasedController.onPageLoad().url)),
+            AnswerRow(messages("createdUnderScotsLaw.checkYourAnswersLabel"), Html("Yes"), Some(CreatedUnderScotsLawController.onPageLoad().url)),
+            AnswerRow(messages("previouslyResidentOffshore.checkYourAnswersLabel"), Html("Yes"), Some(PreviouslyResidentOffshoreController.onPageLoad().url)),
+            AnswerRow(messages("previouslyResidentOffshoreCountry.checkYourAnswersLabel"), Html("United States of America"), Some(PreviouslyResidentOffshoreCountryController.onPageLoad().url)),
+            AnswerRow(messages("businessRelationshipInUk.checkYourAnswersLabel"), Html("Yes"), Some(BusinessRelationshipInUkController.onPageLoad().url)),
+            AnswerRow(messages("settlorBenefitsFromAssets.checkYourAnswersLabel"), Html("No"), Some(SettlorBenefitsFromAssetsController.onPageLoad().url)),
+            AnswerRow(messages("forPurposeOfSection218.checkYourAnswersLabel"), Html("Yes"), Some(ForPurposeOfSection218Controller.onPageLoad().url)),
+            AnswerRow(messages("agentCreatedTrust.checkYourAnswersLabel"), Html("Yes"), Some(AgentCreatedTrustController.onPageLoad().url))
           ),
           sectionKey = None
         )
