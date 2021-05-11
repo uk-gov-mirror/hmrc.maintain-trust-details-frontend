@@ -38,7 +38,8 @@
             field = form("value"),
             legend = messages("whereTrusteesBased.heading"),
             headingIsLegend = true,
-            inputs = TrusteesBased.options
+            inputs = TrusteesBased.options,
+            hint = Some(messages("whereTrusteesBased.hint"))
         )
 
         @components.submit_button()

@@ -17,14 +17,14 @@
 @import viewmodels.RadioOption
 
 @(
-        field: Field,
-        legend: String,
-        legendClass: Option[String] = None,
-        hint: Option[String] = None,
-        trackGa: Boolean = false,
-        headingIsLegend: Boolean = false,
-        inputs: Seq[RadioOption],
-        fieldsetClass: Option[String] = None
+    field: Field,
+    legend: String,
+    legendClass: Option[String] = None,
+    hint: Option[String] = None,
+    trackGa: Boolean = false,
+    headingIsLegend: Boolean = false,
+    inputs: Seq[RadioOption],
+    fieldsetClass: Option[String] = None
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -32,7 +32,7 @@
         @if(hint.nonEmpty || field.hasErrors) {
             aria-describedby="@if(hint.nonEmpty){hint-@{field.id}}@if(hint.nonEmpty && field.hasErrors){ }@if(field.hasErrors){error-message-@{field.id}-input}"
         }
-      @if(fieldsetClass.nonEmpty){class="@fieldsetClass" }
+        @if(fieldsetClass.nonEmpty){class="@fieldsetClass" }
     >
 
         @if(headingIsLegend){

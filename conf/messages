@@ -102,7 +102,7 @@ administrationCountry.heading = In what country is the trust administered?
 administrationCountry.checkYourAnswersLabel = In what country is the trust administered?
 administrationCountry.error.required = Enter the country that the trust is administered in
 administrationCountry.error.length = The country that the trust is administered in must be 100 characters or less
-administrationCountry.error.invalidCharacters = The country that the trust  is administered in must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+administrationCountry.error.invalidCharacters = The country that the trust is administered in must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
 
 setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
 setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?
@@ -150,6 +150,52 @@ efrbsStartDate.error.future = The date that the employer-financed retirement ben
 efrbsStartDate.error.past = The date that the employer-financed retirement benefits scheme started must be after 31 December 1499
 efrbsStartDate.hint = For example, 31 3 1980
 
+whereTrusteesBased.title = Are the trustees based in the UK?
+whereTrusteesBased.heading = Are the trustees based in the UK?
+whereTrusteesBased.checkYourAnswersLabel = Are the trustees based in the UK?
+whereTrusteesBased.hint = For an individual they are based in the UK if they have UK residency. This is usually where the trustee lives and works most of the time during the tax year. For an organisation they are based in the UK if this is where the business is registered.
 whereTrusteesBased.all-uk-based = All the trustees are based in the UK
 whereTrusteesBased.none-uk-based = None of the trustees are based in the UK
 whereTrusteesBased.some-uk-based = The trust contains trustees based in and outside the UK
+whereTrusteesBased.error.required = Select how many of the trustees are based in the UK
+
+settlorsUkBased.title = Are any of the settlors based in the UK?
+settlorsUkBased.heading = Are any of the settlors based in the UK?
+settlorsUkBased.checkYourAnswersLabel = Are any of the settlors based in the UK?
+settlorsUkBased.error.required = Select yes if any of the settlors are based in the UK
+
+createdUnderScotsLaw.title = Was the trust created under Scots law?
+createdUnderScotsLaw.heading = Was the trust created under Scots law?
+createdUnderScotsLaw.checkYourAnswersLabel = Was the trust created under Scots law?
+createdUnderScotsLaw.hint = This could be known as Scottish law
+createdUnderScotsLaw.error.required = Select yes if the trust was created under Scots law
+
+previouslyResidentOffshore.title = Has the trust ever been based offshore?
+previouslyResidentOffshore.heading = Has the trust ever been based offshore?
+previouslyResidentOffshore.checkYourAnswersLabel = Has the trust ever been based offshore?
+previouslyResidentOffshore.hint = This includes the Channel Islands and the Isle of Man
+previouslyResidentOffshore.error.required = Select yes if the trust has ever been based offshore
+
+previouslyResidentOffshoreCountry.title = Where was the trust based before?
+previouslyResidentOffshoreCountry.heading = Where was the trust based before?
+previouslyResidentOffshoreCountry.checkYourAnswersLabel = Where was the trust based before?
+previouslyResidentOffshoreCountry.error.required = Enter where the trust was based before
+previouslyResidentOffshoreCountry.error.length = The country that the trust was based in before must be 100 characters or less
+previouslyResidentOffshoreCountry.error.invalidCharacters = The country that the trust was based in before must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
+settlorsBenefitsFromAssets.title = Are you registering the trust because the settlor benefits from the trust’s assets?
+settlorsBenefitsFromAssets.heading = Are you registering the trust because the settlor benefits from the trust’s assets?
+settlorsBenefitsFromAssets.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
+settlorsBenefitsFromAssets.hint = This relates to Schedule 5A of the Taxation of Chargeable Gains Act 1992
+settlorsBenefitsFromAssets.error.required = Select yes if the settlor benefits from the trust’s assets
+
+forPurposeOfSection218.title = Are you registering the trust for Inheritance Tax reasons?
+forPurposeOfSection218.heading = Are you registering the trust for Inheritance Tax reasons?
+forPurposeOfSection218.checkYourAnswersLabel = Are you registering the trust for Inheritance Tax reasons?
+forPurposeOfSection218.hint = This relates to Section 218 of the Inheritance Tax Act 1984
+forPurposeOfSection218.error.required = Select yes if you are registering the trust for Inheritance Tax reasons
+
+agentCreatedTrust.title = Has an agent who is not a barrister created this trust?
+agentCreatedTrust.heading = Has an agent who is not a barrister created this trust?
+agentCreatedTrust.checkYourAnswersLabel = Has an agent who is not a barrister created this trust?
+agentCreatedTrust.error.required = Select yes if an agent who is not a barrister created this trust
