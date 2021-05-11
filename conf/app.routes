@@ -65,7 +65,22 @@ POST       /where-trustees-based                controllers.maintain.WhereTruste
 GET        /where-settlors-based                controllers.maintain.SettlorsUkBasedController.onPageLoad()
 POST       /where-settlors-based                controllers.maintain.SettlorsUkBasedController.onSubmit()
 
-GET        /resident-country                    controllers.maintain.PreviouslyResidentOffshoreCountryController.onPageLoad()
-POST       /resident-country                    controllers.maintain.PreviouslyResidentOffshoreCountryController.onSubmit()
+GET        /created-under-scots-law             controllers.maintain.CreatedUnderScotsLawController.onPageLoad()
+POST       /created-under-scots-law             controllers.maintain.CreatedUnderScotsLawController.onSubmit()
+
+GET        /previously-resident-offshore        controllers.maintain.PreviouslyResidentOffshoreController.onPageLoad()
+POST       /previously-resident-offshore        controllers.maintain.PreviouslyResidentOffshoreController.onSubmit()
+
+GET        /where-previously-based              controllers.maintain.PreviouslyResidentOffshoreCountryController.onPageLoad()
+POST       /where-previously-based              controllers.maintain.PreviouslyResidentOffshoreCountryController.onSubmit()
+
+GET        /settlor-benefits-from-assets        controllers.maintain.SettlorBenefitsFromAssetsController.onPageLoad()
+POST       /settlor-benefits-from-assets        controllers.maintain.SettlorBenefitsFromAssetsController.onSubmit()
+
+GET        /for-inheritance-tax                 controllers.maintain.ForPurposeOfSection218Controller.onPageLoad()
+POST       /for-inheritance-tax                 controllers.maintain.ForPurposeOfSection218Controller.onSubmit()
+
+GET        /agent-created-trust                 controllers.maintain.AgentCreatedTrustController.onPageLoad()
+POST       /agent-created-trust                 controllers.maintain.AgentCreatedTrustController.onSubmit()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

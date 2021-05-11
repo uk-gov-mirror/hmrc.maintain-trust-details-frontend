@@ -183,11 +183,11 @@ previouslyResidentOffshoreCountry.error.required = Enter where the trust was bas
 previouslyResidentOffshoreCountry.error.length = The country that the trust was based in before must be 100 characters or less
 previouslyResidentOffshoreCountry.error.invalidCharacters = The country that the trust was based in before must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
 
-settlorsBenefitsFromAssets.title = Are you registering the trust because the settlor benefits from the trust’s assets?
-settlorsBenefitsFromAssets.heading = Are you registering the trust because the settlor benefits from the trust’s assets?
-settlorsBenefitsFromAssets.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
-settlorsBenefitsFromAssets.hint = This relates to Schedule 5A of the Taxation of Chargeable Gains Act 1992
-settlorsBenefitsFromAssets.error.required = Select yes if the settlor benefits from the trust’s assets
+settlorBenefitsFromAssets.title = Are you registering the trust because the settlor benefits from the trust’s assets?
+settlorBenefitsFromAssets.heading = Are you registering the trust because the settlor benefits from the trust’s assets?
+settlorBenefitsFromAssets.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
+settlorBenefitsFromAssets.hint = This relates to Schedule 5A of the Taxation of Chargeable Gains Act 1992
+settlorBenefitsFromAssets.error.required = Select yes if the settlor benefits from the trust’s assets
 
 forPurposeOfSection218.title = Are you registering the trust for Inheritance Tax reasons?
 forPurposeOfSection218.heading = Are you registering the trust for Inheritance Tax reasons?
