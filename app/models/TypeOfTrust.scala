@@ -56,7 +56,7 @@ object TypeOfTrust {
     case JsString(EmploymentRelated.asString) => JsSuccess(EmploymentRelated)
     case JsString(HeritageMaintenanceFund.asString) => JsSuccess(HeritageMaintenanceFund)
     case JsString(FlatManagementCompanyOrSinkingFund.asString) => JsSuccess(FlatManagementCompanyOrSinkingFund)
-    case _ => JsError("Invalid type of trust")
+    case _ => JsError("Invalid TypeOfTrust")
   }
 
   implicit val writes: Writes[TypeOfTrust] = Writes(x => JsString(x.asString))

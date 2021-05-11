@@ -16,15 +16,25 @@
 
 package models
 
+import play.api.libs.json._
 import viewmodels.RadioOption
 
 sealed trait TrusteesBased
 
-object TrusteesBased extends Enumerable.Implicits {
+object TrusteesBased {
 
   case object AllTrusteesUkBased extends WithName("all-uk-based") with TrusteesBased
   case object NoTrusteesUkBased extends WithName("none-uk-based") with TrusteesBased
   case object InternationalAndUkBasedTrustees extends WithName("some-uk-based") with TrusteesBased
+
+  implicit val reads: Reads[TrusteesBased] = Reads {
+    case JsString(AllTrusteesUkBased.toString) => JsSuccess(AllTrusteesUkBased)
+    case JsString(NoTrusteesUkBased.toString) => JsSuccess(NoTrusteesUkBased)
+    case JsString(InternationalAndUkBasedTrustees.toString) => JsSuccess(InternationalAndUkBasedTrustees)
+    case _ => JsError("Invalid TrusteesBased")
+  }
+
+  implicit val writes: Writes[TrusteesBased] = Writes(x => JsString(x.toString))
 
   val values: List[TrusteesBased] = List(
     AllTrusteesUkBased, NoTrusteesUkBased, InternationalAndUkBasedTrustees
@@ -33,6 +43,7 @@ object TrusteesBased extends Enumerable.Implicits {
   val options: List[RadioOption] = values
     .map(value => RadioOption("whereTrusteesBased", value.toString))
 
-  implicit val enumerable: Enumerable[TrusteesBased] = Enumerable(values.map(v => v.toString -> v): _*)
+  implicit val enumerable: Enumerable[TrusteesBased] =
+    Enumerable(values.map(v => v.toString -> v): _*)
 
 }

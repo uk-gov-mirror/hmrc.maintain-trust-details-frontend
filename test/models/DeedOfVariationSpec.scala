@@ -18,7 +18,8 @@ package models
 
 import base.SpecBase
 import models.DeedOfVariation._
-import play.api.libs.json.{JsError, JsNull, JsString, Json}
+import play.api.libs.json.{JsNull, JsString, Json}
+import viewmodels.RadioOption
 
 class DeedOfVariationSpec extends SpecBase{
 
@@ -50,7 +51,15 @@ class DeedOfVariationSpec extends SpecBase{
 
     "return error when reading invalid deed of variation" in {
       val json = JsNull
-      json.validate[DeedOfVariation] mustBe JsError("Invalid deed of variation")
+      json.validate[DeedOfVariation].isError mustBe true
+    }
+
+    "filter out AdditionToWillTrust in radio options" in {
+      val prefix = "whyDeedOfVariationCreated"
+      DeedOfVariation.options mustEqual List(
+        RadioOption(prefix, "replace-will-trust"),
+        RadioOption(prefix, "replace-absolute-interest")
+      )
     }
   }
 }

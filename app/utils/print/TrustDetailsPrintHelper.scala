@@ -41,6 +41,8 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
         bound.yesNoQuestion(HoldoverReliefClaimedPage, "holdoverReliefClaimed", HoldoverReliefClaimedController.onPageLoad().url),
         bound.yesNoQuestion(EfrbsYesNoPage, "efrbsYesNo", EfrbsYesNoController.onPageLoad().url),
         bound.dateQuestion(EfrbsStartDatePage, "efrbsStartDate", EfrbsStartDateController.onPageLoad().url),
+        bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrProperty", OwnsUkLandOrPropertyController.onPageLoad().url),
+        bound.yesNoQuestion(RecordedOnEeaRegisterPage, "recordedOnEeaRegister", RecordedOnEeaRegisterController.onPageLoad().url),
         bound.enumQuestion(WhereTrusteesBasedPage, "whereTrusteesBased", WhereTrusteesBasedController.onPageLoad().url),
         //bound.yesNoQuestion(SettlorsUkBasedPage, "settlorsUkBased", SettlorsUkBasedController.onPageLoad().url),
         //bound.yesNoQuestion(CreatedUnderScotsLawPage, "createdUnderScotsLaw", CreatedUnderScotsLawController.onPageLoad().url),

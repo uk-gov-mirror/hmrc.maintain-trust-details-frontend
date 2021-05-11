@@ -47,6 +47,8 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
           .set(HoldoverReliefClaimedPage, true).success.value
           .set(EfrbsYesNoPage, true).success.value
           .set(EfrbsStartDatePage, LocalDate.parse("1996-02-03")).success.value
+          .set(OwnsUkLandOrPropertyPage, true).success.value
+          .set(RecordedOnEeaRegisterPage, true).success.value
           .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
           .set(SettlorsUkBasedPage, true).success.value
           .set(CreatedUnderScotsLawPage, true).success.value
@@ -72,6 +74,8 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
             AnswerRow(messages("holdoverReliefClaimed.checkYourAnswersLabel"), Html("Yes"), Some(HoldoverReliefClaimedController.onPageLoad().url)),
             AnswerRow(messages("efrbsYesNo.checkYourAnswersLabel"), Html("Yes"), Some(EfrbsYesNoController.onPageLoad().url)),
             AnswerRow(messages("efrbsStartDate.checkYourAnswersLabel"), Html("3 February 1996"), Some(EfrbsStartDateController.onPageLoad().url)),
+            AnswerRow(messages("ownsUkLandOrProperty.checkYourAnswersLabel"), Html("Yes"), Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
+            AnswerRow(messages("recordedOnEeaRegister.checkYourAnswersLabel"), Html("Yes"), Some(RecordedOnEeaRegisterController.onPageLoad().url)),
             AnswerRow(messages("whereTrusteesBased.checkYourAnswersLabel"), Html("All the trustees are based in the UK"), Some(WhereTrusteesBasedController.onPageLoad().url)),
             //AnswerRow(messages("settlorsUkBased.checkYourAnswersLabel"), Html("Yes"), Some(SettlorsUkBasedController.onPageLoad().url)),
             //AnswerRow(messages("createdUnderScotsLaw.checkYourAnswersLabel"), Html("Yes"), Some(CreatedUnderScotsLawController.onPageLoad().url)),

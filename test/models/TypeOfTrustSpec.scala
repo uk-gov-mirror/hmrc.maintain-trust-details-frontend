@@ -18,7 +18,7 @@ package models
 
 import base.SpecBase
 import models.TypeOfTrust._
-import play.api.libs.json.{JsError, JsNull, JsString, Json}
+import play.api.libs.json.{JsNull, JsString, Json}
 import viewmodels.RadioOption
 
 class TypeOfTrustSpec extends SpecBase{
@@ -72,7 +72,7 @@ class TypeOfTrustSpec extends SpecBase{
 
     "return error when reading invalid type of trust" in {
       val json = JsNull
-      json.validate[TypeOfTrust] mustBe JsError("Invalid type of trust")
+      json.validate[TypeOfTrust].isError mustBe true
     }
 
     "filter out WillTrustOrIntestacyTrust in radio options" in {
