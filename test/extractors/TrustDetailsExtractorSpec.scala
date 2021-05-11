@@ -51,6 +51,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
+        result.get(StartDatePage).get mustBe startDate
         result.get(TrustResidentInUkPage).get mustBe true
       }
 
@@ -73,6 +74,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
+        result.get(StartDatePage).get mustBe startDate
         result.get(TrustResidentInUkPage).get mustBe false
       }
     }
@@ -97,6 +99,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
+        result.get(StartDatePage).get mustBe startDate
         result.get(OwnsUkLandOrPropertyPage).get mustBe true
         result.get(RecordedOnEeaRegisterPage).get mustBe true
         result.get(BusinessRelationshipInUkPage) mustBe None
@@ -122,6 +125,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
+        result.get(StartDatePage).get mustBe startDate
         result.get(OwnsUkLandOrPropertyPage).get mustBe false
         result.get(RecordedOnEeaRegisterPage).get mustBe false
         result.get(BusinessRelationshipInUkPage).get mustBe true
@@ -149,6 +153,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
+        result.get(StartDatePage).get mustBe startDate
         result.get(OwnsUkLandOrPropertyPage).get mustBe true
         result.get(RecordedOnEeaRegisterPage).get mustBe true
         result.get(BusinessRelationshipInUkPage) mustBe None
@@ -174,6 +179,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails).success.value
 
+        result.get(StartDatePage).get mustBe startDate
         result.get(OwnsUkLandOrPropertyPage).get mustBe false
         result.get(RecordedOnEeaRegisterPage).get mustBe false
         result.get(BusinessRelationshipInUkPage).get mustBe true

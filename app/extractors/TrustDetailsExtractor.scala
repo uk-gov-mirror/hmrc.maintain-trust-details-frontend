@@ -25,6 +25,7 @@ class TrustDetailsExtractor {
 
   def apply(answers: UserAnswers, trustDetails: TrustDetailsType): Try[UserAnswers] =
     answers.deleteAtPath(pages.maintain.basePath)
+      .flatMap(_.set(StartDatePage, trustDetails.startDate))
       .flatMap(_.set(OwnsUkLandOrPropertyPage, trustDetails.trustUKProperty))
       .flatMap(_.set(RecordedOnEeaRegisterPage, trustDetails.trustRecorded))
       .flatMap(ua => extractTrustUKResident(trustDetails, ua))
