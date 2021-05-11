@@ -54,6 +54,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
     lawCountry = None,
     administrationCountry = "GB",
     residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
+    trustUKProperty = true,
+    trustRecorded = true,
     trustUKRelation = None,
     trustUKResident = true,
     typeOfTrust = WillTrustOrIntestacyTrust,
