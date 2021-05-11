@@ -25,10 +25,10 @@
 @(form: Form[_], countryOptions: Seq[InputOption])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("governingCountry.title")}"
+    title = s"${errorPrefix(form)} ${messages("previouslyResidentOffshoreCountry.title")}"
 ) {
 
-    @formHelper(action = GoverningCountryController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = PreviouslyResidentOffshoreCountryController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -36,7 +36,7 @@
 
         @components.select(
             field = form("value"),
-            label = messages("governingCountry.heading"),
+            label = messages("previouslyResidentOffshoreCountry.heading"),
             labelClasses = Set("heading-large"),
             labelAsHeading = true,
             options = countryOptions,
