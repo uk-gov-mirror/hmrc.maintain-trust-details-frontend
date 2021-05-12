@@ -36,7 +36,11 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
     "render answer rows" when {
 
       "migrating from non-taxable to taxable" in {
+
+        val trustName = "Trust Name"
+
         val userAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
+          .set(NamePage, trustName).success.value
           .set(StartDatePage, LocalDate.parse("2000-01-01")).success.value
           .set(GovernedByUkLawPage, false).success.value
           .set(GoverningCountryPage, "DE").success.value
@@ -65,6 +69,7 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
         result mustEqual AnswerSection(
           headingKey = None,
           rows = Seq(
+            AnswerRow(messages("name.checkYourAnswersLabel"), Html(trustName), None),
             AnswerRow(messages("startDate.checkYourAnswersLabel"), Html("1 January 2000"), None),
             AnswerRow(messages("governedByUkLaw.checkYourAnswersLabel"), Html("No"), Some(GovernedByUkLawController.onPageLoad().url)),
             AnswerRow(messages("governingCountry.checkYourAnswersLabel"), Html("Germany"), Some(GoverningCountryController.onPageLoad().url)),

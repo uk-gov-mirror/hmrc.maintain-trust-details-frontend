@@ -31,6 +31,7 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
 
     val answerRows: Seq[Option[AnswerRow]] = if (userAnswers.migratingFromNonTaxableToTaxable) {
       Seq(
+        bound.stringQuestion(NamePage, "name", None),
         bound.dateQuestion(StartDatePage, "startDate", None),
         bound.yesNoQuestion(GovernedByUkLawPage, "governedByUkLaw", Some(GovernedByUkLawController.onPageLoad().url)),
         bound.countryQuestion(GoverningCountryPage, "governingCountry", Some(GoverningCountryController.onPageLoad().url)),
