@@ -77,4 +77,9 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
     http.GET[Boolean](url)
   }
 
+  def getTrustName(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[String] = {
+    val url = s"$baseUrl/$identifier/trust-name"
+    http.GET[String](url)
+  }
+
 }
