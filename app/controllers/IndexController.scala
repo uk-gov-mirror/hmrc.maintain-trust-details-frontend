@@ -53,6 +53,7 @@ class IndexController @Inject()(
         trustDetails <- connector.getTrustDetails(identifier)
         taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
         registeredWithDeceasedSettlor <- connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
+        trustName <- connector.getTrustName(identifier)
         ua <- Future.fromTry {
           request.userAnswers match {
             case Some(userAnswers) if userAnswers.migratingFromNonTaxableToTaxable == taxableMigrationFlag.migratingFromNonTaxableToTaxable =>
@@ -67,7 +68,7 @@ class IndexController @Inject()(
                   registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                 ),
                 trustDetails = trustDetails,
-                trustName = ""
+                trustName = trustName
               )
           }
         }

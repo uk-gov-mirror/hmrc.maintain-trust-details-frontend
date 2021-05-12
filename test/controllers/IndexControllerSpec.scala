@@ -25,7 +25,7 @@ import mappers.TrustDetailsMapper
 import models.http.TaxableMigrationFlag
 import models.{TrustDetailsType, UserAnswers}
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach
@@ -50,12 +50,16 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
   val fakeTrustDetails: TrustDetailsType =
     TrustDetailsType(LocalDate.parse("2020-01-01"), None, None, None, None, None, None, None, None, None, None, None)
 
+  val fakeTrustName: String = "Trust Name"
+
   override def beforeEach(): Unit = {
     reset(mockFeatureFlagService)
 
     reset(mockTrustsConnector)
     when(mockTrustsConnector.getTrustDetails(any())(any(), any()))
       .thenReturn(Future.successful(fakeTrustDetails))
+    when(mockTrustsConnector.getTrustName(any())(any(), any()))
+      .thenReturn(Future.successful(fakeTrustName))
 
     reset(mockExtractor)
     when(mockExtractor(any(), any(), any())).thenReturn(Success(emptyUserAnswers))
@@ -129,7 +133,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
               status(result) mustEqual SEE_OTHER
 
               val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-              verify(mockExtractor).apply(uaCaptor.capture, any(), any())
+              verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
               uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
               uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
           }
@@ -173,7 +177,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                 status(result) mustEqual SEE_OTHER
 
                 val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-                verify(mockExtractor).apply(uaCaptor.capture, any(), any())
+                verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
                 uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                 uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
             }
@@ -369,7 +373,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
 
-        verify(mockExtractor).apply(any(), any(), any())
+        verify(mockExtractor).apply(any(), eqTo(fakeTrustDetails), eqTo(fakeTrustName))
       }
     }
   }
