@@ -66,7 +66,8 @@ class IndexController @Inject()(
                   migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
                   registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                 ),
-                trustDetails = trustDetails
+                trustDetails = trustDetails,
+                trustName = ""
               )
           }
         }

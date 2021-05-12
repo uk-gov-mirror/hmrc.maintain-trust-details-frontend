@@ -58,7 +58,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
       .thenReturn(Future.successful(fakeTrustDetails))
 
     reset(mockExtractor)
-    when(mockExtractor(any(), any())).thenReturn(Success(emptyUserAnswers))
+    when(mockExtractor(any(), any(), any())).thenReturn(Success(emptyUserAnswers))
 
     reset(playbackRepository)
     when(playbackRepository.set(any())).thenReturn(Future.successful(true))
@@ -129,7 +129,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
               status(result) mustEqual SEE_OTHER
 
               val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-              verify(mockExtractor).apply(uaCaptor.capture, any())
+              verify(mockExtractor).apply(uaCaptor.capture, any(), any())
               uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
               uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
           }
@@ -173,7 +173,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                 status(result) mustEqual SEE_OTHER
 
                 val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-                verify(mockExtractor).apply(uaCaptor.capture, any())
+                verify(mockExtractor).apply(uaCaptor.capture, any(), any())
                 uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                 uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
             }
@@ -225,7 +225,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                     redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
 
-                    verify(mockExtractor, never()).apply(any(), any())
+                    verify(mockExtractor, never()).apply(any(), any(), any())
 
                     val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
                     verify(playbackRepository).set(uaCaptor.capture)
@@ -277,7 +277,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                       redirectLocation(result).value mustBe controllers.maintain.routes.GovernedByUkLawController.onPageLoad().url
 
-                      verify(mockExtractor, never()).apply(any(), any())
+                      verify(mockExtractor, never()).apply(any(), any(), any())
 
                       val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
                       verify(playbackRepository).set(uaCaptor.capture)
@@ -327,7 +327,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                       redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
 
-                      verify(mockExtractor, never()).apply(any(), any())
+                      verify(mockExtractor, never()).apply(any(), any(), any())
 
                       val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
                       verify(playbackRepository).set(uaCaptor.capture)
@@ -354,7 +354,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
         when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
           .thenReturn(Future.successful(false))
 
-        when(mockExtractor(any(), any())).thenReturn(Failure(new Throwable("")))
+        when(mockExtractor(any(), any(), any())).thenReturn(Failure(new Throwable("")))
 
         val application = applicationBuilder(userAnswers = None)
           .overrides(
@@ -369,7 +369,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
 
-        verify(mockExtractor).apply(any(), any())
+        verify(mockExtractor).apply(any(), any(), any())
       }
     }
   }

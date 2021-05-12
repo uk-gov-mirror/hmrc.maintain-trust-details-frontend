@@ -23,8 +23,9 @@ import scala.util.{Failure, Try}
 
 class TrustDetailsExtractor {
 
-  def apply(answers: UserAnswers, trustDetails: TrustDetailsType): Try[UserAnswers] =
+  def apply(answers: UserAnswers, trustDetails: TrustDetailsType, trustName: String): Try[UserAnswers] =
     answers.deleteAtPath(pages.maintain.basePath)
+      .flatMap(_.set(NamePage, trustName))
       .flatMap(_.set(StartDatePage, trustDetails.startDate))
       .flatMap(_.set(OwnsUkLandOrPropertyPage, trustDetails.trustUKProperty))
       .flatMap(_.set(RecordedOnEeaRegisterPage, trustDetails.trustRecorded))
