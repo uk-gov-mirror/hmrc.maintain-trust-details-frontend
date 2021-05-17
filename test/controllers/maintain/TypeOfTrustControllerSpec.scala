@@ -174,11 +174,11 @@ class TypeOfTrustControllerSpec extends SpecBase with BeforeAndAfterEach with Sc
 
       "answer hasn't changed" in {
 
-        forAll(arbitrary[(TypeOfTrust, TypeOfTrust)].suchThat(x => x._1 == x._2)) {
-          tuple =>
+        forAll(arbitrary[TypeOfTrust]) {
+          typeOfTrust =>
             beforeEach()
 
-            val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, tuple._1).success.value
+            val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, typeOfTrust).success.value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(bind[Navigator].toInstance(fakeNavigator))
@@ -186,7 +186,7 @@ class TypeOfTrustControllerSpec extends SpecBase with BeforeAndAfterEach with Sc
               .build()
 
             val request = FakeRequest(POST, typeOfTrustRoute)
-              .withFormUrlEncodedBody(("value", tuple._2.toString))
+              .withFormUrlEncodedBody(("value", typeOfTrust.toString))
 
             val result = route(application, request).value
 
