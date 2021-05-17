@@ -25,7 +25,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.running
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.{DefaultDB, MongoConnection}
-import repositories.{ActiveSessionRepository, ActiveSessionRepositoryImpl}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
