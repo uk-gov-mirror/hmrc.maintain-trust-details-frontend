@@ -36,7 +36,7 @@ class WhereTrusteesBasedViewSpec extends EnumViewBehaviours[TrusteesBased] {
       view.apply(form)(fakeRequest, messages)
     }
 
-    behave like normalPage(applyView(form), messageKeyPrefix, "hint")
+    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
 
     behave like pageWithBackLink(applyView(form))
 

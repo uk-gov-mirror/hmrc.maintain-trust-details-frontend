@@ -24,6 +24,12 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
+@content = {
+    <p>@messages("whereTrusteesBased.paragraph1")</p>
+
+    <p>@messages("whereTrusteesBased.paragraph2")</p>
+}
+
 @main_template(
     title = s"${errorPrefix(form)} ${messages("whereTrusteesBased.title")}"
 ) {
@@ -39,7 +45,7 @@
             legend = messages("whereTrusteesBased.heading"),
             headingIsLegend = true,
             inputs = TrusteesBased.options,
-            hint = Some(messages("whereTrusteesBased.hint"))
+            additionalContent = Some(content)
         )
 
         @components.submit_button()

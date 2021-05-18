@@ -25,6 +25,16 @@
 
 @content = {
     <p>@messages("governedByUkLaw.paragraph1")</p>
+
+    @components.bullet_list(
+        "governedByUkLaw",
+        List(
+            "bullet1",
+            "bullet2",
+            "bullet3"
+        )
+    )
+
     <p>@messages("governedByUkLaw.paragraph2")</p>
     <p>@messages("governedByUkLaw.paragraph3")</p>
 }

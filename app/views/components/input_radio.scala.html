@@ -24,7 +24,8 @@
     trackGa: Boolean = false,
     headingIsLegend: Boolean = false,
     inputs: Seq[RadioOption],
-    fieldsetClass: Option[String] = None
+    fieldsetClass: Option[String] = None,
+    additionalContent: Option[Html] = None
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -45,14 +46,20 @@
             </legend>
         }
 
+        @if(additionalContent.isDefined){
+            @additionalContent
+        }
+
         @if(hint.nonEmpty){
             <div class="form-hint" id="hint-@{field.id}">@hint</div>
         }
+
         @field.errors.map { error =>
             <span class="error-message" id="error-message-@field.id-input">
                 <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
             </span>
         }
+
         @for(input <- inputs) {
             <div class="multiple-choice">
                 <input id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}" @if(field.value == Some(input.value)){checked="checked"} @if(trackGa){data-journey-click="maintain-a-trust-frontend:click:@{input.id}"} />
