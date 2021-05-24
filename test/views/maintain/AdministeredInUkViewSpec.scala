@@ -36,7 +36,7 @@ class AdministeredInUkViewSpec extends YesNoViewBehaviours {
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)
 
-    behave like normalPage(applyView(form), messageKeyPrefix)
+    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1")
 
     behave like pageWithBackLink(applyView(form))
 

@@ -53,6 +53,7 @@ class IndexController @Inject()(
         trustDetails <- connector.getTrustDetails(identifier)
         taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
         registeredWithDeceasedSettlor <- connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
+        trustName <- connector.getTrustName(identifier)
         ua <- Future.fromTry {
           request.userAnswers match {
             case Some(userAnswers) if userAnswers.migratingFromNonTaxableToTaxable == taxableMigrationFlag.migratingFromNonTaxableToTaxable =>
@@ -66,7 +67,8 @@ class IndexController @Inject()(
                   migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
                   registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                 ),
-                trustDetails = trustDetails
+                trustDetails = trustDetails,
+                trustName = trustName
               )
           }
         }
@@ -77,8 +79,7 @@ class IndexController @Inject()(
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
             if (taxableMigrationFlag.migratingFromNonTaxableToTaxable) {
-              // TODO - navigate to GovernedByUkLawController once built
-              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+              Redirect(controllers.maintain.routes.GovernedByUkLawController.onPageLoad())
             } else {
               Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
             }

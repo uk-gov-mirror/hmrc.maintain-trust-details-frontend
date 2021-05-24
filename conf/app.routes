@@ -29,11 +29,20 @@ POST       /business-relationship-yes-no        controllers.maintain.BusinessRel
 GET        /check-details                       controllers.maintain.CheckDetailsController.onPageLoad()
 POST       /check-details                       controllers.maintain.CheckDetailsController.onSubmit()
 
-GET        /admin-in-uk-yes-no                  controllers.maintain.AdministeredInUkController.onPageLoad()
-POST       /admin-in-uk-yes-no                  controllers.maintain.AdministeredInUkController.onSubmit()
+GET        /governed-by-uk-law                  controllers.maintain.GovernedByUkLawController.onPageLoad()
+POST       /governed-by-uk-law                  controllers.maintain.GovernedByUkLawController.onSubmit()
 
-GET        /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
-POST       /after-settlor-died                  controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()
+GET        /governing-country                   controllers.maintain.GoverningCountryController.onPageLoad()
+POST       /governing-country                   controllers.maintain.GoverningCountryController.onSubmit()
+
+GET        /administered-in-uk                  controllers.maintain.AdministeredInUkController.onPageLoad()
+POST       /administered-in-uk                  controllers.maintain.AdministeredInUkController.onSubmit()
+
+GET        /administration-country              controllers.maintain.AdministrationCountryController.onPageLoad()
+POST       /administration-country              controllers.maintain.AdministrationCountryController.onSubmit()
+
+GET        /set-up-after-settlor-died           controllers.maintain.SetUpAfterSettlorDiedController.onPageLoad()
+POST       /set-up-after-settlor-died           controllers.maintain.SetUpAfterSettlorDiedController.onSubmit()
 
 GET        /type-of-trust                       controllers.maintain.TypeOfTrustController.onPageLoad()
 POST       /type-of-trust                       controllers.maintain.TypeOfTrustController.onSubmit()
@@ -51,5 +60,27 @@ GET        /efrbs-start-date                    controllers.maintain.EfrbsStartD
 POST       /efrbs-start-date                    controllers.maintain.EfrbsStartDateController.onSubmit()
 
 GET        /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onPageLoad()
+POST       /where-trustees-based                controllers.maintain.WhereTrusteesBasedController.onSubmit()
+
+GET        /where-settlors-based                controllers.maintain.SettlorsUkBasedController.onPageLoad()
+POST       /where-settlors-based                controllers.maintain.SettlorsUkBasedController.onSubmit()
+
+GET        /created-under-scots-law             controllers.maintain.CreatedUnderScotsLawController.onPageLoad()
+POST       /created-under-scots-law             controllers.maintain.CreatedUnderScotsLawController.onSubmit()
+
+GET        /previously-resident-offshore        controllers.maintain.PreviouslyResidentOffshoreController.onPageLoad()
+POST       /previously-resident-offshore        controllers.maintain.PreviouslyResidentOffshoreController.onSubmit()
+
+GET        /where-previously-based              controllers.maintain.PreviouslyResidentOffshoreCountryController.onPageLoad()
+POST       /where-previously-based              controllers.maintain.PreviouslyResidentOffshoreCountryController.onSubmit()
+
+GET        /settlor-benefits-from-assets        controllers.maintain.SettlorBenefitsFromAssetsController.onPageLoad()
+POST       /settlor-benefits-from-assets        controllers.maintain.SettlorBenefitsFromAssetsController.onSubmit()
+
+GET        /for-inheritance-tax                 controllers.maintain.ForPurposeOfSection218Controller.onPageLoad()
+POST       /for-inheritance-tax                 controllers.maintain.ForPurposeOfSection218Controller.onSubmit()
+
+GET        /agent-created-trust                 controllers.maintain.AgentCreatedTrustController.onPageLoad()
+POST       /agent-created-trust                 controllers.maintain.AgentCreatedTrustController.onSubmit()
 
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

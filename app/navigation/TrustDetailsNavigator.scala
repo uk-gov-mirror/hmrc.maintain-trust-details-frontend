@@ -17,8 +17,10 @@
 package navigation
 
 import controllers.maintain.routes._
-import controllers.routes.{FeatureNotAvailableController, SessionExpiredController}
-import models.{TypeOfTrust, UserAnswers}
+import controllers.routes.SessionExpiredController
+import models.TrusteesBased._
+import models.TypeOfTrust._
+import models.UserAnswers
 import pages.Page
 import pages.maintain._
 import play.api.mvc.Call
@@ -37,22 +39,27 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
 
   private def simpleNavigation(): PartialFunction[Page, UserAnswers => Call] = {
     case OwnsUkLandOrPropertyPage => _ => RecordedOnEeaRegisterController.onPageLoad()
-    case BusinessRelationshipInUkPage => _ => CheckDetailsController.onPageLoad()
-    case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => WhereTrusteesBasedController.onPageLoad()
-    case WhyDeedOfVariationCreatedPage => _ => WhereTrusteesBasedController.onPageLoad()
+    case BusinessRelationshipInUkPage => navigateAwayFromBusinessRelationshipInUkQuestion
+    case GoverningCountryPage => _ => AdministeredInUkController.onPageLoad()
+    case AdministrationCountryPage => navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor
+    case HoldoverReliefClaimedPage | EfrbsStartDatePage => _ => firstQuestionAfterTrustTypeQuestions
+    case WhyDeedOfVariationCreatedPage => _ => firstQuestionAfterTrustTypeQuestions
+    case CreatedUnderScotsLawPage => _ => PreviouslyResidentOffshoreController.onPageLoad()
+    case PreviouslyResidentOffshoreCountryPage | AgentCreatedTrustPage => _ => CheckDetailsController.onPageLoad()
   }
 
   private def conditionalNavigation(): PartialFunction[Page, UserAnswers => Call] = {
-    case RecordedOnEeaRegisterPage => navigateToCyaIfUkResidentTrust
+    case RecordedOnEeaRegisterPage => navigateAwayFromRecordedOnEeaRegisterQuestion
     case SetUpAfterSettlorDiedPage => navigateAwayFromSetUpAfterSettlorDiedQuestion
-    case TypeOfTrustPage => fromTypeOfTrustPage
-    case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), WhereTrusteesBasedController.onPageLoad())
-    case AdministeredInUkPage => ua => yesNoNav(
-      ua,
-      AdministeredInUkPage,
-      navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua),
-      FeatureNotAvailableController.onPageLoad() //ToDo This needs to redirect to the No Page
-    )
+    case GovernedByUkLawPage => yesNoNav(_, GovernedByUkLawPage, AdministeredInUkController.onPageLoad(), GoverningCountryController.onPageLoad())
+    case AdministeredInUkPage => ua => yesNoNav(ua, AdministeredInUkPage, navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua), AdministrationCountryController.onPageLoad())
+    case TypeOfTrustPage => navigateAwayFromTypeOfTrustQuestion
+    case EfrbsYesNoPage => yesNoNav(_, EfrbsYesNoPage, EfrbsStartDateController.onPageLoad(), firstQuestionAfterTrustTypeQuestions)
+    case WhereTrusteesBasedPage => navigateAwayFromWhereTrusteesBasedQuestion
+    case SettlorsUkBasedPage => yesNoNav(_, SettlorsUkBasedPage, CreatedUnderScotsLawController.onPageLoad(), BusinessRelationshipInUkController.onPageLoad())
+    case PreviouslyResidentOffshorePage => yesNoNav(_, PreviouslyResidentOffshorePage, PreviouslyResidentOffshoreCountryController.onPageLoad(), CheckDetailsController.onPageLoad())
+    case SettlorBenefitsFromAssetsPage => yesNoNav(_, SettlorBenefitsFromAssetsPage, CheckDetailsController.onPageLoad(), ForPurposeOfSection218Controller.onPageLoad())
+    case ForPurposeOfSection218Page => yesNoNav(_, ForPurposeOfSection218Page, AgentCreatedTrustController.onPageLoad(), CheckDetailsController.onPageLoad())
   }
 
   private def navigateToSetUpAfterSettlorDiedIfRegisteredWithDeceasedSettlor(ua: UserAnswers): Call = {
@@ -65,36 +72,59 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
 
   private def navigateAwayFromSetUpAfterSettlorDiedQuestion(ua: UserAnswers): Call = {
     if (ua.registeredWithDeceasedSettlor) {
-      WhereTrusteesBasedController.onPageLoad()
+      firstQuestionAfterTrustTypeQuestions
     } else {
       TypeOfTrustController.onPageLoad()
     }
   }
 
-  private def navigateToCyaIfUkResidentTrust(ua: UserAnswers): Call = {
-    if (ua.get(TrustResidentInUkPage).contains(true)) {
-      CheckDetailsController.onPageLoad()
+  private def navigateAwayFromRecordedOnEeaRegisterQuestion(ua: UserAnswers): Call = {
+    if (ua.migratingFromNonTaxableToTaxable) {
+      WhereTrusteesBasedController.onPageLoad()
     } else {
-      BusinessRelationshipInUkController.onPageLoad()
+      if (ua.get(TrustResidentInUkPage).contains(true)) {
+        CheckDetailsController.onPageLoad()
+      } else {
+        BusinessRelationshipInUkController.onPageLoad()
+      }
     }
   }
 
-  private def fromTypeOfTrustPage(ua: UserAnswers): Call = {
+  private def navigateAwayFromBusinessRelationshipInUkQuestion(ua: UserAnswers): Call = {
+    if (ua.migratingFromNonTaxableToTaxable) {
+      SettlorBenefitsFromAssetsController.onPageLoad()
+    } else {
+      CheckDetailsController.onPageLoad()
+    }
+  }
+
+  private def navigateAwayFromTypeOfTrustQuestion(ua: UserAnswers): Call = {
     ua.get(TypeOfTrustPage) match {
-      case Some(TypeOfTrust.InterVivosSettlement) =>
+      case Some(InterVivosSettlement) =>
         HoldoverReliefClaimedController.onPageLoad()
-      case Some(TypeOfTrust.EmploymentRelated) =>
+      case Some(EmploymentRelated) =>
         EfrbsYesNoController.onPageLoad()
-      case Some(TypeOfTrust.DeedOfVariationTrustOrFamilyArrangement) =>
+      case Some(DeedOfVariationTrustOrFamilyArrangement) =>
         if (ua.registeredWithDeceasedSettlor) {
-          WhereTrusteesBasedController.onPageLoad()
+          firstQuestionAfterTrustTypeQuestions
         } else {
           WhyDeedOfVariationCreatedController.onPageLoad()
         }
-      case Some(TypeOfTrust.WillTrustOrIntestacyTrust) | Some(TypeOfTrust.FlatManagementCompanyOrSinkingFund) | Some(TypeOfTrust.HeritageMaintenanceFund) =>
-        WhereTrusteesBasedController.onPageLoad()
+      case Some(WillTrustOrIntestacyTrust) | Some(FlatManagementCompanyOrSinkingFund) | Some(HeritageMaintenanceFund) =>
+        firstQuestionAfterTrustTypeQuestions
       case _ =>
         SessionExpiredController.onPageLoad()
     }
   }
+
+  private def navigateAwayFromWhereTrusteesBasedQuestion(ua: UserAnswers): Call = {
+    ua.get(WhereTrusteesBasedPage) match {
+      case Some(AllTrusteesUkBased) => CreatedUnderScotsLawController.onPageLoad()
+      case Some(NoTrusteesUkBased) => BusinessRelationshipInUkController.onPageLoad()
+      case Some(InternationalAndUkBasedTrustees) => SettlorsUkBasedController.onPageLoad()
+      case _ => SessionExpiredController.onPageLoad()
+    }
+  }
+
+  private lazy val firstQuestionAfterTrustTypeQuestions: Call = OwnsUkLandOrPropertyController.onPageLoad()
 }

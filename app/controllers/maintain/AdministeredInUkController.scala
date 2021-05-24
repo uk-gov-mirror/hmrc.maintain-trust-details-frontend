@@ -31,14 +31,14 @@ import views.html.maintain.AdministeredInUkView
 import scala.concurrent.{ExecutionContext, Future}
 
 class AdministeredInUkController @Inject()(
-                                                 override val messagesApi: MessagesApi,
-                                                 yesNoFormProvider: YesNoFormProvider,
-                                                 repository: PlaybackRepository,
-                                                 navigator: Navigator,
-                                                 actions: StandardActionSets,
-                                                 val controllerComponents: MessagesControllerComponents,
-                                                 view: AdministeredInUkView
-                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                            override val messagesApi: MessagesApi,
+                                            yesNoFormProvider: YesNoFormProvider,
+                                            repository: PlaybackRepository,
+                                            navigator: Navigator,
+                                            actions: StandardActionSets,
+                                            val controllerComponents: MessagesControllerComponents,
+                                            view: AdministeredInUkView
+                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUk")
 
@@ -70,6 +70,4 @@ class AdministeredInUkController @Inject()(
         }
       )
   }
-
-
 }

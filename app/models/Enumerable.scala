@@ -37,7 +37,5 @@ object Enumerable {
         JsError("error.invalid")
     }
 
-    implicit def writes[A: Enumerable]: Writes[A] = Writes(value => JsString(value.toString))
-
   }
 }

@@ -16,12 +16,17 @@
 
 package utils.print
 
-import javax.inject.Inject
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
+import uk.gov.hmrc.play.language.LanguageUtils
+import viewmodels.CountryOptions
 
-class CheckAnswersFormatters @Inject()() {
+import java.time.LocalDate
+import javax.inject.Inject
+
+class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
+                                       countryOptions: CountryOptions) {
 
   def yesOrNo(answer: Boolean)(implicit messages: Messages): Html = {
     if (answer) {
@@ -29,6 +34,18 @@ class CheckAnswersFormatters @Inject()() {
     } else {
       escape(messages("site.no"))
     }
+  }
+
+  def formatDate(date: LocalDate)(implicit messages: Messages): Html = {
+    escape(languageUtils.Dates.formatDate(date))
+  }
+
+  def country(code: String)(implicit messages: Messages): Html = {
+    escape(countryOptions.allOptions.find(_.value.equals(code)).map(_.label).getOrElse(""))
+  }
+
+  def formatEnum[T](key: String, answer: T)(implicit messages: Messages): Html = {
+    escape(messages(s"$key.$answer"))
   }
 
 }

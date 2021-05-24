@@ -17,22 +17,40 @@
 package controllers.maintain
 
 import base.SpecBase
-import forms.TypeOfTrustFormProvider
+import connectors.TrustsConnector
+import forms.EnumFormProvider
+import generators.ModelGenerators
 import models.TypeOfTrust
+import models.TypeOfTrust.EmploymentRelated
 import navigation.Navigator
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{never, reset, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.maintain.TypeOfTrustPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HttpResponse
 import views.html.maintain.TypeOfTrustView
 
-class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
 
-  val form: Form[TypeOfTrust] = new TypeOfTrustFormProvider()()
+class TypeOfTrustControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
+
+  val form: Form[TypeOfTrust] = new EnumFormProvider()("typeOfTrust")
 
   lazy val typeOfTrustRoute: String = routes.TypeOfTrustController.onPageLoad().url
+
+  val mockConnector: TrustsConnector = mock[TrustsConnector]
+
+  override def beforeEach(): Unit = {
+    reset(mockConnector)
+    when(mockConnector.removeTrustTypeDependentTransforms(any())(any(), any()))
+      .thenReturn(Future.successful(HttpResponse(OK, "")))
+  }
 
   "TypeOfTrustController" must {
 
@@ -76,10 +94,10 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[Navigator].toInstance(fakeNavigator))
-          .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[Navigator].toInstance(fakeNavigator))
+        .overrides(bind[TrustsConnector].toInstance(mockConnector))
+        .build()
 
       val request = FakeRequest(POST, typeOfTrustRoute)
         .withFormUrlEncodedBody(("value", TypeOfTrust.EmploymentRelated.toString))
@@ -93,14 +111,130 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
+    "remove trust type dependent transforms" when {
+
+      "previous answer EmploymentRelated and answer changed" in {
+
+        forAll(arbitrary[TypeOfTrust].suchThat(_ != EmploymentRelated)) {
+          newAnswer =>
+            beforeEach()
+
+            val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, EmploymentRelated).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[Navigator].toInstance(fakeNavigator))
+              .overrides(bind[TrustsConnector].toInstance(mockConnector))
+              .build()
+
+            val request = FakeRequest(POST, typeOfTrustRoute)
+              .withFormUrlEncodedBody(("value", newAnswer.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+            verify(mockConnector).removeTrustTypeDependentTransforms(any())(any(), any())
+
+            application.stop()
+        }
+      }
+
+      "new answer EmploymentRelated and answer changed" in {
+
+        forAll(arbitrary[Option[TypeOfTrust]].suchThat(!_.contains(EmploymentRelated))) {
+          previousAnswer =>
+            beforeEach()
+
+            val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, previousAnswer).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[Navigator].toInstance(fakeNavigator))
+              .overrides(bind[TrustsConnector].toInstance(mockConnector))
+              .build()
+
+            val request = FakeRequest(POST, typeOfTrustRoute)
+              .withFormUrlEncodedBody(("value", EmploymentRelated.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+            verify(mockConnector).removeTrustTypeDependentTransforms(any())(any(), any())
+
+            application.stop()
+        }
+      }
+    }
+
+    "not remove trust type dependent transforms" when {
+
+      "answer hasn't changed" in {
+
+        forAll(arbitrary[TypeOfTrust]) {
+          typeOfTrust =>
+            beforeEach()
+
+            val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, typeOfTrust).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[Navigator].toInstance(fakeNavigator))
+              .overrides(bind[TrustsConnector].toInstance(mockConnector))
+              .build()
+
+            val request = FakeRequest(POST, typeOfTrustRoute)
+              .withFormUrlEncodedBody(("value", typeOfTrust.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+            verify(mockConnector, never()).removeTrustTypeDependentTransforms(any())(any(), any())
+
+            application.stop()
+        }
+      }
+
+      "neither previous answer nor new answer are EmploymentRelated" in {
+
+        forAll(arbitrary[(Option[TypeOfTrust], TypeOfTrust)].suchThat(x => !x._1.contains(EmploymentRelated) && x._2 != EmploymentRelated)) {
+          tuple =>
+            beforeEach()
+
+            val userAnswers = emptyUserAnswers.set(TypeOfTrustPage, tuple._1).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[Navigator].toInstance(fakeNavigator))
+              .overrides(bind[TrustsConnector].toInstance(mockConnector))
+              .build()
+
+            val request = FakeRequest(POST, typeOfTrustRoute)
+              .withFormUrlEncodedBody(("value", tuple._2.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+            verify(mockConnector, never()).removeTrustTypeDependentTransforms(any())(any(), any())
+
+            application.stop()
+        }
+      }
+    }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request =
-        FakeRequest(POST, typeOfTrustRoute)
-          .withFormUrlEncodedBody(("value", ""))
+      val request = FakeRequest(POST, typeOfTrustRoute)
+        .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -135,9 +269,8 @@ class TypeOfTrustControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request =
-        FakeRequest(POST, typeOfTrustRoute)
-          .withFormUrlEncodedBody(("value", "true"))
+      val request = FakeRequest(POST, typeOfTrustRoute)
+        .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
 

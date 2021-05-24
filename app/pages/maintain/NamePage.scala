@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package forms
+package pages.maintain
 
-import com.google.inject.Inject
-import forms.mappings.Mappings
-import models.DeedOfVariation
-import play.api.data.Form
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class WhyDeedOfVariationCreatedFormProvider @Inject() extends Mappings {
+case object NamePage extends QuestionPage[String] {
 
-  def apply(): Form[DeedOfVariation] =
-    Form(
-      "value" -> enumerable[DeedOfVariation]("whyDeedOfVariationCreated.error.required")
-    )
+  override def path: JsPath = basePath \ toString
+
+  override def toString: String = "name"
+
 }

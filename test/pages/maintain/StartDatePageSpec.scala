@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package forms
+package pages.maintain
 
-import com.google.inject.Inject
-import forms.mappings.Mappings
-import models.TypeOfTrust
-import play.api.data.Form
+import pages.behaviours.PageBehaviours
 
-class TypeOfTrustFormProvider @Inject() extends Mappings {
+import java.time.LocalDate
 
-  def apply(): Form[TypeOfTrust] =
-    Form(
-      "value" -> enumerable[TypeOfTrust]("typeOfTrust.error.required")
-    )
+class StartDatePageSpec extends PageBehaviours {
+
+  "StartDatePage" must {
+
+    beRetrievable[LocalDate](StartDatePage)
+
+    beSettable[LocalDate](StartDatePage)
+
+    beRemovable[LocalDate](StartDatePage)
+  }
 }

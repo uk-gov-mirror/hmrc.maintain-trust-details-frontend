@@ -170,6 +170,8 @@ class TrustDetailsMapper {
       governingCountryReads and
         administrationCountryReads and
         residentialStatusReads and
+        OwnsUkLandOrPropertyPage.path.read[Boolean] and
+        RecordedOnEeaRegisterPage.path.read[Boolean] and
         BusinessRelationshipInUkPage.path.readNullable[Boolean] and
         trustUkResidentReads and
         typeOfTrustReads and

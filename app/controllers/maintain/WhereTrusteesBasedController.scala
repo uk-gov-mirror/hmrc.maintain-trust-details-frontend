@@ -16,19 +16,58 @@
 
 package controllers.maintain
 
-import com.google.inject.{Inject, Singleton}
-import play.api.i18n.I18nSupport
+import controllers.actions.StandardActionSets
+import forms.EnumFormProvider
+import models.TrusteesBased
+import navigation.Navigator
+import pages.maintain.WhereTrusteesBasedPage
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.FeatureNotAvailableView
+import views.html.maintain.WhereTrusteesBasedView
 
-@Singleton
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
+
 class WhereTrusteesBasedController @Inject()(
+                                              override val messagesApi: MessagesApi,
+                                              standardActionSets: StandardActionSets,
+                                              repository: PlaybackRepository,
+                                              navigator: Navigator,
+                                              formProvider: EnumFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: FeatureNotAvailableView
-                                            ) extends FrontendBaseController with I18nSupport {
+                                              view: WhereTrusteesBasedView
+                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+  private val form: Form[TrusteesBased] = formProvider("whereTrusteesBased")
+
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(WhereTrusteesBasedPage) match {
+        case None => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm))
+  }
+
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForIdentifier.async {
+    implicit request =>
+
+      form.bindFromRequest().fold(
+        (formWithErrors: Form[_]) =>
+          Future.successful(BadRequest(view(formWithErrors))),
+
+        value => {
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhereTrusteesBasedPage, value))
+            _ <- repository.set(updatedAnswers)
+          } yield {
+            Redirect(navigator.nextPage(WhereTrusteesBasedPage, updatedAnswers))
+          }
+        }
+      )
   }
 }

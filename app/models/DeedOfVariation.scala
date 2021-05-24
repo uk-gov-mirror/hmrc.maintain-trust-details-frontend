@@ -25,12 +25,12 @@ sealed trait DeedOfVariation {
 
 object DeedOfVariation {
 
-  case object PreviouslyAbsoluteInterestUnderWill extends WithName("replace-absolute-interest") with DeedOfVariation {
-    override val asString: String = "Previously there was only an absolute interest under the will"
-  }
-
   case object ReplacedWillTrust extends WithName("replace-will-trust") with DeedOfVariation {
     override val asString: String = "Replaced the will trust"
+  }
+
+  case object PreviouslyAbsoluteInterestUnderWill extends WithName("replace-absolute-interest") with DeedOfVariation {
+    override val asString: String = "Previously there was only an absolute interest under the will"
   }
 
   case object AdditionToWillTrust extends WithName("add-will-trust") with DeedOfVariation {
@@ -41,7 +41,7 @@ object DeedOfVariation {
     case JsString(PreviouslyAbsoluteInterestUnderWill.asString) => JsSuccess(PreviouslyAbsoluteInterestUnderWill)
     case JsString(ReplacedWillTrust.asString) => JsSuccess(ReplacedWillTrust)
     case JsString(AdditionToWillTrust.asString) => JsSuccess(AdditionToWillTrust)
-    case _ => JsError("Invalid deed of variation")
+    case _ => JsError("Invalid DeedOfVariation")
   }
 
   implicit val writes: Writes[DeedOfVariation] = Writes(x => JsString(x.asString))

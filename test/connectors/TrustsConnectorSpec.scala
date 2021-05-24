@@ -27,7 +27,7 @@ import models.http.TaxableMigrationFlag
 import models._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
-import play.api.libs.json.{JsBoolean, Json}
+import play.api.libs.json.{JsBoolean, JsString, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -64,6 +64,8 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
   private def setMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/migrating-trust-details"
   private def setNonMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/non-migrating-trust-details"
   private def wasTrustRegisteredWithDeceasedSettlorUrl(identifier: String) = s"/trusts/trust-details/$identifier/has-deceased-settlor"
+  private def getTrustNameUrl(identifier: String) = s"/trusts/trust-details/$identifier/trust-name"
+  private def removeTrustTypeDependentTransformsUrl(identifier: String) = s"/trusts/$identifier/trust-type-dependent-transforms"
 
   "trust connector" must {
 
@@ -309,6 +311,8 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
           lawCountry = None,
           administrationCountry = "GB",
           residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
+          trustUKProperty = true,
+          trustRecorded = true,
           trustUKRelation = None,
           trustUKResident = true,
           typeOfTrust = WillTrustOrIntestacyTrust,
@@ -379,6 +383,60 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
       whenReady(result) { r =>
         r mustBe true
       }
+
+      application.stop()
+    }
+
+    "getTrustName" in {
+
+      val trustName = "Trust Name"
+
+      val json = JsString(trustName)
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsConnector]
+
+      server.stubFor(
+        get(urlEqualTo(getTrustNameUrl(identifier)))
+          .willReturn(okJson(json.toString))
+      )
+
+      val result = connector.getTrustName(identifier)
+
+      whenReady(result) { r =>
+        r mustBe trustName
+      }
+
+      application.stop()
+    }
+
+    "removeTrustTypeDependentTransforms" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsConnector]
+
+      server.stubFor(
+        delete(urlEqualTo(removeTrustTypeDependentTransformsUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val result = connector.removeTrustTypeDependentTransforms(identifier)
+
+      result.futureValue.status mustBe OK
 
       application.stop()
     }

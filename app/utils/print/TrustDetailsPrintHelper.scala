@@ -19,7 +19,7 @@ package utils.print
 import com.google.inject.Inject
 import controllers.maintain.routes._
 import models.UserAnswers
-import pages.maintain.{BusinessRelationshipInUkPage, RecordedOnEeaRegisterPage, OwnsUkLandOrPropertyPage}
+import pages.maintain._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
 
@@ -30,7 +30,31 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
     val bound = answerRowConverter.bind(userAnswers)
 
     val answerRows: Seq[Option[AnswerRow]] = if (userAnswers.migratingFromNonTaxableToTaxable) {
-      Seq() // TODO - add relevant rows once controllers built
+      Seq(
+        bound.stringQuestion(NamePage, "name", None),
+        bound.dateQuestion(StartDatePage, "startDate", None),
+        bound.yesNoQuestion(GovernedByUkLawPage, "governedByUkLaw", Some(GovernedByUkLawController.onPageLoad().url)),
+        bound.countryQuestion(GoverningCountryPage, "governingCountry", Some(GoverningCountryController.onPageLoad().url)),
+        bound.yesNoQuestion(AdministeredInUkPage, "administeredInUk", Some(AdministeredInUkController.onPageLoad().url)),
+        bound.countryQuestion(AdministrationCountryPage, "administrationCountry", Some(AdministrationCountryController.onPageLoad().url)),
+        bound.yesNoQuestion(SetUpAfterSettlorDiedPage, "setUpAfterSettlorDied", Some(SetUpAfterSettlorDiedController.onPageLoad().url)),
+        bound.enumQuestion(TypeOfTrustPage, "typeOfTrust", Some(TypeOfTrustController.onPageLoad().url)),
+        bound.enumQuestion(WhyDeedOfVariationCreatedPage, "whyDeedOfVariationCreated", Some(WhyDeedOfVariationCreatedController.onPageLoad().url)),
+        bound.yesNoQuestion(HoldoverReliefClaimedPage, "holdoverReliefClaimed", Some(HoldoverReliefClaimedController.onPageLoad().url)),
+        bound.yesNoQuestion(EfrbsYesNoPage, "efrbsYesNo", Some(EfrbsYesNoController.onPageLoad().url)),
+        bound.dateQuestion(EfrbsStartDatePage, "efrbsStartDate", Some(EfrbsStartDateController.onPageLoad().url)),
+        bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrProperty", Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
+        bound.yesNoQuestion(RecordedOnEeaRegisterPage, "recordedOnEeaRegister", Some(RecordedOnEeaRegisterController.onPageLoad().url)),
+        bound.enumQuestion(WhereTrusteesBasedPage, "whereTrusteesBased", Some(WhereTrusteesBasedController.onPageLoad().url)),
+        bound.yesNoQuestion(SettlorsUkBasedPage, "settlorsUkBased", Some(SettlorsUkBasedController.onPageLoad().url)),
+        bound.yesNoQuestion(CreatedUnderScotsLawPage, "createdUnderScotsLaw", Some(CreatedUnderScotsLawController.onPageLoad().url)),
+        bound.yesNoQuestion(PreviouslyResidentOffshorePage, "previouslyResidentOffshore", Some(PreviouslyResidentOffshoreController.onPageLoad().url)),
+        bound.countryQuestion(PreviouslyResidentOffshoreCountryPage, "previouslyResidentOffshoreCountry", Some(PreviouslyResidentOffshoreCountryController.onPageLoad().url)),
+        bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUk", Some(BusinessRelationshipInUkController.onPageLoad().url)),
+        bound.yesNoQuestion(SettlorBenefitsFromAssetsPage, "settlorBenefitsFromAssets", Some(SettlorBenefitsFromAssetsController.onPageLoad().url)),
+        bound.yesNoQuestion(ForPurposeOfSection218Page, "forPurposeOfSection218", Some(ForPurposeOfSection218Controller.onPageLoad().url)),
+        bound.yesNoQuestion(AgentCreatedTrustPage, "agentCreatedTrust", Some(AgentCreatedTrustController.onPageLoad().url))
+      )
     } else {
       Seq(
         bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrProperty", Some(OwnsUkLandOrPropertyController.onPageLoad().url)),

@@ -91,6 +91,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -101,6 +103,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = None,
             administrationCountry = GB,
             residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = true, preOffShore = None))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = None,
             trustUKResident = true,
             typeOfTrust = WillTrustOrIntestacyTrust,
@@ -117,6 +121,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, false).success.value
             .set(PreviouslyResidentOffshorePage, true).success.value
@@ -128,6 +134,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = None,
             administrationCountry = GB,
             residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = false, preOffShore = Some(country)))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = None,
             trustUKResident = true,
             typeOfTrust = WillTrustOrIntestacyTrust,
@@ -145,6 +153,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, true).success.value
             .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
             .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, false).success.value
             .set(PreviouslyResidentOffshorePage, true).success.value
@@ -156,6 +166,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = None,
             administrationCountry = GB,
             residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = false, preOffShore = Some(country)))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = None,
             trustUKResident = true,
             typeOfTrust = DeedOfVariationTrustOrFamilyArrangement,
@@ -173,6 +185,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, true).success.value
             .set(TypeOfTrustPage, InterVivosSettlement).success.value
             .set(HoldoverReliefClaimedPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
             .set(SettlorsUkBasedPage, true).success.value
             .set(CreatedUnderScotsLawPage, false).success.value
@@ -184,6 +198,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = None,
             administrationCountry = GB,
             residentialStatus = ResidentialStatusType(uk = Some(UkType(scottishLaw = false, preOffShore = None))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = None,
             trustUKResident = true,
             typeOfTrust = InterVivosSettlement,
@@ -204,6 +220,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(TypeOfTrustPage, EmploymentRelated).success.value
             .set(EfrbsYesNoPage, true).success.value
             .set(EfrbsStartDatePage, date).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
             .set(SettlorsUkBasedPage, false).success.value
             .set(BusinessRelationshipInUkPage, false).success.value
@@ -215,6 +233,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = Some(country),
             administrationCountry = country,
             residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = true, s218ihta84 = None, agentS218IHTA84 = None))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = Some(false),
             trustUKResident = false,
             typeOfTrust = EmploymentRelated,
@@ -234,6 +254,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministrationCountryPage, country).success.value
             .set(TypeOfTrustPage, EmploymentRelated).success.value
             .set(EfrbsYesNoPage, false).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
             .set(SettlorsUkBasedPage, false).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
@@ -245,6 +267,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = Some(country),
             administrationCountry = country,
             residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = true, s218ihta84 = None, agentS218IHTA84 = None))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = Some(true),
             trustUKResident = false,
             typeOfTrust = EmploymentRelated,
@@ -263,6 +287,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, false).success.value
             .set(AdministrationCountryPage, country).success.value
             .set(TypeOfTrustPage, FlatManagementCompanyOrSinkingFund).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
             .set(SettlorBenefitsFromAssetsPage, false).success.value
@@ -274,6 +300,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = Some(country),
             administrationCountry = country,
             residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = false, s218ihta84 = Some(false), agentS218IHTA84 = None))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = Some(true),
             trustUKResident = false,
             typeOfTrust = FlatManagementCompanyOrSinkingFund,
@@ -292,6 +320,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, false).success.value
             .set(AdministrationCountryPage, country).success.value
             .set(TypeOfTrustPage, HeritageMaintenanceFund).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
             .set(SettlorBenefitsFromAssetsPage, false).success.value
@@ -304,6 +334,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             lawCountry = Some(country),
             administrationCountry = country,
             residentialStatus = ResidentialStatusType(nonUK = Some(NonUKType(sch5atcgga92 = false, s218ihta84 = Some(true), agentS218IHTA84 = Some(true)))),
+            trustUKProperty = true,
+            trustRecorded = true,
             trustUKRelation = Some(true),
             trustUKResident = false,
             typeOfTrust = HeritageMaintenanceFund,
@@ -381,6 +413,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, true).success.value
             .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
             .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -397,6 +431,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, false).success.value
             .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
             .set(WhyDeedOfVariationCreatedPage, ReplacedWillTrust).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -412,6 +448,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(TypeOfTrustPage, InterVivosSettlement).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -427,6 +465,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(TypeOfTrustPage, EmploymentRelated).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -443,6 +483,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(AdministeredInUkPage, true).success.value
             .set(TypeOfTrustPage, EmploymentRelated).success.value
             .set(EfrbsYesNoPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -458,6 +500,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, false).success.value
@@ -473,6 +517,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
             .set(CreatedUnderScotsLawPage, true).success.value
             .set(PreviouslyResidentOffshorePage, true).success.value
@@ -488,6 +534,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
             .set(SettlorBenefitsFromAssetsPage, false).success.value
@@ -503,6 +551,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, true).success.value
+            .set(OwnsUkLandOrPropertyPage, true).success.value
+            .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, NoTrusteesUkBased).success.value
             .set(BusinessRelationshipInUkPage, true).success.value
             .set(SettlorBenefitsFromAssetsPage, false).success.value

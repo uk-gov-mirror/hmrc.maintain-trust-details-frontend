@@ -34,7 +34,7 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val administeredInUkRoute: String = routes.AdministeredInUkController.onPageLoad().url
 
-  "AdministeredInUk Controller" must {
+  "AdministeredInUkController" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -76,10 +76,9 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[Navigator].toInstance(fakeNavigator))
-          .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[Navigator].toInstance(fakeNavigator))
+        .build()
 
       val request = FakeRequest(POST, administeredInUkRoute)
         .withFormUrlEncodedBody(("value", "false"))
@@ -98,9 +97,8 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request =
-        FakeRequest(POST, administeredInUkRoute)
-          .withFormUrlEncodedBody(("value", ""))
+      val request = FakeRequest(POST, administeredInUkRoute)
+        .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -135,9 +133,8 @@ class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request =
-        FakeRequest(POST, administeredInUkRoute)
-          .withFormUrlEncodedBody(("value", "true"))
+      val request = FakeRequest(POST, administeredInUkRoute)
+        .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
 

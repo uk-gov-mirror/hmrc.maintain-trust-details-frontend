@@ -77,4 +77,14 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
     http.GET[Boolean](url)
   }
 
+  def getTrustName(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[String] = {
+    val url = s"$baseUrl/$identifier/trust-name"
+    http.GET[String](url)
+  }
+
+  def removeTrustTypeDependentTransforms(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url = s"$trustsUrl/$identifier/trust-type-dependent-transforms"
+    http.DELETE[HttpResponse](url)
+  }
+
 }

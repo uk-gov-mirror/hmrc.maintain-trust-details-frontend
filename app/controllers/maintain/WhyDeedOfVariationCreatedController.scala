@@ -17,8 +17,7 @@
 package controllers.maintain
 
 import controllers.actions.StandardActionSets
-import forms.WhyDeedOfVariationCreatedFormProvider
-import javax.inject.Inject
+import forms.EnumFormProvider
 import models.DeedOfVariation
 import navigation.Navigator
 import pages.maintain.WhyDeedOfVariationCreatedPage
@@ -29,19 +28,20 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.maintain.WhyDeedOfVariationCreatedView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhyDeedOfVariationCreatedController @Inject()(
-                                           override val messagesApi: MessagesApi,
-                                           standardActionSets: StandardActionSets,
-                                           repository: PlaybackRepository,
-                                           navigator: Navigator,
-                                           formProvider: WhyDeedOfVariationCreatedFormProvider,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           view: WhyDeedOfVariationCreatedView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                     override val messagesApi: MessagesApi,
+                                                     standardActionSets: StandardActionSets,
+                                                     repository: PlaybackRepository,
+                                                     navigator: Navigator,
+                                                     formProvider: EnumFormProvider,
+                                                     val controllerComponents: MessagesControllerComponents,
+                                                     view: WhyDeedOfVariationCreatedView
+                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[DeedOfVariation] = formProvider()
+  private val form: Form[DeedOfVariation] = formProvider("whyDeedOfVariationCreated")
 
   def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForIdentifier {
     implicit request =>

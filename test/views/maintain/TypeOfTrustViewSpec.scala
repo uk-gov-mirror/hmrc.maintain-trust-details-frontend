@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package views
+package views.maintain
 
-import forms.TypeOfTrustFormProvider
+import forms.EnumFormProvider
 import models.TypeOfTrust
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import views.behaviours.ViewBehaviours
+import views.behaviours.EnumViewBehaviours
 import views.html.maintain.TypeOfTrustView
 
-class TypeOfTrustViewSpec extends ViewBehaviours {
+class TypeOfTrustViewSpec extends EnumViewBehaviours[TypeOfTrust] {
 
   val messageKeyPrefix = "typeOfTrust"
 
-  val form = new TypeOfTrustFormProvider()()
+  val form: Form[TypeOfTrust] = new EnumFormProvider()(messageKeyPrefix)
 
   "TypeOfTrustView" when {
 
@@ -42,33 +42,6 @@ class TypeOfTrustViewSpec extends ViewBehaviours {
 
     behave like pageWithASubmitButton(applyView(form))
 
-    "render radio buttons with hint text" in {
-
-      val doc = asDocument(applyView(form))
-
-      for (option <- TypeOfTrust.options) {
-        assertContainsRadioButton(doc, option.id, "value", option.value, isChecked = false)
-      }
-    }
-
-    "render selected radio button" when {
-
-      for (option <- TypeOfTrust.options) {
-
-        s"value is '${option.value}'" must {
-
-          s"have the '${option.value}' radio button selected" in {
-
-            val doc = asDocument(applyView(form.bind(Map("value" -> s"${option.value}"))))
-
-            assertContainsRadioButton(doc, option.id, "value", option.value, isChecked = true)
-
-            for (unselectedOption <- TypeOfTrust.options.filterNot(_ == option)) {
-              assertContainsRadioButton(doc, unselectedOption.id, "value", unselectedOption.value, isChecked = false)
-            }
-          }
-        }
-      }
-    }
+    behave like pageWithRadioOptions(form, applyView, TypeOfTrust.options)
   }
 }
