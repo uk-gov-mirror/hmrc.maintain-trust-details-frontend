@@ -118,7 +118,7 @@ setUpAfterSettlorDied.error.required = Select yes if the trust was set up after 
 
 typeOfTrust.title = What kind of trust did the settlor create?
 typeOfTrust.heading = What kind of trust did the settlor create?
-typeOfTrust.will-trust =
+typeOfTrust.checkYourAnswersLabel = What kind of trust did the settlor create?
 typeOfTrust.inter-vivos = A trust created during their lifetime to give or transfer assets
 typeOfTrust.deed-of-variation = A trust through a Deed of Variation or family agreement
 typeOfTrust.employment-related = A trust for the employees of a company
@@ -128,9 +128,9 @@ typeOfTrust.error.required = Select the type of trust the settlor created
 
 whyDeedOfVariationCreated.title = Why was the deed of variation created?
 whyDeedOfVariationCreated.heading = Why was the deed of variation created?
+whyDeedOfVariationCreated.checkYourAnswersLabel = Why was the deed of variation created?
 whyDeedOfVariationCreated.replace-will-trust = To replace a will trust
 whyDeedOfVariationCreated.replace-absolute-interest = To replace an absolute interest over a will
-whyDeedOfVariationCreated.add-will-trust =
 whyDeedOfVariationCreated.error.required = Select the reason that the deed of variation was created
 
 holdoverReliefClaimed.title = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
