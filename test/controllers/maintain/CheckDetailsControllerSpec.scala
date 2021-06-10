@@ -22,7 +22,7 @@ import mappers.TrustDetailsMapper
 import models.TypeOfTrust.WillTrustOrIntestacyTrust
 import models.{MigratingTrustDetails, NonMigratingTrustDetails, ResidentialStatusType, UkType}
 import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.inject.bind
 import play.api.libs.json.{JsError, JsSuccess}
@@ -132,6 +132,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           redirectLocation(result).value mustEqual onwardRoute
 
+          verify(mockTrustConnector, never()).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
           verify(mockTrustConnector).setNonMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
 
           application.stop()
@@ -139,7 +140,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         "migrating" in {
 
-          val userAnswers = emptyUserAnswers
+          val userAnswers = emptyUserAnswers.copy(migratingFromNonTaxableToTaxable = true)
 
           val mockTrustConnector = mock[TrustsConnector]
           val mockMapper = mock[TrustDetailsMapper]
@@ -151,6 +152,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
               bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector)
             ).build()
 
+          when(mockTrustConnector.removeOptionalTrustDetailTransforms(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
           when(mockTrustConnector.setMigratingTrustDetails(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
 
           val trustDetails = migratingTrustDetails
@@ -165,6 +167,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           redirectLocation(result).value mustEqual onwardRoute
 
+          verify(mockTrustConnector).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
           verify(mockTrustConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
 
           application.stop()

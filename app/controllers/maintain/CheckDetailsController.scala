@@ -61,6 +61,13 @@ class CheckDetailsController @Inject()(
       mapper(userAnswers) match {
         case JsSuccess(trustDetails, _) =>
           (for {
+            _ <- {
+              if (userAnswers.migratingFromNonTaxableToTaxable) {
+                connector.removeOptionalTrustDetailTransforms(identifier).map(_ => ())
+              } else {
+                Future.successful(())
+              }
+            }
             _ <- trustDetails match {
               case x: NonMigratingTrustDetails => connector.setNonMigratingTrustDetails(identifier, x)
               case x: MigratingTrustDetails => connector.setMigratingTrustDetails(identifier, x)
