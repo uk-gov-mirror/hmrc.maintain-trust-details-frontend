@@ -66,7 +66,7 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
   private def wasTrustRegisteredWithDeceasedSettlorUrl(identifier: String) = s"/trusts/trust-details/$identifier/has-deceased-settlor"
   private def getTrustNameUrl(identifier: String) = s"/trusts/trust-details/$identifier/trust-name"
   private def removeTrustTypeDependentTransformsUrl(identifier: String) = s"/trusts/$identifier/trust-type-dependent-transforms"
-  private def removeOptionalTrustDetailTransformsUrl(identifier: String) = s"/trusts/$identifier/optional-trust-detail-transforms"
+  private def removeOptionalTrustDetailTransformsUrl(identifier: String) = s"/trusts/trust-details/$identifier/optional-trust-detail-transforms"
 
   "trust connector" must {
 

@@ -88,7 +88,7 @@ class TrustsConnector @Inject()(http: HttpClient, config: AppConfig) {
   }
 
   def removeOptionalTrustDetailTransforms(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val url = s"$trustsUrl/$identifier/optional-trust-detail-transforms"
+    val url = s"$baseUrl/$identifier/optional-trust-detail-transforms"
     http.DELETE[HttpResponse](url)
   }
 
