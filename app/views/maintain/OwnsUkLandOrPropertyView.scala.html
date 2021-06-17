@@ -23,11 +23,6 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@content = {
-    <p>@messages("ownsUkLandOrProperty.paragraph1")</p>
-    <p>@messages("ownsUkLandOrProperty.paragraph2")</p>
-}
-
 @main_template(
     title = s"${errorPrefix(form)} ${messages("ownsUkLandOrProperty.title")}"
 ) {
@@ -38,11 +33,16 @@
 
         @components.error_summary(form.errors)
 
+        @components.heading("ownsUkLandOrProperty.heading")
+
+        <p>@messages("ownsUkLandOrProperty.paragraph1")</p>
+        <p>@messages("ownsUkLandOrProperty.paragraph2")</p>
+
         @components.input_yes_no(
             field = form("value"),
             legend = messages("ownsUkLandOrProperty.heading"),
-            headingIsLegend = true,
-            additionalContent = Some(content)
+            legendClass = Some("visually-hidden"),
+            headingIsLegend = false
         )
 
         @components.submit_button()

@@ -23,18 +23,6 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@content = {
-    <p>@messages("holdoverReliefClaimed.paragraph1")</p>
-
-    @components.bullet_list(
-        "holdoverReliefClaimed",
-        List(
-            "bullet1",
-            "bullet2"
-        )
-    )
-}
-
 @main_template(
     title = s"${errorPrefix(form)} ${messages("holdoverReliefClaimed.title")}"
 ) {
@@ -45,11 +33,23 @@
 
         @components.error_summary(form.errors)
 
+        @components.heading("holdoverReliefClaimed.heading")
+
+        <p>@messages("holdoverReliefClaimed.paragraph1")</p>
+
+        @components.bullet_list(
+            "holdoverReliefClaimed",
+            List(
+                "bullet1",
+                "bullet2"
+            )
+        )
+
         @components.input_yes_no(
             field = form("value"),
             legend = messages("holdoverReliefClaimed.heading"),
-            headingIsLegend = true,
-            additionalContent = Some(content)
+            legendClass = Some("visually-hidden"),
+            headingIsLegend = false
         )
 
         @components.submit_button()

@@ -24,12 +24,6 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@content = {
-    <p>@messages("whereTrusteesBased.paragraph1")</p>
-
-    <p>@messages("whereTrusteesBased.paragraph2")</p>
-}
-
 @main_template(
     title = s"${errorPrefix(form)} ${messages("whereTrusteesBased.title")}"
 ) {
@@ -40,12 +34,18 @@
 
         @components.error_summary(form.errors)
 
+        @components.heading("whereTrusteesBased.heading")
+
+        <p>@messages("whereTrusteesBased.paragraph1")</p>
+
+        <p>@messages("whereTrusteesBased.paragraph2")</p>
+
         @components.input_radio(
             field = form("value"),
             legend = messages("whereTrusteesBased.heading"),
-            headingIsLegend = true,
-            inputs = TrusteesBased.options,
-            additionalContent = Some(content)
+            legendClass = Some("visually-hidden"),
+            headingIsLegend = false,
+            inputs = TrusteesBased.options
         )
 
         @components.submit_button()

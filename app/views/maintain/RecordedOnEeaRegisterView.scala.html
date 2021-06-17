@@ -23,22 +23,6 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@content = {
-    <p>@messages("recordedOnEeaRegister.paragraph1")</p>
-
-    <p>@messages("recordedOnEeaRegister.paragraph2")</p>
-
-    @components.bullet_list(
-        "recordedOnEeaRegister",
-        List(
-            "bullet1",
-            "bullet2",
-            "bullet3",
-            "bullet4"
-        )
-    )
-}
-
 @main_template(
     title = s"${errorPrefix(form)} ${messages("recordedOnEeaRegister.title")}"
 ) {
@@ -49,11 +33,27 @@
 
         @components.error_summary(form.errors)
 
+        @components.heading("recordedOnEeaRegister.heading")
+
+        <p>@messages("recordedOnEeaRegister.paragraph1")</p>
+
+        <p>@messages("recordedOnEeaRegister.paragraph2")</p>
+
+        @components.bullet_list(
+            "recordedOnEeaRegister",
+            List(
+                "bullet1",
+                "bullet2",
+                "bullet3",
+                "bullet4"
+            )
+        )
+
         @components.input_yes_no(
             field = form("value"),
             legend = messages("recordedOnEeaRegister.heading"),
-            headingIsLegend = true,
-            additionalContent = Some(content)
+            legendClass = Some("visually-hidden"),
+            headingIsLegend = false
         )
 
         @components.submit_button()

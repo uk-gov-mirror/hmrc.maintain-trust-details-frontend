@@ -24,8 +24,7 @@
     trackGa: Boolean = false,
     headingIsLegend: Boolean = false,
     inputs: Seq[RadioOption],
-    fieldsetClass: Option[String] = None,
-    additionalContent: Option[Html] = None
+    fieldsetClass: Option[String] = None
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -44,10 +43,6 @@
             <legend @if(legendClass.nonEmpty){class="@legendClass" }>
                 @legend
             </legend>
-        }
-
-        @if(additionalContent.isDefined){
-            @additionalContent
         }
 
         @if(hint.nonEmpty){
