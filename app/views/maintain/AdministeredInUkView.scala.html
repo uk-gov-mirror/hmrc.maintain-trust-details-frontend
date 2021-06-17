@@ -37,11 +37,15 @@
 
         @components.error_summary(form.errors)
 
+        @components.heading("businessRelationshipInUk.heading")
+
+        <p>@messages("administeredInUk.paragraph1")</p>
+
         @components.input_yes_no(
             field = form("value"),
             legend = messages("administeredInUk.heading"),
-            headingIsLegend = true,
-            additionalContent = Some(content)
+            legendClass = Some("visually-hidden"),
+            headingIsLegend = false
         )
 
         @components.submit_button()

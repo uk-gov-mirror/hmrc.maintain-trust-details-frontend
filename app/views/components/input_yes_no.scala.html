@@ -14,12 +14,12 @@
  * limitations under the License.
  *@
 
-@(field: Field,
+@(
+    field: Field,
     legend: String,
     hint: Option[String] = None,
     legendClass: Option[String] = None,
-    headingIsLegend: Boolean = true,
-    additionalContent: Option[Html] = None
+    headingIsLegend: Boolean = true
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -29,14 +29,14 @@
         }
     >
 
-        <legend id="@{field.id}-legend">
-            @if(headingIsLegend){<h1 id="@{field.id}-id" class="legend-as-heading heading-large">}
-            @legend
-            @if(headingIsLegend){</h1>}
-        </legend>
-
-        @if(additionalContent.isDefined){
-            @additionalContent
+        @if(headingIsLegend){
+            <legend>
+                <h1 @if(legendClass.nonEmpty){class="@legendClass" }else{class="heading-large"}>@legend</h1>
+            </legend>
+        } else {
+            <legend @if(legendClass.nonEmpty){class="@legendClass" }>
+                @legend
+            </legend>
         }
 
         @if(hint.nonEmpty){
@@ -44,9 +44,9 @@
         }
 
         @field.errors.map { error =>
-        <span class="error-message" id="error-message-@field.id-input">
-            <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
-        </span>
+            <span class="error-message" id="error-message-@field.id-input">
+                <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
+            </span>
         }
 
         <div class="multiple-choice">
