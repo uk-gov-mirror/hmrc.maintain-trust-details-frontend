@@ -23,10 +23,6 @@
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
-@content = {
-    <p>@messages("administeredInUk.paragraph1")</p>
-}
-
 @main_template(
     title = s"${errorPrefix(form)} ${messages("administeredInUk.title")}"
 ) {
