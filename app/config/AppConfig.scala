@@ -16,13 +16,12 @@
 
 package config
 
+import controllers.routes
 import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{Call, Request}
-import controllers.routes
+import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import java.net.{URI, URLEncoder}
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 
@@ -64,12 +63,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   lazy val reportAProblemPartialUrl: String = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl: String = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-
-  def accessibilityLinkUrl(implicit request: Request[_]): String = {
-    lazy val accessibilityBaseLinkUrl: String = config.get[String]("urls.accessibility")
-    val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
-    s"$accessibilityBaseLinkUrl?userAction=$userAction"
-  }
 
   val analyticsToken: String  = config.get[String](s"google-analytics.token")
 
