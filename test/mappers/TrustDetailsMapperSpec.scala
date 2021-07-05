@@ -110,7 +110,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = WillTrustOrIntestacyTrust,
             deedOfVariation = None,
             interVivos = None,
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = None
           ))
         }
 
@@ -141,7 +142,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = WillTrustOrIntestacyTrust,
             deedOfVariation = Some(AdditionToWillTrust),
             interVivos = None,
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = None
           ))
         }
 
@@ -173,7 +175,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = DeedOfVariationTrustOrFamilyArrangement,
             deedOfVariation = Some(ReplacedWillTrust),
             interVivos = None,
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = None
           ))
         }
 
@@ -205,7 +208,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = InterVivosSettlement,
             deedOfVariation = None,
             interVivos = Some(true),
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = Some(true)
           ))
         }
 
@@ -240,7 +244,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = EmploymentRelated,
             deedOfVariation = None,
             interVivos = None,
-            efrbsStartDate = Some(date)
+            efrbsStartDate = Some(date),
+            settlorsUkBased = Some(false)
           ))
         }
 
@@ -274,7 +279,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = EmploymentRelated,
             deedOfVariation = None,
             interVivos = None,
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = Some(false)
           ))
         }
 
@@ -307,7 +313,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = FlatManagementCompanyOrSinkingFund,
             deedOfVariation = None,
             interVivos = None,
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = None
           ))
         }
 
@@ -341,7 +348,8 @@ class TrustDetailsMapperSpec extends SpecBase {
             typeOfTrust = HeritageMaintenanceFund,
             deedOfVariation = None,
             interVivos = None,
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            settlorsUkBased = None
           ))
         }
       }
