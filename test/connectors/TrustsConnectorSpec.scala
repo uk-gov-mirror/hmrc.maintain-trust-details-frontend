@@ -65,7 +65,7 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
   private def setNonMigratingTrustDetailsUrl(identifier: String) = s"/trusts/trust-details/$identifier/non-migrating-trust-details"
   private def wasTrustRegisteredWithDeceasedSettlorUrl(identifier: String) = s"/trusts/trust-details/$identifier/has-deceased-settlor"
   private def getTrustNameUrl(identifier: String) = s"/trusts/trust-details/$identifier/trust-name"
-  private def removeTrustTypeDependentTransformsUrl(identifier: String) = s"/trusts/$identifier/trust-type-dependent-transforms"
+  private def removeTrustTypeDependentTransformFieldsUrl(identifier: String) = s"/trusts/$identifier/trust-type-dependent-transform-fields"
   private def removeOptionalTrustDetailTransformsUrl(identifier: String) = s"/trusts/trust-details/$identifier/optional-trust-detail-transforms"
 
   "trust connector" must {
@@ -431,11 +431,11 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
       val connector = application.injector.instanceOf[TrustsConnector]
 
       server.stubFor(
-        delete(urlEqualTo(removeTrustTypeDependentTransformsUrl(identifier)))
+        delete(urlEqualTo(removeTrustTypeDependentTransformFieldsUrl(identifier)))
           .willReturn(ok)
       )
 
-      val result = connector.removeTrustTypeDependentTransforms(identifier)
+      val result = connector.removeTrustTypeDependentTransformFields(identifier)
 
       result.futureValue.status mustBe OK
 

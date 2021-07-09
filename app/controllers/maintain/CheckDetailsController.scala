@@ -20,10 +20,12 @@ import config.{AppConfig, ErrorHandler}
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
 import mappers.TrustDetailsMapper
-import models.{MigratingTrustDetails, NonMigratingTrustDetails}
+import models.TypeOfTrust.EmploymentRelated
+import models._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsError, JsSuccess}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.SessionLogging
 import utils.print.TrustDetailsPrintHelper
@@ -59,19 +61,12 @@ class CheckDetailsController @Inject()(
       val identifier = userAnswers.identifier
 
       mapper(userAnswers) match {
-        case JsSuccess(trustDetails, _) =>
+        case JsSuccess(newTrustDetails, _) =>
           (for {
-            _ <- {
-              if (userAnswers.migratingFromNonTaxableToTaxable) {
-                connector.removeOptionalTrustDetailTransforms(identifier).map(_ => ())
-              } else {
-                Future.successful(())
-              }
-            }
-            _ <- trustDetails match {
-              case x: NonMigratingTrustDetails => connector.setNonMigratingTrustDetails(identifier, x)
-              case x: MigratingTrustDetails => connector.setMigratingTrustDetails(identifier, x)
-            }
+            oldTrustDetails <- connector.getTrustDetails(identifier)
+            _ <- removeOptionalTransformsIfMigrating(userAnswers.migratingFromNonTaxableToTaxable, identifier)
+            _ <- setNewDetails(newTrustDetails, identifier)
+            _ <- removeAnyTrustTypeDependentTransformFields(newTrustDetails, oldTrustDetails, identifier)
             _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
@@ -85,4 +80,40 @@ class CheckDetailsController @Inject()(
           Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
       }
   }
+
+  private def removeOptionalTransformsIfMigrating(migratingFromNonTaxableToTaxable: Boolean, identifier: String)
+                                                 (implicit hc: HeaderCarrier): Future[Unit] = {
+    if (migratingFromNonTaxableToTaxable) {
+      connector.removeOptionalTrustDetailTransforms(identifier).map(_ => ())
+    } else {
+      Future.successful(())
+    }
+  }
+
+  private def setNewDetails(newTrustDetails: TrustDetails, identifier: String)
+                           (implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    newTrustDetails match {
+      case x: NonMigratingTrustDetails => connector.setNonMigratingTrustDetails(identifier, x)
+      case x: MigratingTrustDetails => connector.setMigratingTrustDetails(identifier, x)
+    }
+  }
+
+  private def removeAnyTrustTypeDependentTransformFields(newTrustDetails: TrustDetails, oldTrustDetails: TrustDetailsType, identifier: String)
+                                                        (implicit hc: HeaderCarrier): Future[Unit] = {
+
+    def needToRemoveTrustTypeDependentTransformFields(previousAnswer: Option[TypeOfTrust], newAnswer: TypeOfTrust): Boolean = {
+      previousAnswer match {
+        case Some(x) => x == EmploymentRelated && x != newAnswer
+        case _ => false
+      }
+    }
+
+    newTrustDetails match {
+      case x: MigratingTrustDetails if needToRemoveTrustTypeDependentTransformFields(oldTrustDetails.typeOfTrust, x.typeOfTrust) =>
+        connector.removeTrustTypeDependentTransformFields(identifier).map(_ => ())
+      case _ =>
+        Future.successful(())
+    }
+  }
+
 }
