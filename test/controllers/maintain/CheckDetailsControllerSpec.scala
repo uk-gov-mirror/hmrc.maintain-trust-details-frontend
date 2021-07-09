@@ -385,15 +385,13 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
           val newTrustDetails = migratingTrustDetails.copy(typeOfTrust = HeritageMaintenanceFund)
           when(mockMapper(any())).thenReturn(JsSuccess(newTrustDetails))
 
+          when(mockTrustsConnector.removeTrustTypeDependentTransformFields(any())(any(), any())).thenReturn(Future.failed(new Throwable("")))
+
           val request = FakeRequest(POST, submitDetailsRoute)
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-
-          redirectLocation(result).value mustEqual onwardRoute
-
-          verify(mockTrustsConnector).removeTrustTypeDependentTransformFields(any())(any(), any())
+          status(result) mustEqual INTERNAL_SERVER_ERROR
 
           application.stop()
         }
