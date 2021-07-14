@@ -21,12 +21,15 @@ import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
+class AppConfig @Inject()(config: Configuration,
+                          servicesConfig: ServicesConfig,
+                          contactFrontendConfig: ContactFrontendConfig) {
 
   val welshLanguageSupportEnabled: Boolean = config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
 
@@ -55,19 +58,10 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
 
   lazy val trustsAuthUrl: String = servicesConfig.baseUrl("trusts-auth")
 
-  private lazy val contactHost: String = config.get[String]("microservice.services.contact-frontend.host")
-  private lazy val contactFormServiceIdentifier: String = "trusts"
+  val betaFeedbackUrl = s"${contactFrontendConfig.baseUrl}/contact/beta-feedback?service=${contactFrontendConfig.serviceId}"
 
-  lazy val betaFeedbackUrl: String = s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
-  lazy val betaFeedbackUnauthenticatedUrl: String = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
-
-  lazy val reportAProblemPartialUrl: String = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemNonJSUrl: String = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-
-  val analyticsToken: String  = config.get[String](s"google-analytics.token")
-
-  lazy val countdownLength: String = config.get[String]("timeout.countdown")
-  lazy val timeoutLength: String = config.get[String]("timeout.length")
+  lazy val countdownLength: Int = config.get[Int]("timeout.countdown")
+  lazy val timeoutLength: Int = config.get[Int]("timeout.length")
 
   private def getDate(entry: String): LocalDate = {
 

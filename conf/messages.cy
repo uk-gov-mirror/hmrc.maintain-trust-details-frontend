@@ -1,3 +1,4 @@
+service.name=Cofrestru Ymddiriedolaeth a’i Chynnal
 site.service_name=Cofrestru Ymddiriedolaeth a’i Chynnal
 site.service_section=Manylion yr Ymddiriedolaeth
 site.sign_out=Allgofnodi
