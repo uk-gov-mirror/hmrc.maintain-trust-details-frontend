@@ -15,32 +15,35 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputDate, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    inputDate: InputDate,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("efrbsStartDate.title")}"
+    title = s"${errorPrefix(form)} ${messages("efrbsStartDate.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = EfrbsStartDateController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_date(
+        @inputDate(
             field = form("value"),
             legend = messages("efrbsStartDate.heading"),
-            headingIsLegend = true,
+            legendAsHeading = true,
             hint = Some(messages("efrbsStartDate.hint"))
         )
 
-        @components.submit_button()
+        @submitButton()
 
     }
 }

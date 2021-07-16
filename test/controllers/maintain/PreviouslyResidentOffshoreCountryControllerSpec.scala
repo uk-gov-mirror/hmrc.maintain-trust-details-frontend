@@ -25,7 +25,7 @@ import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import viewmodels.{CountryOptions, InputOption}
+import viewmodels.CountryOptions
 import views.html.maintain.PreviouslyResidentOffshoreCountryView
 
 class PreviouslyResidentOffshoreCountryControllerSpec extends SpecBase with MockitoSugar {

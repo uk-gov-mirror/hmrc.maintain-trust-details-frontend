@@ -15,31 +15,36 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, Heading, BulletList, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    heading: Heading,
+    bulletList: BulletList,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("governedByUkLaw.title")}"
+    title = s"${errorPrefix(form)} ${messages("governedByUkLaw.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = GovernedByUkLawController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.heading("governedByUkLaw.heading")
+        @heading("governedByUkLaw.heading")
 
         <p>@messages("governedByUkLaw.paragraph1")</p>
 
-        @components.bullet_list(
+        @bulletList(
             "governedByUkLaw",
-            List(
+            Seq(
                 "bullet1",
                 "bullet2",
                 "bullet3"
@@ -49,13 +54,13 @@
         <p>@messages("governedByUkLaw.paragraph2")</p>
         <p>@messages("governedByUkLaw.paragraph3")</p>
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("governedByUkLaw.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false
+            label = messages("governedByUkLaw.heading"),
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

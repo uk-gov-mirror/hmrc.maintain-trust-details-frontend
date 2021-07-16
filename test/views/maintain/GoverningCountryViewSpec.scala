@@ -19,7 +19,7 @@ package views.maintain
 import forms.CountryFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import viewmodels.{CountryOptions, InputOption}
+import viewmodels.CountryOptions
 import views.behaviours.SelectCountryViewBehaviours
 import views.html.maintain.GoverningCountryView
 

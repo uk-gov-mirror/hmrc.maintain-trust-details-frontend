@@ -14,8 +14,15 @@
  * limitations under the License.
  *@
 
-@()(implicit messages: Messages)
+@this(
+  subHeading: SubHeading
+)
 
-<div class="js-visible">
-  <p><a id="back-link" class="link-back" href="#">@messages("site.back")</a></p>
-</div>
+@(messagePrefix: String, optionalParam: Option[String] = None, captionParam: Option[String] = None, hiddenText: Boolean = true)(implicit messages: Messages)
+
+<header>
+ <h1 class="govuk-heading-l">
+  @subHeading(s"$messagePrefix.caption", captionParam.getOrElse(""), hiddenText)
+  @messages(s"$messagePrefix.heading", optionalParam.getOrElse(""))
+ </h1>
+</header>

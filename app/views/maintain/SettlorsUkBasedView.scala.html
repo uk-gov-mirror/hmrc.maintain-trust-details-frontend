@@ -15,30 +15,32 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("settlorsUkBased.title")}"
+    title = s"${errorPrefix(form)} ${messages("settlorsUkBased.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = SettlorsUkBasedController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("settlorsUkBased.heading"),
-            headingIsLegend = true
+            label = messages("settlorsUkBased.heading")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

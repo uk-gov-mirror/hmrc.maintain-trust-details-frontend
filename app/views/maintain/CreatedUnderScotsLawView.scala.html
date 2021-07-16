@@ -15,31 +15,33 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("createdUnderScotsLaw.title")}"
+    title = s"${errorPrefix(form)} ${messages("createdUnderScotsLaw.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = CreatedUnderScotsLawController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("createdUnderScotsLaw.heading"),
-            headingIsLegend = true,
+            label = messages("createdUnderScotsLaw.heading"),
             hint = Some(messages("createdUnderScotsLaw.hint"))
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }
