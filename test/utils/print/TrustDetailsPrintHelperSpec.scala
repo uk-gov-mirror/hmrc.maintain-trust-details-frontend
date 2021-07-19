@@ -69,8 +69,8 @@ class TrustDetailsPrintHelperSpec extends SpecBase {
         result mustEqual AnswerSection(
           headingKey = None,
           rows = Seq(
-            AnswerRow(messages("name.checkYourAnswersLabel"), Html(trustName), None),
-            AnswerRow(messages("startDate.checkYourAnswersLabel"), Html("1 January 2000"), None),
+            AnswerRow(messages("name.checkYourAnswersLabel"), Html(trustName), canEdit = false, changeUrl = None),
+            AnswerRow(messages("startDate.checkYourAnswersLabel"), Html("1 January 2000"), canEdit = false, changeUrl = None),
             AnswerRow(messages("governedByUkLawYesNo.checkYourAnswersLabel"), Html("No"), Some(GovernedByUkLawController.onPageLoad().url)),
             AnswerRow(messages("governingCountry.checkYourAnswersLabel"), Html("Germany"), Some(GoverningCountryController.onPageLoad().url)),
             AnswerRow(messages("administeredInUkYesNo.checkYourAnswersLabel"), Html("No"), Some(AdministeredInUkController.onPageLoad().url)),
