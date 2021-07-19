@@ -58,7 +58,7 @@ class AppConfig @Inject()(config: Configuration,
 
   lazy val trustsAuthUrl: String = servicesConfig.baseUrl("trusts-auth")
 
-  val betaFeedbackUrl = s"${contactFrontendConfig.baseUrl}/contact/beta-feedback?service=${contactFrontendConfig.serviceId}"
+  val betaFeedbackUrl = s"${contactFrontendConfig.baseUrl.get}/contact/beta-feedback?service=${contactFrontendConfig.serviceId.get}"
 
   lazy val countdownLength: Int = config.get[Int]("timeout.countdown")
   lazy val timeoutLength: Int = config.get[Int]("timeout.length")

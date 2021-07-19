@@ -154,3 +154,5 @@ agentCreatedTrustYesNo.heading=A oes asiant nad yw’n fargyfreithiwr wedi creu�
 agentCreatedTrustYesNo.checkYourAnswersLabel=A oes asiant nad yw’n fargyfreithiwr wedi creu’r ymddiriedolaeth hon?
 agentCreatedTrustYesNo.error.required=Dewiswch ‘Iawn’ os yw asiant nad yw’n fargyfreithiwr wedi creu’r ymddiriedolaeth hon
 
+address.country=Gwlad
+address.country.select=Dewiswch wlad
