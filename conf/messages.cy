@@ -33,7 +33,8 @@ ownsUkLandOrPropertyYesNo.title=A yw’r ymddiriedolaeth yn berchen ar dir neu e
 ownsUkLandOrPropertyYesNo.heading=A yw’r ymddiriedolaeth yn berchen ar dir neu eiddo yn y DU?
 ownsUkLandOrPropertyYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth yn berchen ar dir neu eiddo yn y DU?
 ownsUkLandOrPropertyYesNo.error.required=Dewiswch ‘Iawn’ os yw’r ymddiriedolaeth yn berchen ar dir neu eiddo yn y DU
-ownsUkLandOrPropertyYesNo.paragraph1=Mae tir neu eiddo yn cyfeirio at ddarnau o dir neu adeiladau brics a morter yn y DU.
+ownsUkLandOrPropertyYesNo.paragraph1=Daeth y rheolau presennol ar gyfer cofrestru ymddiriedolaeth newydd i rym ar 6 Hydref 2020.
+ownsUkLandOrPropertyYesNo.paragraph2=Mae tir neu eiddo yn cyfeirio at ddarnau o dir neu adeiladau brics a morter yn y DU.
 recordedOnEeaRegisterYesNo.title=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd eraill o fewn yr Ardal Economaidd Ewropeaidd (EEA)?
 recordedOnEeaRegisterYesNo.heading=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd eraill o fewn yr Ardal Economaidd Ewropeaidd (EEA)?
 recordedOnEeaRegisterYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd eraill o fewn yr Ardal Economaidd Ewropeaidd (EEA)?
@@ -100,4 +101,56 @@ whyDeedOfVariationCreated.error.required=Dewiswch y rheswm pam y crëwyd y weith
 date.day=Diwrnod
 date.month=Mis
 date.year=Blwyddyn
+
+name.checkYourAnswersLabel=Beth yw enw’r ymddiriedolaeth?
+startDate.checkYourAnswersLabel=Pryd y cafodd yr ymddiriedolaeth ei chreu?
+
+governedByUkLawYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth yn cael ei llywodraethu gan gyfraith y DU?
+governedByUkLawYesNo.error.required=Dewiswch ‘Iawn’ os yw’r ymddiriedolaeth yn cael ei llywodraethu gan gyfraith y DU
+governedByUkLawYesNo.heading=A yw’r ymddiriedolaeth yn cael ei llywodraethu gan gyfraith y DU?
+governedByUkLawYesNo.title=A yw’r ymddiriedolaeth yn cael ei llywodraethu gan gyfraith y DU?
+
+governingCountry.checkYourAnswersLabel=Pa wlad sy’n llywodraethu’r ymddiriedolaeth?
+governingCountry.error.invalidCharacters=Mae’n rhaid i’r wlad sy’n llywodraethu’r ymddiriedolaeth gynnwys y llythrennau a i z yn unig
+governingCountry.error.length=Mae’n rhaid i’r wlad sy’n llywodraethu’r ymddiriedolaeth fod yn 100 o gymeriadau neu lai
+governingCountry.error.required=Nodwch y wlad sy’n llywodraethu’r ymddiriedolaeth
+governingCountry.heading=Pa wlad sy’n llywodraethu’r ymddiriedolaeth?
+governingCountry.title=Pa wlad sy’n llywodraethu’r ymddiriedolaeth?
+
+administrationCountry.checkYourAnswersLabel=Ym mha wlad y gweinyddir yr ymddiriedolaeth?
+administrationCountry.error.invalidCharacters=Mae’n rhaid i’r wlad sy’n llywodraethu’r ymddiriedolaeth gynnwys y llythrennau a i z yn unig
+administrationCountry.error.length=Mae’n rhaid i’r wlad y gweinyddir ynddi fod yn 100 o gymeriadau neu lai
+administrationCountry.error.required=Nodwch y wlad y gweinyddir yr ymddiriedolaeth ynddi
+administrationCountry.heading=Ym mha wlad y gweinyddir yr ymddiriedolaeth?
+administrationCountry.title=Ym mha wlad y gweinyddir yr ymddiriedolaeth?
+
+whereTrusteesBased.title=A yw’r ymddiriedolwyr wedi’u lleoli yn y DU?
+whereTrusteesBased.heading=A yw’r ymddiriedolwyr wedi’u lleoli yn y DU?
+whereTrusteesBased.all-uk-based=Mae pob un o’r ymddiriedolwyr wedi’u lleoli yn y DU
+whereTrusteesBased.some-uk-based=Mae’r ymddiriedolaeth yn cynnwys ymddiriedolwyr sydd wedi’u lleoli yn y DU a’r tu allan i’r DU
+whereTrusteesBased.none-uk-based=Nid oes yr un o’r ymddiriedolwyr wedi’u lleoli yn y DU
+whereTrusteesBased.error.required=Dewiswch faint o’r ymddiriedolwyr sydd wedi’u lleoli yn y DU
+whereTrusteesBased.checkYourAnswersLabel = Faint o’r ymddiriedolwyr sydd wedi’u lleoli yn y DU?
+
+settlorsUkBasedYesNo.title=A oes unrhyw un o’r setlwyr wedi’u lleoli yn y DU?
+settlorsUkBasedYesNo.heading=A oes unrhyw un o’r setlwyr wedi’u lleoli yn y DU?
+settlorsUkBasedYesNo.checkYourAnswersLabel=A oes unrhyw un o’r setlwyr wedi’u lleoli yn y DU?
+settlorsUkBasedYesNo.error.required=Dewiswch ‘Iawn’ os oes unrhyw un o’r setlwyr wedi’u lleoli yn y DU
+
+settlorBenefitsFromAssetsYesNo.title=A ydych yn cofrestru’r ymddiriedolaeth oherwydd bod y setlwr yn elwa o asedion yr ymddiriedolaeth?
+settlorBenefitsFromAssetsYesNo.heading=A ydych yn cofrestru’r ymddiriedolaeth oherwydd bod y setlwr yn elwa o asedion yr ymddiriedolaeth?
+settlorBenefitsFromAssetsYesNo.checkYourAnswersLabel=A ydych yn cofrestru’r ymddiriedolaeth oherwydd bod y setlwr yn elwa o asedion yr ymddiriedolaeth?
+settlorBenefitsFromAssetsYesNo.hint=Mae hyn yn ymwneud ag Atodlen 5A o Ddeddf Trethu Enillion Trethadwy 1992.
+settlorBenefitsFromAssetsYesNo.error.required=Dewiswch ‘Iawn’ os yw’r setlwr yn elwa o asedion yr ymddiriedolaeth
+
+forPurposeOfSection218YesNo.title=A ydych yn cofrestru’r ymddiriedolaeth am resymau Treth Etifeddiant?
+forPurposeOfSection218YesNo.heading=A ydych yn cofrestru’r ymddiriedolaeth am resymau Treth Etifeddiant?
+forPurposeOfSection218YesNo.checkYourAnswersLabel=A ydych yn cofrestru’r ymddiriedolaeth am resymau Treth Etifeddiant?
+forPurposeOfSection218YesNo.hint=Mae hyn yn ymwneud ag Adran 218 o Ddeddf Treth Etifeddiant 1984.
+forPurposeOfSection218YesNo.error.required=Dewiswch ‘Iawn’ os ydych yn cofrestru’r ymddiriedolaeth am resymau Treth Etifeddiant
+
+agentCreatedTrustYesNo.title=A oes asiant nad yw’n fargyfreithiwr wedi creu’r ymddiriedolaeth hon?
+agentCreatedTrustYesNo.heading=A oes asiant nad yw’n fargyfreithiwr wedi creu’r ymddiriedolaeth hon?
+agentCreatedTrustYesNo.checkYourAnswersLabel=A oes asiant nad yw’n fargyfreithiwr wedi creu’r ymddiriedolaeth hon?
+agentCreatedTrustYesNo.error.required=Dewiswch ‘Iawn’ os yw asiant nad yw’n fargyfreithiwr wedi creu’r ymddiriedolaeth hon
 
