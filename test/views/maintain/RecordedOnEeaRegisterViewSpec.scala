@@ -25,7 +25,7 @@ import views.html.maintain.RecordedOnEeaRegisterView
 
 class RecordedOnEeaRegisterViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "recordedOnEeaRegister"
+  val messageKeyPrefix = "recordedOnEeaRegisterYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

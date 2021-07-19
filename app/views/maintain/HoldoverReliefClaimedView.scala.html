@@ -30,7 +30,7 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("holdoverReliefClaimed.title")}",
+    title = s"${errorPrefix(form)} ${messages("holdoverReliefClaimedYesNo.title")}",
     showBackLink = true
 ) {
 
@@ -38,12 +38,12 @@
 
         @errorSummary(form.errors)
 
-        @heading("holdoverReliefClaimed.heading")
+        @heading("holdoverReliefClaimedYesNo.heading")
 
-        <p>@messages("holdoverReliefClaimed.paragraph1")</p>
+        <p>@messages("holdoverReliefClaimedYesNo.paragraph1")</p>
 
         @bulletList(
-            "holdoverReliefClaimed",
+            "holdoverReliefClaimedYesNo",
             Seq(
                 "bullet1",
                 "bullet2"
@@ -52,7 +52,7 @@
 
         @inputYesNo(
             field = form("value"),
-            label = messages("holdoverReliefClaimed.heading"),
+            label = messages("holdoverReliefClaimedYesNo.heading"),
             legendClass = Some("govuk-visually-hidden"),
             legendAsHeading = false
         )

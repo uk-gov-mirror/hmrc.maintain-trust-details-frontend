@@ -30,7 +30,7 @@ import views.html.maintain.GovernedByUkLawView
 class GovernedByUkLawControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("governedByUkLaw")
+  val form: Form[Boolean] = formProvider.withPrefix("governedByUkLawYesNo")
 
   lazy val governedByUkLawRoute: String = routes.GovernedByUkLawController.onPageLoad().url
 

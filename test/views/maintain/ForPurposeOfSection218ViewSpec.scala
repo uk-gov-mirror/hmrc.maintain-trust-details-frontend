@@ -25,7 +25,7 @@ import views.html.maintain.ForPurposeOfSection218View
 
 class ForPurposeOfSection218ViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "forPurposeOfSection218"
+  val messageKeyPrefix = "forPurposeOfSection218YesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

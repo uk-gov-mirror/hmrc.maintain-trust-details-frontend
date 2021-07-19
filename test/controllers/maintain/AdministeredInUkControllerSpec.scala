@@ -30,7 +30,7 @@ import views.html.maintain.AdministeredInUkView
 class AdministeredInUkControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("administeredInUk")
+  val form: Form[Boolean] = formProvider.withPrefix("administeredInUkYesNo")
 
   lazy val administeredInUkRoute: String = routes.AdministeredInUkController.onPageLoad().url
 

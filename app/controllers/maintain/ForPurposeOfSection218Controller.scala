@@ -40,7 +40,7 @@ class ForPurposeOfSection218Controller @Inject()(
                                                   view: ForPurposeOfSection218View
                                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("forPurposeOfSection218")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("forPurposeOfSection218YesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

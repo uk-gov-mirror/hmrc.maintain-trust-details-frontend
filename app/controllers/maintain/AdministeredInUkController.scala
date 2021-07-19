@@ -40,7 +40,7 @@ class AdministeredInUkController @Inject()(
                                             view: AdministeredInUkView
                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUk")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("administeredInUkYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

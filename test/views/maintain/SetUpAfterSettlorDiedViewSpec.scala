@@ -25,7 +25,7 @@ import views.html.maintain.SetUpAfterSettlorDiedView
 
 class SetUpAfterSettlorDiedViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "setUpAfterSettlorDied"
+  val messageKeyPrefix = "setUpAfterSettlorDiedYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

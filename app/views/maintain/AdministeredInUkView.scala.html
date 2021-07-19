@@ -29,7 +29,7 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("administeredInUk.title")}",
+    title = s"${errorPrefix(form)} ${messages("administeredInUkYesNo.title")}",
     showBackLink = true
 ) {
 
@@ -37,13 +37,13 @@
 
         @errorSummary(form.errors)
 
-        @heading("administeredInUk.heading")
+        @heading("administeredInUkYesNo.heading")
 
-        <p>@messages("administeredInUk.paragraph1")</p>
+        <p>@messages("administeredInUkYesNo.paragraph1")</p>
 
         @inputYesNo(
             field = form("value"),
-            label = messages("administeredInUk.heading"),
+            label = messages("administeredInUkYesNo.heading"),
             legendClass = Some("govuk-visually-hidden"),
             legendAsHeading = false
         )

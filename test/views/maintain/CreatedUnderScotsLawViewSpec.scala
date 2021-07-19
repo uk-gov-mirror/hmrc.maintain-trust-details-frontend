@@ -25,7 +25,7 @@ import views.html.maintain.CreatedUnderScotsLawView
 
 class CreatedUnderScotsLawViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "createdUnderScotsLaw"
+  val messageKeyPrefix = "createdUnderScotsLawYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

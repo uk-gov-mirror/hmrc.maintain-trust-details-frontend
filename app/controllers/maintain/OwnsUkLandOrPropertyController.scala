@@ -40,7 +40,7 @@ class OwnsUkLandOrPropertyController @Inject()(
                                                 view: OwnsUkLandOrPropertyView
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("ownsUkLandOrProperty")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("ownsUkLandOrPropertyYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

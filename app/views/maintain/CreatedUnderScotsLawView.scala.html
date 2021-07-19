@@ -28,7 +28,7 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("createdUnderScotsLaw.title")}",
+    title = s"${errorPrefix(form)} ${messages("createdUnderScotsLawYesNo.title")}",
     showBackLink = true
 ) {
 
@@ -38,8 +38,8 @@
 
         @inputYesNo(
             field = form("value"),
-            label = messages("createdUnderScotsLaw.heading"),
-            hint = Some(messages("createdUnderScotsLaw.hint"))
+            label = messages("createdUnderScotsLawYesNo.heading"),
+            hint = Some(messages("createdUnderScotsLawYesNo.hint"))
         )
 
         @submitButton()

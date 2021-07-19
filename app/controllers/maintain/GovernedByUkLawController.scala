@@ -40,7 +40,7 @@ class GovernedByUkLawController @Inject()(
                                            view: GovernedByUkLawView
                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("governedByUkLaw")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("governedByUkLawYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

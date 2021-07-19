@@ -29,7 +29,7 @@ import views.html.maintain.BusinessRelationshipInUkView
 class BusinessRelationshipInUkControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("businessRelationshipInUk")
+  val form: Form[Boolean] = formProvider.withPrefix("businessRelationshipInUkYesNo")
 
   lazy val businessRelationshipYesNoControllerRoute: String = routes.BusinessRelationshipInUkController.onPageLoad().url
 

@@ -25,7 +25,7 @@ import views.html.maintain.SettlorsUkBasedView
 
 class SettlorsUkBasedViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "settlorsUkBased"
+  val messageKeyPrefix = "settlorsUkBasedYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

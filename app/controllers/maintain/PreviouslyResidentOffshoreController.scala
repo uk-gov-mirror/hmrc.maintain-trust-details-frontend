@@ -40,7 +40,7 @@ class PreviouslyResidentOffshoreController @Inject()(
                                                       view: PreviouslyResidentOffshoreView
                                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("previouslyResidentOffshore")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("previouslyResidentOffshoreYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

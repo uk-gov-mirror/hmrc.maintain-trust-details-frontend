@@ -30,7 +30,7 @@ import views.html.maintain.SettlorsUkBasedView
 class SettlorsUkBasedControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("settlorsUkBased")
+  val form: Form[Boolean] = formProvider.withPrefix("settlorsUkBasedYesNo")
 
   lazy val settlorsUkBasedRoute: String = routes.SettlorsUkBasedController.onPageLoad().url
 

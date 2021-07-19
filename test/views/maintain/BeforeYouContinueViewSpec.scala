@@ -31,17 +31,16 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
     def applyView(): HtmlFormat.Appendable =
       view.apply()(fakeRequest, messages)
 
-    behave like normalPage(
-      view = applyView(),
+    behave like normalPageTitleWithCaption(
+      view = applyView,
       messageKeyPrefix = messageKeyPrefix,
-      expectedGuidanceKeys = "caption", "subheading", "bullet1", "bullet2", "bullet3"
+      messageKeyParam = "",
+      captionParam = "",
+      expectedGuidanceKeys = "subheading", "bullet1", "bullet2", "bullet3"
     )
 
     behave like pageWithBackLink(applyView())
 
-    behave like pageWithContinueButton(
-      view = applyView(),
-      url = controllers.maintain.routes.OwnsUkLandOrPropertyController.onPageLoad().url
-    )
+    behave like pageWithASubmitButton(applyView)
   }
 }

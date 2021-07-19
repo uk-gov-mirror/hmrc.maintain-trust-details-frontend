@@ -30,7 +30,7 @@ import views.html.maintain.OwnsUkLandOrPropertyView
 class OwnsUkLandOrPropertyControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("ownsUkLandOrProperty")
+  val form: Form[Boolean] = formProvider.withPrefix("ownsUkLandOrPropertyYesNo")
 
   lazy val trustOwnUKLandOrPropertyControllerRoute: String = routes.OwnsUkLandOrPropertyController.onPageLoad().url
 

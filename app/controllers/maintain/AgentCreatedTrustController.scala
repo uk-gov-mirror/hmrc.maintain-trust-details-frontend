@@ -40,7 +40,7 @@ class AgentCreatedTrustController @Inject()(
                                              view: AgentCreatedTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("agentCreatedTrust")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("agentCreatedTrustYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

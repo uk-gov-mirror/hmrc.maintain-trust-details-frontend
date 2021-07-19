@@ -30,7 +30,7 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("governedByUkLaw.title")}",
+    title = s"${errorPrefix(form)} ${messages("governedByUkLawYesNo.title")}",
     showBackLink = true
 ) {
 
@@ -38,12 +38,12 @@
 
         @errorSummary(form.errors)
 
-        @heading("governedByUkLaw.heading")
+        @heading("governedByUkLawYesNo.heading")
 
-        <p>@messages("governedByUkLaw.paragraph1")</p>
+        <p>@messages("governedByUkLawYesNo.paragraph1")</p>
 
         @bulletList(
-            "governedByUkLaw",
+            "governedByUkLawYesNo",
             Seq(
                 "bullet1",
                 "bullet2",
@@ -51,12 +51,12 @@
             )
         )
 
-        <p>@messages("governedByUkLaw.paragraph2")</p>
-        <p>@messages("governedByUkLaw.paragraph3")</p>
+        <p>@messages("governedByUkLawYesNo.paragraph2")</p>
+        <p>@messages("governedByUkLawYesNo.paragraph3")</p>
 
         @inputYesNo(
             field = form("value"),
-            label = messages("governedByUkLaw.heading"),
+            label = messages("governedByUkLawYesNo.heading"),
             legendClass = Some("govuk-visually-hidden"),
             legendAsHeading = false
         )

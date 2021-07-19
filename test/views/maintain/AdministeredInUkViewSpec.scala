@@ -25,7 +25,7 @@ import views.html.maintain.AdministeredInUkView
 
 class AdministeredInUkViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "administeredInUk"
+  val messageKeyPrefix = "administeredInUkYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

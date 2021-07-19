@@ -30,7 +30,7 @@ import views.html.maintain.CreatedUnderScotsLawView
 class CreatedUnderScotsLawControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("createdUnderScotsLaw")
+  val form: Form[Boolean] = formProvider.withPrefix("createdUnderScotsLawYesNo")
 
   lazy val createdUnderScotsLawRoute: String = routes.CreatedUnderScotsLawController.onPageLoad().url
 
