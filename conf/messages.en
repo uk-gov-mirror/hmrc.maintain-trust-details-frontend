@@ -15,6 +15,7 @@ site.yes = Yes
 site.no = No
 site.continue = Continue
 site.edit = Change
+site.hidden-edit = Change {0}
 
 error.summary.title = There is a problem
 
