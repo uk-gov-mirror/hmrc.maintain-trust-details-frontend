@@ -10,6 +10,8 @@ site.yes=Do
 site.no=Naddo
 site.continue=Yn eich blaen
 site.edit=Newid
+site.hidden-edit=Newid {0}
+
 error.summary.title=Mae problem wedi codi
 session_expired.guidance=Mae hyn oherwydd eich bod wedi bod yn segur yn y gwasanaeth ers 15 munud.
 unauthorised.title=Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
