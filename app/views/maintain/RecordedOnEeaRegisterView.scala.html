@@ -15,33 +15,38 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, Heading, BulletList, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    heading: Heading,
+    bulletList: BulletList,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("recordedOnEeaRegister.title")}"
+    title = s"${errorPrefix(form)} ${messages("recordedOnEeaRegisterYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = RecordedOnEeaRegisterController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @heading("recordedOnEeaRegisterYesNo.heading")
 
-        @components.heading("recordedOnEeaRegister.heading")
+        <p>@messages("recordedOnEeaRegisterYesNo.paragraph1")</p>
 
-        <p>@messages("recordedOnEeaRegister.paragraph1")</p>
+        <p>@messages("recordedOnEeaRegisterYesNo.paragraph2")</p>
 
-        <p>@messages("recordedOnEeaRegister.paragraph2")</p>
-
-        @components.bullet_list(
-            "recordedOnEeaRegister",
-            List(
+        @bulletList(
+            "recordedOnEeaRegisterYesNo",
+            Seq(
                 "bullet1",
                 "bullet2",
                 "bullet3",
@@ -49,13 +54,13 @@
             )
         )
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("recordedOnEeaRegister.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false
+            label = messages("recordedOnEeaRegisterYesNo.heading"),
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

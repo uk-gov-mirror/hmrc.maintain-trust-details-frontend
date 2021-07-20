@@ -15,43 +15,48 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, Heading, BulletList, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    heading: Heading,
+    bulletList: BulletList,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("holdoverReliefClaimed.title")}"
+    title = s"${errorPrefix(form)} ${messages("holdoverReliefClaimedYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = HoldoverReliefClaimedController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @heading("holdoverReliefClaimedYesNo.heading")
 
-        @components.heading("holdoverReliefClaimed.heading")
+        <p>@messages("holdoverReliefClaimedYesNo.paragraph1")</p>
 
-        <p>@messages("holdoverReliefClaimed.paragraph1")</p>
-
-        @components.bullet_list(
-            "holdoverReliefClaimed",
-            List(
+        @bulletList(
+            "holdoverReliefClaimedYesNo",
+            Seq(
                 "bullet1",
                 "bullet2"
             )
         )
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("holdoverReliefClaimed.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false
+            label = messages("holdoverReliefClaimedYesNo.heading"),
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

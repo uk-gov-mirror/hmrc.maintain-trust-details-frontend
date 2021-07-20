@@ -15,37 +15,40 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton}
 
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF,
+    headingWithCaption: HeadingWithCaption,
+    bulletList: BulletList,
+    submitButton: SubmitButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("beforeYouContinue.title")
+    title = messages("beforeYouContinue.title"),
+    showBackLink = true
 ){
 
-    @components.back_link()
-
-    <span class="govuk-caption-xl">@messages("beforeYouContinue.caption")</span>
-
-    @components.heading(
-        headingKey = "beforeYouContinue.heading",
-        headingSize = "heading-xlarge govuk-fieldset__heading"
+    @headingWithCaption(
+        messagePrefix = "beforeYouContinue"
     )
 
      <h2>@messages("beforeYouContinue.subheading")</h2>
 
-    @components.bullet_list(
+    @bulletList(
         "beforeYouContinue",
-        List(
+        Seq(
             "bullet1",
             "bullet2",
             "bullet3"
         )
     )
 
-    @components.button_link(messages("site.continue"), OwnsUkLandOrPropertyController.onPageLoad().url)
+    @formHelper(action = OwnsUkLandOrPropertyController.onPageLoad(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.continue")))
+    }
 
 }

@@ -16,38 +16,41 @@
 
 @import controllers.maintain.routes._
 @import models.TrusteesBased
+@import views.html.components.{Heading, ErrorSummary, InputRadio, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    heading: Heading,
+    errorSummary: ErrorSummary,
+    inputRadio: InputRadio,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("whereTrusteesBased.title")}"
+    title = s"${errorPrefix(form)} ${messages("whereTrusteesBased.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = WhereTrusteesBasedController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, TrusteesBased.options)
 
-        @components.error_summary(form.errors)
-
-        @components.heading("whereTrusteesBased.heading")
+        @heading("whereTrusteesBased.heading")
 
         <p>@messages("whereTrusteesBased.paragraph1")</p>
 
         <p>@messages("whereTrusteesBased.paragraph2")</p>
 
-        @components.input_radio(
+        @inputRadio(
             field = form("value"),
             legend = messages("whereTrusteesBased.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false,
-            inputs = TrusteesBased.options
+            legendClass = Some("govuk-heading-m"),
+            inputs = mapRadioOptionsToRadioItems(form("value"), false, TrusteesBased.options)
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

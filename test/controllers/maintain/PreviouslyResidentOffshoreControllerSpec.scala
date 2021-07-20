@@ -30,7 +30,7 @@ import views.html.maintain.PreviouslyResidentOffshoreView
 class PreviouslyResidentOffshoreControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("previouslyResidentOffshore")
+  val form: Form[Boolean] = formProvider.withPrefix("previouslyResidentOffshoreYesNo")
 
   lazy val previouslyResidentOffshoreRoute: String = routes.PreviouslyResidentOffshoreController.onPageLoad().url
 

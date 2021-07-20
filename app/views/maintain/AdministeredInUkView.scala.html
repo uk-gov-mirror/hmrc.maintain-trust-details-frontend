@@ -15,35 +15,39 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    heading: Heading,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("administeredInUk.title")}"
+    title = s"${errorPrefix(form)} ${messages("administeredInUkYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = AdministeredInUkController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @heading("administeredInUkYesNo.heading")
 
-        @components.heading("administeredInUk.heading")
+        <p>@messages("administeredInUkYesNo.paragraph1")</p>
 
-        <p>@messages("administeredInUk.paragraph1")</p>
-
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("administeredInUk.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false
+            label = messages("administeredInUkYesNo.heading"),
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

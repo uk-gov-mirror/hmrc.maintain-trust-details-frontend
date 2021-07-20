@@ -40,7 +40,7 @@ class RecordedOnEeaRegisterController @Inject()(
                                                  view: RecordedOnEeaRegisterView
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("recordedOnEeaRegister")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("recordedOnEeaRegisterYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

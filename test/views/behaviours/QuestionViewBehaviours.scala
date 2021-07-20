@@ -51,7 +51,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         "not render an error summary" in {
 
           val doc = asDocument(createView(form))
-          assertNotRenderedById(doc, "error-summary-heading")
+          assertNotRenderedById(doc,  "error-summary-title")
         }
       }
 
@@ -60,7 +60,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         "show an error prefix in the browser title" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          assertEqualsValue(doc, "title", ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title", messageKeyParam.getOrElse(""))}"""))
+          assertEqualsValue(doc, "title", ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title")}"""))
         }
       }
 
@@ -71,43 +71,15 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
           "show an error summary" in {
 
             val doc = asDocument(createView(form.withError(FormError(field, "error"))))
-            assertRenderedById(doc, "error-summary-heading")
+            assertRenderedById(doc, "error-summary-title")
           }
 
-          s"show an error associated with the field '$field'" in {
+          s"show an error in the label for field '$field'" in {
 
             val doc = asDocument(createView(form.withError(FormError(field, "error"))))
-            val inputField = doc.getElementById(field)
-            inputField.attr("aria-describedby").split(" ").foreach { idOfDescribedByTarget =>
-              doc.getElementById(idOfDescribedByTarget) mustNot be(null)
-            }
-
-
-            doc.select(s"label[for='$field']").size() mustBe 1
+            val errorSpan = doc.getElementsByClass("govuk-error-message").first
+            errorSpan.parent.getElementsByClass("govuk-label").attr("for") mustBe field
           }
-        }
-
-        s"show an error associated with the field '$field'" in {
-
-          val fieldId = if(field.contains("_")) {
-            field.replace("_", ".")
-          } else {
-            field
-          }
-
-          val doc = asDocument(createView(form.withError(FormError(fieldId, "error"))))
-
-          val errorSpan = doc.getElementsByClass("error-message").first
-
-          // error id is that of the input field
-          errorSpan.attr("id") must include(field)
-          errorSpan.getElementsByClass("visually-hidden").first().text() must include("Error:")
-
-          // input is described by error to screen readers
-          doc.getElementById(field).attr("aria-describedby") must include(errorSpan.attr("id"))
-
-          // error is linked with input
-          errorSpan.parent().getElementsByAttributeValue("for", field).get(0).attr("for") mustBe field
         }
       }
     }
@@ -121,7 +93,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
                                             dateKey : String,
                                             args: String*) = {
 
-    val dateFields = Seq(s"${dateKey}_day", s"${dateKey}_month", s"${dateKey}_year")
+    val dateFields = Seq(s"${dateKey}.day", s"${dateKey}.month", s"${dateKey}.year")
 
     "behave like a passportOrIDCard page" when {
 
@@ -146,7 +118,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         "not render an error summary" in {
 
           val doc = asDocument(createView(form))
-          assertNotRenderedById(doc, "error-summary-heading")
+          assertNotRenderedById(doc,  "error-summary-title")
         }
       }
 
@@ -166,14 +138,14 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
           "show an error summary" in {
 
             val doc = asDocument(createView(form.withError(FormError(field._1, "error"))))
-            assertRenderedById(doc, "error-summary-heading")
+            assertRenderedById(doc, "error-summary-title")
           }
 
           s"show an error in the label for field '$field'" in {
 
             val doc = asDocument(createView(form.withError(FormError(field._1, "error"))))
-            val errorSpan = doc.getElementsByClass("error-message").first
-            errorSpan.parent.getElementsByClass("form-label").attr("for") mustBe field._1
+            val errorSpan = doc.getElementsByClass("govuk-error-message").first
+            errorSpan.parent.getElementsByClass("govuk-label").attr("for") mustBe field._1
           }
 
           s"contains a label and optional hint text for the field '$field'" in {
@@ -190,7 +162,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         "show an error in the legend" in {
 
           val doc = asDocument(createView(form.withError(FormError(dateKey, "error"))))
-          assertRenderedById(doc, s"error-message-$dateKey-input")
+          assertRenderedById(doc, s"$dateKey-error")
         }
 
         "show an error prefix in the browser title" in {
@@ -209,7 +181,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
                          key: String,
                          args: String*) = {
 
-    val fields = Seq(s"${key}_day", s"${key}_month", s"${key}_year")
+    val fields = Seq(s"${key}.day", s"${key}.month", s"${key}.year")
 
     "behave like a question page" when {
 
@@ -226,7 +198,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         "not render an error summary" in {
 
           val doc = asDocument(createView(form))
-          assertNotRenderedById(doc, "error-summary-heading")
+          assertNotRenderedById(doc,  "error-summary-title")
         }
       }
 
@@ -239,18 +211,18 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         }
       }
 
-      s"rendered with an error" must {
+      "rendered with an error" must {
 
         "show an error summary" in {
 
           val doc = asDocument(createView(form.withError(FormError(key, "error"))))
-          assertRenderedById(doc, "error-summary-heading")
+          assertRenderedById(doc,  "error-summary-title")
         }
 
-        s"show an error in the legend" in {
+        "show an error in the legend" in {
 
           val doc = asDocument(createView(form.withError(FormError(key, "error"))))
-          assertRenderedById(doc, s"error-message-$key-input")
+          assertRenderedById(doc, s"value-error")
         }
       }
     }

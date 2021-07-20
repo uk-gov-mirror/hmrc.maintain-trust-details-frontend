@@ -25,7 +25,7 @@ import views.html.maintain.OwnsUkLandOrPropertyView
 
 class OwnsUkLandOrPropertyViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "ownsUkLandOrProperty"
+  val messageKeyPrefix = "ownsUkLandOrPropertyYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

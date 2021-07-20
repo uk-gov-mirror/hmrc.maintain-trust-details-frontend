@@ -25,7 +25,7 @@ import views.html.maintain.SettlorBenefitsFromAssetsView
 
 class SettlorBenefitsFromAssetsViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "settlorBenefitsFromAssets"
+  val messageKeyPrefix = "settlorBenefitsFromAssetsYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

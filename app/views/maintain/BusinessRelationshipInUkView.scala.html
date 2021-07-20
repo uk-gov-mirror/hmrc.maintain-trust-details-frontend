@@ -15,46 +15,51 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{Heading, ErrorSummary, BulletList, InputYesNo, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    heading: Heading,
+    bulletList: BulletList,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("businessRelationshipInUk.title")}"
+    title = s"${errorPrefix(form)} ${messages("businessRelationshipInUkYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = BusinessRelationshipInUkController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @heading("businessRelationshipInUkYesNo.heading")
 
-        @components.heading("businessRelationshipInUk.heading")
+        <p>@messages("businessRelationshipInUkYesNo.paragraph1")</p>
 
-        <p>@messages("businessRelationshipInUk.paragraph1")</p>
-
-        @components.bullet_list(
-            "businessRelationshipInUk",
-            List(
+        @bulletList(
+            "businessRelationshipInUkYesNo",
+            Seq(
                 "bullet1",
                 "bullet2",
                 "bullet3"
             )
         )
 
-        <p>@messages("businessRelationshipInUk.paragraph2")</p>
+        <p>@messages("businessRelationshipInUkYesNo.paragraph2")</p>
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("businessRelationshipInUk.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false
+            label = messages("businessRelationshipInUkYesNo.heading"),
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

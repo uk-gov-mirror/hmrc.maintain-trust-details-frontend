@@ -40,7 +40,7 @@ class SettlorBenefitsFromAssetsController @Inject()(
                                                      view: SettlorBenefitsFromAssetsView
                                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("settlorBenefitsFromAssets")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("settlorBenefitsFromAssetsYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

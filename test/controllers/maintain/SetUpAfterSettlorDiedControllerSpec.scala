@@ -30,7 +30,7 @@ import views.html.maintain.SetUpAfterSettlorDiedView
 class SetUpAfterSettlorDiedControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("setUpAfterSettlorDied")
+  val form: Form[Boolean] = formProvider.withPrefix("setUpAfterSettlorDiedYesNo")
 
   lazy val setUpAfterSettlorDiedRoute: String = routes.SetUpAfterSettlorDiedController.onPageLoad().url
 

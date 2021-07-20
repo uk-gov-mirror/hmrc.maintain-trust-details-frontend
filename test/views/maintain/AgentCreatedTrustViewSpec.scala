@@ -25,7 +25,7 @@ import views.html.maintain.AgentCreatedTrustView
 
 class AgentCreatedTrustViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "agentCreatedTrust"
+  val messageKeyPrefix = "agentCreatedTrustYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

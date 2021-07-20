@@ -25,7 +25,7 @@ import views.html.maintain.BusinessRelationshipInUkView
 
 class BusinessRelationshipInUkViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "businessRelationshipInUk"
+  val messageKeyPrefix = "businessRelationshipInUkYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

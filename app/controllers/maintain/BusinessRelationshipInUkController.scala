@@ -40,7 +40,7 @@ class BusinessRelationshipInUkController @Inject()(
                                                     view: BusinessRelationshipInUkView
                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipInUk")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipInUkYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

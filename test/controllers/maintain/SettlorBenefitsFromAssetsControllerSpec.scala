@@ -30,7 +30,7 @@ import views.html.maintain.SettlorBenefitsFromAssetsView
 class SettlorBenefitsFromAssetsControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("settlorBenefitsFromAssets")
+  val form: Form[Boolean] = formProvider.withPrefix("settlorBenefitsFromAssetsYesNo")
 
   lazy val settlorBenefitsFromAssetsRoute: String = routes.SettlorBenefitsFromAssetsController.onPageLoad().url
 

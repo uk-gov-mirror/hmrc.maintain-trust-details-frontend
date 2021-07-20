@@ -16,31 +16,36 @@
 
 @import controllers.maintain.routes._
 @import models.TypeOfTrust
+@import views.html.components.{ErrorSummary, InputRadio, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    inputRadio: InputRadio,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("typeOfTrust.title")}"
+    title = s"${errorPrefix(form)} ${messages("typeOfTrust.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = TypeOfTrustController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, TypeOfTrust.options)
 
-        @components.error_summary(form.errors)
-
-        @components.input_radio(
+        @inputRadio(
             field = form("value"),
             legend = messages("typeOfTrust.heading"),
-            headingIsLegend = true,
-            inputs = TypeOfTrust.options
+            legendClass = Some("govuk-heading-l"),
+            inputs = mapRadioOptionsToRadioItems(form("value"), false, TypeOfTrust.options),
+            legendAsHeading = true,
+            inline = true
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

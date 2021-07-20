@@ -15,36 +15,41 @@
  *@
 
 @import controllers.maintain.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, Heading, BulletList, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    heading: Heading,
+    bulletList: BulletList,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("ownsUkLandOrProperty.title")}"
+    title = s"${errorPrefix(form)} ${messages("ownsUkLandOrPropertyYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = OwnsUkLandOrPropertyController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @heading("ownsUkLandOrPropertyYesNo.heading")
 
-        @components.heading("ownsUkLandOrProperty.heading")
+        <p>@messages("ownsUkLandOrPropertyYesNo.paragraph1")</p>
+        <p>@messages("ownsUkLandOrPropertyYesNo.paragraph2")</p>
 
-        <p>@messages("ownsUkLandOrProperty.paragraph1")</p>
-        <p>@messages("ownsUkLandOrProperty.paragraph2")</p>
-
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            legend = messages("ownsUkLandOrProperty.heading"),
-            legendClass = Some("visually-hidden"),
-            headingIsLegend = false
+            label = messages("ownsUkLandOrPropertyYesNo.heading"),
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

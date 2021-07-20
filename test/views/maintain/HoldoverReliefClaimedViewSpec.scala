@@ -25,7 +25,7 @@ import views.html.maintain.HoldoverReliefClaimedView
 
 class HoldoverReliefClaimedViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "holdoverReliefClaimed"
+  val messageKeyPrefix = "holdoverReliefClaimedYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

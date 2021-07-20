@@ -30,7 +30,7 @@ import views.html.maintain.ForPurposeOfSection218View
 class ForPurposeOfSection218ControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("forPurposeOfSection218")
+  val form: Form[Boolean] = formProvider.withPrefix("forPurposeOfSection218YesNo")
 
   lazy val forPurposeOfSection218Route: String = routes.ForPurposeOfSection218Controller.onPageLoad().url
 

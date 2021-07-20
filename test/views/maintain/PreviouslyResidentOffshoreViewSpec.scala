@@ -25,7 +25,7 @@ import views.html.maintain.PreviouslyResidentOffshoreView
 
 class PreviouslyResidentOffshoreViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "previouslyResidentOffshore"
+  val messageKeyPrefix = "previouslyResidentOffshoreYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

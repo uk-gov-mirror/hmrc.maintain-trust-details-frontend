@@ -26,7 +26,7 @@ case object SetUpAfterSettlorDiedPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = basePath \ toString
 
-  override def toString: String = "setUpAfterSettlorDied"
+  override def toString: String = "setUpAfterSettlorDiedYesNo"
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
     value match {

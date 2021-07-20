@@ -40,7 +40,7 @@ class SettlorsUkBasedController @Inject()(
                                            view: SettlorsUkBasedView
                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("settlorsUkBased")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("settlorsUkBasedYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

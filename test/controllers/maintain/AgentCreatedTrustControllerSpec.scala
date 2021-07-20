@@ -30,7 +30,7 @@ import views.html.maintain.AgentCreatedTrustView
 class AgentCreatedTrustControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("agentCreatedTrust")
+  val form: Form[Boolean] = formProvider.withPrefix("agentCreatedTrustYesNo")
 
   lazy val agentCreatedTrustRoute: String = routes.AgentCreatedTrustController.onPageLoad().url
 

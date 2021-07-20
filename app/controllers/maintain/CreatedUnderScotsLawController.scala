@@ -40,7 +40,7 @@ class CreatedUnderScotsLawController @Inject()(
                                                 view: CreatedUnderScotsLawView
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("createdUnderScotsLaw")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("createdUnderScotsLawYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

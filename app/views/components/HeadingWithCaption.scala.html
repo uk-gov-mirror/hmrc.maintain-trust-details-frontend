@@ -14,13 +14,15 @@
  * limitations under the License.
  *@
 
-@(
-    prefix: String,
-    keys: Seq[String]
-)(implicit messages: Messages)
+@this(
+  subHeading: SubHeading
+)
 
-<ul class="list list-bullet">
-    @keys.map { key =>
-        <li>@messages(s"$prefix.$key")</li>
-    }
-</ul>
+@(messagePrefix: String, optionalParam: Option[String] = None, captionParam: Option[String] = None, hiddenText: Boolean = false)(implicit messages: Messages)
+
+<header>
+ <h1 class="govuk-heading-l">
+  @subHeading(s"$messagePrefix.caption", captionParam.getOrElse(""), hiddenText)
+  @messages(s"$messagePrefix.heading", optionalParam.getOrElse(""))
+ </h1>
+</header>

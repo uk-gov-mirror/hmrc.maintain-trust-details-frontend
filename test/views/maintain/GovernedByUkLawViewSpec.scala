@@ -25,7 +25,7 @@ import views.html.maintain.GovernedByUkLawView
 
 class GovernedByUkLawViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "governedByUkLaw"
+  val messageKeyPrefix = "governedByUkLawYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 

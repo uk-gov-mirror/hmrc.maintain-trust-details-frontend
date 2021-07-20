@@ -16,26 +16,29 @@
 
 @import viewmodels.AnswerSection
 @import controllers.maintain.routes._
+@import views.html.components.{Heading, CheckDetailsList, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    heading: Heading,
+    checkDetailsList: CheckDetailsList,
+    submitButton: SubmitButton
 )
 
-@(answerSection: AnswerSection)(implicit request: Request[_], messages: Messages)
+@(answersSection: AnswerSection)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("checkDetails.title")
+    title = messages("checkDetails.title"),
+    showBackLink = true
 ) {
 
     @formHelper(action = CheckDetailsController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @heading("checkDetails.heading")
 
-        @components.heading("checkDetails.heading")
+        @checkDetailsList(answersSection = answersSection)
 
-        @components.answer_section(answerSection)
-
-        @components.submit_button()
+        @submitButton()
     }
 }

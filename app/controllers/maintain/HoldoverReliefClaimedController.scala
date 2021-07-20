@@ -40,7 +40,7 @@ class HoldoverReliefClaimedController @Inject()(
                                                  view: HoldoverReliefClaimedView
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("holdoverReliefClaimed")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("holdoverReliefClaimedYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>

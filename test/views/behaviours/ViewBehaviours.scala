@@ -33,9 +33,8 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val nav = doc.getElementById("proposition-menu")
-          val span = nav.children.first
-          span.text mustBe messages("site.service_name")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          bannerTitle.html() mustBe messages("service.name")
         }
 
         "display the correct browser title" in {
@@ -56,10 +55,54 @@ trait ViewBehaviours extends ViewSpecBase {
           for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
         }
 
-        "not display language toggles" in {
+        "display language toggles" in {
 
           val doc = asDocument(view)
-          assertNotRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
+        }
+      }
+    }
+  }
+
+  def normalPageTitleWithCaption(view: HtmlFormat.Appendable,
+                                 messageKeyPrefix: String,
+                                 messageKeyParam: String,
+                                 captionParam: String,
+                                 expectedGuidanceKeys: String*): Unit = {
+
+    "behave like a normal page" when {
+
+      "rendered" must {
+
+        "have the correct banner title" in {
+
+          val doc = asDocument(view)
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          bannerTitle.html() mustBe messages("service.name")
+        }
+
+        "display the correct browser title" in {
+
+          val doc = asDocument(view)
+          assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title", messageKeyParam)
+        }
+
+        "display the correct page title with caption" in {
+
+          val doc = asDocument(view)
+          assertPageTitleWithCaptionEqualsMessages(doc, s"$messageKeyPrefix.caption",  captionParam, s"$messageKeyPrefix.heading", messageKeyParam)
+        }
+
+        "display the correct guidance" in {
+
+          val doc = asDocument(view)
+          for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
+        }
+
+        "display language toggles" in {
+
+          val doc = asDocument(view)
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
       }
     }
@@ -77,9 +120,8 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val nav = doc.getElementById("proposition-menu")
-          val span = nav.children.first
-          span.text mustBe messages("site.service_name")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          bannerTitle.html() mustBe messages("service.name")
         }
 
         "display the correct browser title" in {
@@ -100,10 +142,10 @@ trait ViewBehaviours extends ViewSpecBase {
           for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
         }
 
-        "not display language toggles" in {
+        "display language toggles" in {
 
           val doc = asDocument(view)
-          assertNotRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
       }
     }
