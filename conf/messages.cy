@@ -13,7 +13,12 @@ site.edit=Newid
 site.hidden-edit=Newid {0}
 
 error.summary.title=Mae problem wedi codi
+
+session_expired.title=Er eich diogelwch, gwnaethom eich allgofnodi
+session_expired.heading=Er eich diogelwch, gwnaethom eich allgofnodi
 session_expired.guidance=Mae hyn oherwydd eich bod wedi bod yn segur yn y gwasanaeth ers 15 munud.
+session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i gynnal yr ymddiriedolaeth.
+
 unauthorised.title=Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading=Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
 timeout.title=Bydd eich cais yn dod i ben cyn hir
@@ -68,6 +73,7 @@ setUpAfterSettlorDiedYesNo.checkYourAnswersLabel=A gafodd yr ymddiriedolaeth ei 
 setUpAfterSettlorDiedYesNo.error.required=Dewiswch ‘Iawn’ os cafodd yr ymddiriedolaeth ei chreu ar ôl i’r setlwr farw
 typeOfTrust.title=Pa fath o ymddiriedolaeth a grëwyd gan y setlwr?
 typeOfTrust.heading=Pa fath o ymddiriedolaeth a grëwyd gan y setlwr?
+typeOfTrust.checkYourAnswersLabel=Pa fath o ymddiriedolaeth a grëwyd gan y setlwr?
 typeOfTrust.inter-vivos=Ymddiriedolaeth a gafodd ei chreu yn ystod ei oes er mwyn trosglwyddo asedion neu eu rhoi fel rhodd
 typeOfTrust.deed-of-variation=Ymddiriedolaeth drwy Weithred Amrywio neu gytundeb rhwng y teulu
 typeOfTrust.employment-related=Ymddiriedolaeth ar gyfer cyflogeion cwmni
@@ -97,6 +103,7 @@ efrbsStartDate.error.past=Mae’n rhaid i’r dyddiad y dechreuodd y cynllun bud
 efrbsStartDate.hint=Er enghraifft, 31 3 1980
 whyDeedOfVariationCreated.title=Pam y crëwyd y weithred amrywio?
 whyDeedOfVariationCreated.heading=Pam y crëwyd y weithred amrywio?
+whyDeedOfVariationCreated.checkYourAnswersLabel=Pam y crëwyd y weithred amrywio?
 whyDeedOfVariationCreated.replace-will-trust=Er mwyn disodli ymddiriedolaeth ewyllys
 whyDeedOfVariationCreated.replace-absolute-interest=Er mwyn disodli buddiant absoliwt dros ewyllys
 whyDeedOfVariationCreated.error.required=Dewiswch y rheswm pam y crëwyd y weithred amrywio?
