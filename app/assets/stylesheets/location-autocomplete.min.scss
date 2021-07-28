@@ -19,7 +19,7 @@
 }
 
 // Make the autocomplete dropdown size correct (width-two-thirds) for all devices except mobile
-@media (min-width:40.0625em) {
+@include govuk-media-query($from: mobile) {
     .autocomplete-wrapper {
         width: 66.66%;
     }
