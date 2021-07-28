@@ -17,3 +17,10 @@
 .govuk-form-group--error .autocomplete__wrapper input {
     border: 2px solid $govuk-error-colour;
 }
+
+// Make the autocomplete dropdown size correct (width-two-thirds) for all devices except mobile
+@media (min-width:40.0625em) {
+    .autocomplete-wrapper {
+        width: 66.66%;
+    }
+}
