@@ -61,6 +61,11 @@ $(document).ready(function() {
 
 
     //======================================================
+    // Default width of country input dropdown to two thirds
+    //======================================================
+    $('.autocomplete__wrapper').addClass("govuk-!-width-two-thirds");
+
+    //======================================================
     // Fix IE country lookup where clicks are not registered when clicking list items
     //======================================================
 
