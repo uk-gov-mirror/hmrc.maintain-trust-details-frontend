@@ -65,6 +65,7 @@ checkDetails.title=Gwirio manylion yr ymddiriedolaeth
 checkDetails.heading=Gwirio manylion yr ymddiriedolaeth
 administeredInUkYesNo.title=A yw gweinyddu cyffredinol yr ymddiriedolaeth yn cael ei wneud yn y DU?
 administeredInUkYesNo.heading=A yw gweinyddu cyffredinol yr ymddiriedolaeth yn cael ei wneud yn y DU?
+administeredInUkYesNo.paragraph1=Fel arfer mae gweinyddu cyffredinol yr ymddiriedolaeth yn cael ei gynnal yn y wlad lle mae’r ymddiriedolwyr sy’n rheoli yn byw ac yn gweithio.
 administeredInUkYesNo.checkYourAnswersLabel=A yw gweinyddu cyffredinol yr ymddiriedolaeth yn cael ei wneud yn y DU?
 administeredInUkYesNo.error.required=Dewiswch ‘Iawn’ os yw gweinyddu cyffredinol yr ymddiriedolaeth yn cael ei wneud yn y DU
 setUpAfterSettlorDiedYesNo.title=A gafodd yr ymddiriedolaeth ei chreu ar ôl i’r setlwr farw?
@@ -138,6 +139,8 @@ whereTrusteesBased.heading=A yw’r ymddiriedolwyr wedi’u lleoli yn y DU?
 whereTrusteesBased.all-uk-based=Mae pob un o’r ymddiriedolwyr wedi’u lleoli yn y DU
 whereTrusteesBased.some-uk-based=Mae’r ymddiriedolaeth yn cynnwys ymddiriedolwyr sydd wedi’u lleoli yn y DU a’r tu allan i’r DU
 whereTrusteesBased.none-uk-based=Nid oes yr un o’r ymddiriedolwyr wedi’u lleoli yn y DU
+whereTrusteesBased.paragraph1=Mae unigolyn wedi’i leoli yn y DU os yw’n byw ac yn gweithio yno y rhan fwyaf o’r amser yn ystod y flwyddyn dreth.
+whereTrusteesBased.paragraph2=Mae sefydliad wedi’i leoli yn y DU os yw wedi ei gofrestru â Thŷ’r Cwmnïau yn y DU.
 whereTrusteesBased.error.required=Dewiswch faint o’r ymddiriedolwyr sydd wedi’u lleoli yn y DU
 whereTrusteesBased.checkYourAnswersLabel = Faint o’r ymddiriedolwyr sydd wedi’u lleoli yn y DU?
 
@@ -165,3 +168,29 @@ agentCreatedTrustYesNo.error.required=Dewiswch ‘Iawn’ os yw asiant nad yw’
 
 address.country=Gwlad
 address.country.select=Dewiswch wlad
+
+governedByUkLawYesNo.paragraph1=Mae cyfraith y DU yn cyfeirio at systemau cyfreithiol:
+governedByUkLawYesNo.bullet1=Cymru a Lloegr
+governedByUkLawYesNo.bullet2=Gogledd Iwerddon
+governedByUkLawYesNo.bullet3=Yr Alban
+governedByUkLawYesNo.paragraph2=Fel arfer caiff ymddiriedolaethau eu llywodraethu gan gyfraith y wlad y cawsant eu creu ynddi.
+governedByUkLawYesNo.paragraph3=Ar adegau bydd y weithred ymddiriedolaeth yn nodi pa wlad sy’n llywodraethu’r ymddiriedolaeth.
+
+createdUnderScotsLawYesNo.title=A grëwyd yr ymddiriedolaeth o dan gyfraith yr Alban?
+createdUnderScotsLawYesNo.heading=A grëwyd yr ymddiriedolaeth o dan gyfraith yr Alban?
+createdUnderScotsLawYesNo.checkYourAnswersLabel=A grëwyd yr ymddiriedolaeth o dan gyfraith yr Alban?
+createdUnderScotsLawYesNo.hint=Gall hyn cael ei adnabod fel cyfraith yr Alban
+createdUnderScotsLawYesNo.error.required=Dewiswch ‘Iawn’ os crëwyd yr ymddiriedolaeth o dan gyfraith yr Alban
+
+previouslyResidentOffshoreYesNo.title=A yw’r ymddiriedolaeth erioed wedi’i lleoli alltraeth?
+previouslyResidentOffshoreYesNo.heading=A yw’r ymddiriedolaeth erioed wedi’i lleoli alltraeth?
+previouslyResidentOffshoreYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth erioed wedi’i lleoli alltraeth?
+previouslyResidentOffshoreYesNo.hint=Mae hyn yn cynnwys Ynysoedd y Sianel ac Ynys Manaw
+previouslyResidentOffshoreYesNo.error.required=Dewiswch ‘Iawn’ os yw’r ymddiriedolaeth erioed wedi’i lleoli alltraeth
+
+previouslyResidentOffshoreCountry.title=Ymhle roedd yr ymddiriedolaeth wedi’i lleoli yn flaenorol?
+previouslyResidentOffshoreCountry.heading=Ymhle roedd yr ymddiriedolaeth wedi’i lleoli yn flaenorol?
+previouslyResidentOffshoreCountry.checkYourAnswersLabel=Ymhle roedd yr ymddiriedolaeth wedi’i lleoli yn flaenorol?
+previouslyResidentOffshoreCountry.error.required=Nodwch ble roedd yr ymddiriedolaeth wedi’i lleoli yn flaenorol
+previouslyResidentOffshoreCountry.error.length=Mae’n rhaid i’r wlad yr oedd yr ymddiriedolaeth wedi’i lleoli ynddi yn flaenorol fod yn 100 o gymeriadau neu lai
+previouslyResidentOffshoreCountry.error.invalidCharacters=Mae’n rhaid i’r wlad yr oedd yr ymddiriedolaeth wedi’i lleoli ynddi yn flaenorol gynnwys y llythrennau a i z, collnodau, comas, atalnodau llawn, cysylltnodau, cromfachau crwn a bylchau yn unig
