@@ -21,10 +21,11 @@ import connectors.TrustsConnector
 import controllers.actions.StandardActionSets
 import extractors.TrustDetailsExtractor
 import mappers.TrustDetailsMapper
+import models.TaskStatus.InProgress
 import models.UserAnswers
 import play.api.mvc._
 import repositories.PlaybackRepository
-import services.FeatureFlagService
+import services.TrustsStoreService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.SessionLogging
 
@@ -36,7 +37,7 @@ import scala.util.Success
 class IndexController @Inject()(
                                  mcc: MessagesControllerComponents,
                                  actions: StandardActionSets,
-                                 featureFlagService: FeatureFlagService,
+                                 trustsStoreService: TrustsStoreService,
                                  cacheRepository: PlaybackRepository,
                                  appConfig: AppConfig,
                                  connector: TrustsConnector,
@@ -49,7 +50,7 @@ class IndexController @Inject()(
     implicit request =>
 
       (for {
-        is5mldEnabled <- featureFlagService.is5mldEnabled()
+        is5mldEnabled <- trustsStoreService.is5mldEnabled()
         trustDetails <- connector.getTrustDetails(identifier)
         taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
         registeredWithDeceasedSettlor <- connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
@@ -73,6 +74,7 @@ class IndexController @Inject()(
           }
         }
         _ <- cacheRepository.set(ua)
+        _ <- trustsStoreService.updateTaskStatus(identifier, InProgress)
       } yield {
         if (is5mldEnabled) {
           if (mapper.areAnswersSubmittable(ua)) {

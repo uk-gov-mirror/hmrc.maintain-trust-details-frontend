@@ -17,12 +17,13 @@
 package connectors
 
 import base.{SpecBase, WireMockHelper}
-import com.github.tomakehurst.wiremock.client.WireMock.{okJson, urlEqualTo, _}
+import com.github.tomakehurst.wiremock.client.WireMock.{urlEqualTo, _}
+import models.TaskStatus.Completed
+import models.http.FeatureResponse
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
-import models.http.FeatureResponse
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -38,7 +39,7 @@ class TrustsStoreConnectorSpec extends SpecBase
 
     ".setTasksComplete" must {
 
-      val url = s"/trusts-store/maintain/tasks/trust-details/$identifier"
+      val url = s"/trusts-store/maintain/tasks/update-trust-details/$identifier"
 
       "return OK with the current task status" in {
         val application = applicationBuilder()
@@ -51,25 +52,12 @@ class TrustsStoreConnectorSpec extends SpecBase
 
         val connector = application.injector.instanceOf[TrustsStoreConnector]
 
-        val json = Json.parse(
-          """
-            |{
-            |  "trustDetails": false,
-            |  "trustees": true,
-            |  "beneficiaries": false,
-            |  "settlors": false,
-            |  "protectors": false,
-            |  "other": false,
-            |  "nonEeaCompany": false
-            |}
-            |""".stripMargin)
-
         server.stubFor(
           post(urlEqualTo(url))
-            .willReturn(okJson(json.toString))
+            .willReturn(ok())
         )
 
-        val futureResult = connector.setTaskComplete(identifier)
+        val futureResult = connector.updateTaskStatus(identifier, Completed)
 
         whenReady(futureResult) {
           r =>
@@ -95,7 +83,7 @@ class TrustsStoreConnectorSpec extends SpecBase
             .willReturn(serverError())
         )
 
-        connector.setTaskComplete(identifier) map { response =>
+        connector.updateTaskStatus(identifier, Completed) map { response =>
           response.status mustBe 500
         }
 

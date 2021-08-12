@@ -20,6 +20,7 @@ import base.SpecBase
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import generators.ModelGenerators
 import mappers.TrustDetailsMapper
+import models.TaskStatus.Completed
 import models.TypeOfTrust.{EmploymentRelated, HeritageMaintenanceFund, WillTrustOrIntestacyTrust}
 import models._
 import org.mockito.Matchers.{any, eq => eqTo}
@@ -67,7 +68,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
     when(mockTrustsConnector.setNonMigratingTrustDetails(any(), any())(any(), any()))
       .thenReturn(Future.successful(HttpResponse(OK, "")))
     
-    when(mockTrustsStoreConnector.setTaskComplete(any())(any(), any()))
+    when(mockTrustsStoreConnector.updateTaskStatus(any(), any())(any(), any()))
       .thenReturn(Future.successful(HttpResponse(OK, "")))
   }
 
@@ -166,6 +167,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
           verify(mockTrustsConnector, never()).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
           verify(mockTrustsConnector).setNonMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
+          verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
           application.stop()
         }
@@ -196,6 +198,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
           verify(mockTrustsConnector).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
           verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
+          verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
           application.stop()
         }
@@ -208,9 +211,11 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
             newAnswer =>
               beforeEach()
 
+              val userAnswers = emptyUserAnswers
+
               val mockMapper = mock[TrustDetailsMapper]
 
-              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+              val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[TrustsConnector].toInstance(mockTrustsConnector),
                   bind[TrustDetailsMapper].toInstance(mockMapper),
@@ -229,6 +234,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
               redirectLocation(result).value mustEqual onwardRoute
 
               verify(mockTrustsConnector).removeTrustTypeDependentTransformFields(any())(any(), any())
+              verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
+              verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
               application.stop()
           }
@@ -243,9 +250,11 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
             (oldAnswer, newAnswer) =>
               beforeEach()
 
+              val userAnswers = emptyUserAnswers
+
               val mockMapper = mock[TrustDetailsMapper]
 
-              val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+              val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[TrustsConnector].toInstance(mockTrustsConnector),
                   bind[TrustDetailsMapper].toInstance(mockMapper),
@@ -267,6 +276,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
               redirectLocation(result).value mustEqual onwardRoute
 
               verify(mockTrustsConnector, never()).removeTrustTypeDependentTransformFields(any())(any(), any())
+              verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
+              verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
               application.stop()
           }
@@ -274,9 +285,11 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
         "previous trust type is EmploymentRelated and new one hasn't changed" in {
 
+          val userAnswers = emptyUserAnswers
+
           val mockMapper = mock[TrustDetailsMapper]
 
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(
               bind[TrustsConnector].toInstance(mockTrustsConnector),
               bind[TrustDetailsMapper].toInstance(mockMapper),
@@ -295,6 +308,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
           redirectLocation(result).value mustEqual onwardRoute
 
           verify(mockTrustsConnector, never()).removeTrustTypeDependentTransformFields(any())(any(), any())
+          verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
+          verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
           application.stop()
         }

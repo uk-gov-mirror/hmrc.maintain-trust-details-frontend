@@ -20,6 +20,7 @@ import config.{AppConfig, ErrorHandler}
 import connectors.{TrustsConnector, TrustsStoreConnector}
 import controllers.actions._
 import mappers.TrustDetailsMapper
+import models.TaskStatus.Completed
 import models.TypeOfTrust.EmploymentRelated
 import models._
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -67,7 +68,7 @@ class CheckDetailsController @Inject()(
             _ <- removeOptionalTransformsIfMigrating(userAnswers.migratingFromNonTaxableToTaxable, identifier)
             _ <- setNewDetails(newTrustDetails, identifier)
             _ <- removeAnyTrustTypeDependentTransformFields(newTrustDetails, oldTrustDetails, identifier)
-            _ <- trustsStoreConnector.setTaskComplete(request.userAnswers.identifier)
+            _ <- trustsStoreConnector.updateTaskStatus(request.userAnswers.identifier, Completed)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
           }).recover {
