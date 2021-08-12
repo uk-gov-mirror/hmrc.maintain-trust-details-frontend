@@ -16,14 +16,15 @@
 
 package services
 
-import uk.gov.hmrc.http.HeaderCarrier
 import connectors.TrustsStoreConnector
+import models.TaskStatus.TaskStatus
 import models.http.FeatureResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FeatureFlagService @Inject()(trustsStoreConnector: TrustsStoreConnector) {
+class TrustsStoreService @Inject()(trustsStoreConnector: TrustsStoreConnector) {
 
   def is5mldEnabled()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
     isFeatureEnabled("5mld")
@@ -34,6 +35,11 @@ class FeatureFlagService @Inject()(trustsStoreConnector: TrustsStoreConnector) {
       case FeatureResponse(_, true) => true
       case _ => false
     }
+  }
+
+  def updateTaskStatus(identifier: String, taskStatus: TaskStatus)
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    trustsStoreConnector.updateTaskStatus(identifier, taskStatus)
   }
   
 }

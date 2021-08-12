@@ -22,6 +22,7 @@ import controllers.Assets.SEE_OTHER
 import extractors.TrustDetailsExtractor
 import generators.ModelGenerators
 import mappers.TrustDetailsMapper
+import models.TaskStatus.InProgress
 import models.http.TaxableMigrationFlag
 import models.{TrustDetailsType, UserAnswers}
 import org.mockito.ArgumentCaptor
@@ -33,7 +34,8 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.FeatureFlagService
+import services.TrustsStoreService
+import uk.gov.hmrc.http.HttpResponse
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -41,7 +43,7 @@ import scala.util.{Failure, Success}
 
 class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
 
-  val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
+  val mockTrustsStoreService: TrustsStoreService = mock[TrustsStoreService]
   val mockTrustsConnector: TrustsConnector = mock[TrustsConnector]
   val mockExtractor: TrustDetailsExtractor = mock[TrustDetailsExtractor]
 
@@ -53,18 +55,18 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
   val fakeTrustName: String = "Trust Name"
 
   override def beforeEach(): Unit = {
-    reset(mockFeatureFlagService)
+    reset(mockTrustsStoreService, mockTrustsConnector, mockExtractor, playbackRepository)
 
-    reset(mockTrustsConnector)
     when(mockTrustsConnector.getTrustDetails(any())(any(), any()))
       .thenReturn(Future.successful(fakeTrustDetails))
     when(mockTrustsConnector.getTrustName(any())(any(), any()))
       .thenReturn(Future.successful(fakeTrustName))
 
-    reset(mockExtractor)
+    when(mockTrustsStoreService.updateTaskStatus(any(), any())(any(), any()))
+      .thenReturn(Future.successful(HttpResponse(OK, "")))
+
     when(mockExtractor(any(), any(), any())).thenReturn(Success(emptyUserAnswers))
 
-    reset(playbackRepository)
     when(playbackRepository.set(any())).thenReturn(Future.successful(true))
   }
 
@@ -73,7 +75,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
     "4mld" must {
       "redirect to task list" in {
 
-        when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+        when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
           .thenReturn(Future.successful(false))
 
         when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -84,7 +86,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
         val application = applicationBuilder(userAnswers = None)
           .overrides(
-            bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+            bind[TrustsStoreService].toInstance(mockTrustsStoreService),
             bind[TrustsConnector].toInstance(mockTrustsConnector),
             bind[TrustDetailsExtractor].toInstance(mockExtractor)
           ).build()
@@ -96,6 +98,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustBe frontendAppConfig.maintainATrustOverviewUrl
+
+        verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
 
         application.stop()
       }
@@ -110,7 +114,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
               beforeEach()
 
-              when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+              when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
                 .thenReturn(Future.successful(true))
 
               when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -121,7 +125,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
               val application = applicationBuilder(userAnswers = None)
                 .overrides(
-                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                  bind[TrustsStoreService].toInstance(mockTrustsStoreService),
                   bind[TrustsConnector].toInstance(mockTrustsConnector),
                   bind[TrustDetailsExtractor].toInstance(mockExtractor)
                 ).build()
@@ -136,6 +140,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
               verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
               uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
               uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+              verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
           }
         }
       }
@@ -150,7 +156,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                 beforeEach()
 
-                when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
                   .thenReturn(Future.successful(true))
 
                 when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -165,7 +171,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                     registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                   ))
                 ).overrides(
-                  bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                  bind[TrustsStoreService].toInstance(mockTrustsStoreService),
                   bind[TrustsConnector].toInstance(mockTrustsConnector),
                   bind[TrustDetailsExtractor].toInstance(mockExtractor)
                 ).build()
@@ -180,6 +186,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                 verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
                 uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                 uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+                verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
             }
           }
         }
@@ -197,7 +205,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                     beforeEach()
 
-                    when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                    when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
                       .thenReturn(Future.successful(true))
 
                     when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -215,7 +223,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                         registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                       ))
                     ).overrides(
-                      bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                      bind[TrustsStoreService].toInstance(mockTrustsStoreService),
                       bind[TrustsConnector].toInstance(mockTrustsConnector),
                       bind[TrustDetailsExtractor].toInstance(mockExtractor),
                       bind[TrustDetailsMapper].toInstance(mockMapper)
@@ -235,6 +243,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                     verify(playbackRepository).set(uaCaptor.capture)
                     uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                     uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+                    verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
                 }
               }
             }
@@ -249,7 +259,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                       beforeEach()
 
-                      when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                      when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
                         .thenReturn(Future.successful(true))
 
                       when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -267,7 +277,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                           registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                         ))
                       ).overrides(
-                        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                        bind[TrustsStoreService].toInstance(mockTrustsStoreService),
                         bind[TrustsConnector].toInstance(mockTrustsConnector),
                         bind[TrustDetailsExtractor].toInstance(mockExtractor),
                         bind[TrustDetailsMapper].toInstance(mockMapper)
@@ -287,6 +297,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                       verify(playbackRepository).set(uaCaptor.capture)
                       uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe true
                       uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+                      verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
                   }
                 }
               }
@@ -299,7 +311,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                       beforeEach()
 
-                      when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+                      when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
                         .thenReturn(Future.successful(true))
 
                       when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -317,7 +329,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                           registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                         ))
                       ).overrides(
-                        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+                        bind[TrustsStoreService].toInstance(mockTrustsStoreService),
                         bind[TrustsConnector].toInstance(mockTrustsConnector),
                         bind[TrustDetailsExtractor].toInstance(mockExtractor),
                         bind[TrustDetailsMapper].toInstance(mockMapper)
@@ -337,6 +349,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                       verify(playbackRepository).set(uaCaptor.capture)
                       uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                       uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+                      verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
                   }
                 }
               }
@@ -349,7 +363,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
     "extractor fails" must {
       "return internal server error" in {
 
-        when(mockFeatureFlagService.is5mldEnabled()(any(), any()))
+        when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
           .thenReturn(Future.successful(true))
 
         when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
@@ -362,7 +376,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
         val application = applicationBuilder(userAnswers = None)
           .overrides(
-            bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+            bind[TrustsStoreService].toInstance(mockTrustsStoreService),
             bind[TrustsConnector].toInstance(mockTrustsConnector),
             bind[TrustDetailsExtractor].toInstance(mockExtractor)
           ).build()
