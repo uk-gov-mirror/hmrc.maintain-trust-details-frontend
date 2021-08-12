@@ -131,10 +131,13 @@ class TrustDetailsMapper {
     }
 
     lazy val typeOfTrustReads: Reads[TypeOfTrust] = {
-      if (registeredWithDeceasedSettlor) {
-        Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
-      } else {
-        TypeOfTrustPage.path.read[TypeOfTrust]
+      deedOfVariationReads.flatMap {
+        case Some(AdditionToWillTrust) => Reads(_ => JsSuccess(DeedOfVariationTrustOrFamilyArrangement))
+        case _ => if (registeredWithDeceasedSettlor) {
+          Reads(_ => JsSuccess(WillTrustOrIntestacyTrust))
+        } else {
+          TypeOfTrustPage.path.read[TypeOfTrust]
+        }
       }
     }
 
