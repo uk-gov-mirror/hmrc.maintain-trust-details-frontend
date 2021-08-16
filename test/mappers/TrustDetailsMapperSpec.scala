@@ -122,6 +122,7 @@ class TrustDetailsMapperSpec extends SpecBase {
             .set(GovernedByUkLawPage, true).success.value
             .set(AdministeredInUkPage, true).success.value
             .set(SetUpAfterSettlorDiedPage, false).success.value
+            .set(TypeOfTrustPage, DeedOfVariationTrustOrFamilyArrangement).success.value
             .set(OwnsUkLandOrPropertyPage, true).success.value
             .set(RecordedOnEeaRegisterPage, true).success.value
             .set(WhereTrusteesBasedPage, AllTrusteesUkBased).success.value
