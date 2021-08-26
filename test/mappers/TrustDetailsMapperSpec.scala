@@ -139,7 +139,7 @@ class TrustDetailsMapperSpec extends SpecBase {
             trustRecorded = true,
             trustUKRelation = None,
             trustUKResident = true,
-            typeOfTrust = WillTrustOrIntestacyTrust,
+            typeOfTrust = DeedOfVariationTrustOrFamilyArrangement,
             deedOfVariation = Some(AdditionToWillTrust),
             interVivos = None,
             efrbsStartDate = None,
