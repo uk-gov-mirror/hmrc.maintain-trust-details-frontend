@@ -20,7 +20,7 @@ import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import controllers.Assets.OK
+import play.api.test.Helpers._
 import models.DeedOfVariation.PreviouslyAbsoluteInterestUnderWill
 import models.TypeOfTrust.WillTrustOrIntestacyTrust
 import models.http.TaxableMigrationFlag

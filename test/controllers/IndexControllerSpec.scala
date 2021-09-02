@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustsConnector
-import controllers.Assets.SEE_OTHER
 import extractors.TrustDetailsExtractor
 import generators.ModelGenerators
 import mappers.TrustDetailsMapper
