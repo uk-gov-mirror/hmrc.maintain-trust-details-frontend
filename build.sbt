@@ -5,12 +5,43 @@ val appName = "maintain-trust-details-frontend"
 
 val silencerVersion = "1.7.0"
 
+val excludedPackages = Seq(
+  "<empty>",
+  ".*Reverse.*",
+  ".*Routes.*",
+  ".*standardError*.*",
+  ".*main_template*.*",
+  "uk.gov.hmrc.BuildInfo",
+  "app.*",
+  "prod.*",
+  "config.*",
+  "testOnlyDoNotUseInAppConf.*",
+  "views.html.*",
+  "testOnly.*",
+  "com.kenshoo.play.metrics*.*",
+  ".*LocalDateService.*",
+  ".*LocalDateTimeService.*",
+  ".*RichJsValue.*",
+  ".*Repository.*"
+)
+
+lazy val scoverageSettings = {
+  import scoverage.ScoverageKeys
+  Seq(
+    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
+    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageFailOnMinimum := true,
+    ScoverageKeys.coverageHighlighting := true
+  )
+}
+
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     DefaultBuildSettings.scalaSettings,
     DefaultBuildSettings.defaultSettings(),
+    scoverageSettings,
     scalaVersion := "2.12.12",
     // ***************
     // Use the silencer plugin to suppress warnings
@@ -65,6 +96,7 @@ lazy val microservice = Project(appName, file("."))
 lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   fork := true,
   javaOptions ++= Seq(
+    "-Dlogger.resource=logback-test.xml",
     "-Dconfig.resource=test.application.conf"
   )
 )
