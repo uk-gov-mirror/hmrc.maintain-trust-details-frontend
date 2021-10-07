@@ -71,41 +71,46 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
   "IndexController" when {
 
-    "4mld" must {
-      "redirect to task list" in {
+    "no previous answers" must {
+      "call extractor" in {
 
-        when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-          .thenReturn(Future.successful(false))
+        forAll(arbitrary[TaxableMigrationFlag], arbitrary[Boolean]) {
+          (taxableMigrationFlag, registeredWithDeceasedSettlor) =>
 
-        when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
-          .thenReturn(Future.successful(TaxableMigrationFlag(None)))
+            beforeEach()
 
-        when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
-          .thenReturn(Future.successful(false))
+            when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+              .thenReturn(Future.successful(taxableMigrationFlag))
 
-        val application = applicationBuilder(userAnswers = None)
-          .overrides(
-            bind[TrustsStoreService].toInstance(mockTrustsStoreService),
-            bind[TrustsConnector].toInstance(mockTrustsConnector),
-            bind[TrustDetailsExtractor].toInstance(mockExtractor)
-          ).build()
+            when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
+              .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
-        val request = FakeRequest(GET, onPageLoad)
+            val application = applicationBuilder(userAnswers = None)
+              .overrides(
+                bind[TrustsStoreService].toInstance(mockTrustsStoreService),
+                bind[TrustsConnector].toInstance(mockTrustsConnector),
+                bind[TrustDetailsExtractor].toInstance(mockExtractor)
+              ).build()
 
-        val result = route(application, request).value
+            val request = FakeRequest(GET, onPageLoad)
 
-        status(result) mustEqual SEE_OTHER
+            val result = route(application, request).value
 
-        redirectLocation(result).value mustBe frontendAppConfig.maintainATrustOverviewUrl
+            status(result) mustEqual SEE_OTHER
 
-        verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+            val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+            verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
+            uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+            uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
 
-        application.stop()
+            verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+        }
       }
     }
 
-    "5mld" when {
-      "no previous answers" must {
+    "previous answers" when {
+
+      "value of migratingFromNonTaxableToTaxable has changed" must {
         "call extractor" in {
 
           forAll(arbitrary[TaxableMigrationFlag], arbitrary[Boolean]) {
@@ -113,21 +118,22 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
               beforeEach()
 
-              when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-                .thenReturn(Future.successful(true))
-
               when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
                 .thenReturn(Future.successful(taxableMigrationFlag))
 
               when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
                 .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
-              val application = applicationBuilder(userAnswers = None)
-                .overrides(
-                  bind[TrustsStoreService].toInstance(mockTrustsStoreService),
-                  bind[TrustsConnector].toInstance(mockTrustsConnector),
-                  bind[TrustDetailsExtractor].toInstance(mockExtractor)
-                ).build()
+              val application = applicationBuilder(
+                userAnswers = Some(emptyUserAnswers.copy(
+                  migratingFromNonTaxableToTaxable = !taxableMigrationFlag.migratingFromNonTaxableToTaxable,
+                  registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
+                ))
+              ).overrides(
+                bind[TrustsStoreService].toInstance(mockTrustsStoreService),
+                bind[TrustsConnector].toInstance(mockTrustsConnector),
+                bind[TrustDetailsExtractor].toInstance(mockExtractor)
+              ).build()
 
               val request = FakeRequest(GET, onPageLoad)
 
@@ -145,67 +151,118 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
         }
       }
 
-      "previous answers" when {
+      "value of migratingFromNonTaxableToTaxable has not changed" must {
+        "not call extractor" when {
 
-        "value of migratingFromNonTaxableToTaxable has changed" must {
-          "call extractor" in {
+          val mockMapper = mock[TrustDetailsMapper]
 
-            forAll(arbitrary[TaxableMigrationFlag], arbitrary[Boolean]) {
-              (taxableMigrationFlag, registeredWithDeceasedSettlor) =>
+          "in submittable state" must {
+            "redirect to CheckDetailsController" in {
 
-                beforeEach()
+              forAll(arbitrary[TaxableMigrationFlag], arbitrary[Boolean]) {
+                (taxableMigrationFlag, registeredWithDeceasedSettlor) =>
 
-                when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-                  .thenReturn(Future.successful(true))
+                  beforeEach()
 
-                when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
-                  .thenReturn(Future.successful(taxableMigrationFlag))
+                  when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                    .thenReturn(Future.successful(taxableMigrationFlag))
 
-                when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
-                  .thenReturn(Future.successful(registeredWithDeceasedSettlor))
+                  when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
+                    .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
-                val application = applicationBuilder(
-                  userAnswers = Some(emptyUserAnswers.copy(
-                    migratingFromNonTaxableToTaxable = !taxableMigrationFlag.migratingFromNonTaxableToTaxable,
-                    registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
-                  ))
-                ).overrides(
-                  bind[TrustsStoreService].toInstance(mockTrustsStoreService),
-                  bind[TrustsConnector].toInstance(mockTrustsConnector),
-                  bind[TrustDetailsExtractor].toInstance(mockExtractor)
-                ).build()
+                  when(mockMapper.areAnswersSubmittable(any()))
+                    .thenReturn(true)
 
-                val request = FakeRequest(GET, onPageLoad)
+                  val application = applicationBuilder(
+                    userAnswers = Some(emptyUserAnswers.copy(
+                      migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
+                      registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
+                    ))
+                  ).overrides(
+                    bind[TrustsStoreService].toInstance(mockTrustsStoreService),
+                    bind[TrustsConnector].toInstance(mockTrustsConnector),
+                    bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                    bind[TrustDetailsMapper].toInstance(mockMapper)
+                  ).build()
 
-                val result = route(application, request).value
+                  val request = FakeRequest(GET, onPageLoad)
 
-                status(result) mustEqual SEE_OTHER
+                  val result = route(application, request).value
 
-                val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-                verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
-                uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
-                uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+                  status(result) mustEqual SEE_OTHER
 
-                verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+                  redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
+
+                  verify(mockExtractor, never()).apply(any(), any(), any())
+
+                  val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+                  verify(playbackRepository).set(uaCaptor.capture)
+                  uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
+                  uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+                  verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+              }
             }
           }
-        }
 
-        "value of migratingFromNonTaxableToTaxable has not changed" must {
-          "not call extractor" when {
+          "not in submittable state" when {
 
-            val mockMapper = mock[TrustDetailsMapper]
+            "migrating from non-taxable to taxable" must {
+              "redirect to GovernedByUkLawController" in {
 
-            "in submittable state" must {
-              "redirect to CheckDetailsController" in {
-
-                forAll(arbitrary[TaxableMigrationFlag], arbitrary[Boolean]) {
-                  (taxableMigrationFlag, registeredWithDeceasedSettlor) =>
+                forAll(arbitrary[Boolean]) {
+                  registeredWithDeceasedSettlor =>
 
                     beforeEach()
 
-                    when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-                      .thenReturn(Future.successful(true))
+                    when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
+                      .thenReturn(Future.successful(TaxableMigrationFlag(Some(true))))
+
+                    when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
+                      .thenReturn(Future.successful(registeredWithDeceasedSettlor))
+
+                    when(mockMapper.areAnswersSubmittable(any()))
+                      .thenReturn(false)
+
+                    val application = applicationBuilder(
+                      userAnswers = Some(emptyUserAnswers.copy(
+                        migratingFromNonTaxableToTaxable = true,
+                        registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
+                      ))
+                    ).overrides(
+                      bind[TrustsStoreService].toInstance(mockTrustsStoreService),
+                      bind[TrustsConnector].toInstance(mockTrustsConnector),
+                      bind[TrustDetailsExtractor].toInstance(mockExtractor),
+                      bind[TrustDetailsMapper].toInstance(mockMapper)
+                    ).build()
+
+                    val request = FakeRequest(GET, onPageLoad)
+
+                    val result = route(application, request).value
+
+                    status(result) mustEqual SEE_OTHER
+
+                    redirectLocation(result).value mustBe controllers.maintain.routes.GovernedByUkLawController.onPageLoad().url
+
+                    verify(mockExtractor, never()).apply(any(), any(), any())
+
+                    val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+                    verify(playbackRepository).set(uaCaptor.capture)
+                    uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe true
+                    uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
+
+                    verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+                }
+              }
+            }
+
+            "not migrating" must {
+              "redirect to BeforeYouContinueController" in {
+
+                forAll(arbitrary[TaxableMigrationFlag].suchThat(!_.value.contains(true)), arbitrary[Boolean]) {
+                  (taxableMigrationFlag, registeredWithDeceasedSettlor) =>
+
+                    beforeEach()
 
                     when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
                       .thenReturn(Future.successful(taxableMigrationFlag))
@@ -214,7 +271,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                       .thenReturn(Future.successful(registeredWithDeceasedSettlor))
 
                     when(mockMapper.areAnswersSubmittable(any()))
-                      .thenReturn(true)
+                      .thenReturn(false)
 
                     val application = applicationBuilder(
                       userAnswers = Some(emptyUserAnswers.copy(
@@ -234,7 +291,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                     status(result) mustEqual SEE_OTHER
 
-                    redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
+                    redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
 
                     verify(mockExtractor, never()).apply(any(), any(), any())
 
@@ -247,113 +304,6 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                 }
               }
             }
-
-            "not in submittable state" when {
-
-              "migrating from non-taxable to taxable" must {
-                "redirect to GovernedByUkLawController" in {
-
-                  forAll(arbitrary[Boolean]) {
-                    registeredWithDeceasedSettlor =>
-
-                      beforeEach()
-
-                      when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-                        .thenReturn(Future.successful(true))
-
-                      when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
-                        .thenReturn(Future.successful(TaxableMigrationFlag(Some(true))))
-
-                      when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
-                        .thenReturn(Future.successful(registeredWithDeceasedSettlor))
-
-                      when(mockMapper.areAnswersSubmittable(any()))
-                        .thenReturn(false)
-
-                      val application = applicationBuilder(
-                        userAnswers = Some(emptyUserAnswers.copy(
-                          migratingFromNonTaxableToTaxable = true,
-                          registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
-                        ))
-                      ).overrides(
-                        bind[TrustsStoreService].toInstance(mockTrustsStoreService),
-                        bind[TrustsConnector].toInstance(mockTrustsConnector),
-                        bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                        bind[TrustDetailsMapper].toInstance(mockMapper)
-                      ).build()
-
-                      val request = FakeRequest(GET, onPageLoad)
-
-                      val result = route(application, request).value
-
-                      status(result) mustEqual SEE_OTHER
-
-                      redirectLocation(result).value mustBe controllers.maintain.routes.GovernedByUkLawController.onPageLoad().url
-
-                      verify(mockExtractor, never()).apply(any(), any(), any())
-
-                      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-                      verify(playbackRepository).set(uaCaptor.capture)
-                      uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe true
-                      uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
-
-                      verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
-                  }
-                }
-              }
-
-              "not migrating" must {
-                "redirect to BeforeYouContinueController" in {
-
-                  forAll(arbitrary[TaxableMigrationFlag].suchThat(!_.value.contains(true)), arbitrary[Boolean]) {
-                    (taxableMigrationFlag, registeredWithDeceasedSettlor) =>
-
-                      beforeEach()
-
-                      when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-                        .thenReturn(Future.successful(true))
-
-                      when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
-                        .thenReturn(Future.successful(taxableMigrationFlag))
-
-                      when(mockTrustsConnector.wasTrustRegisteredWithDeceasedSettlor(any())(any(), any()))
-                        .thenReturn(Future.successful(registeredWithDeceasedSettlor))
-
-                      when(mockMapper.areAnswersSubmittable(any()))
-                        .thenReturn(false)
-
-                      val application = applicationBuilder(
-                        userAnswers = Some(emptyUserAnswers.copy(
-                          migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
-                          registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
-                        ))
-                      ).overrides(
-                        bind[TrustsStoreService].toInstance(mockTrustsStoreService),
-                        bind[TrustsConnector].toInstance(mockTrustsConnector),
-                        bind[TrustDetailsExtractor].toInstance(mockExtractor),
-                        bind[TrustDetailsMapper].toInstance(mockMapper)
-                      ).build()
-
-                      val request = FakeRequest(GET, onPageLoad)
-
-                      val result = route(application, request).value
-
-                      status(result) mustEqual SEE_OTHER
-
-                      redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
-
-                      verify(mockExtractor, never()).apply(any(), any(), any())
-
-                      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-                      verify(playbackRepository).set(uaCaptor.capture)
-                      uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
-                      uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
-
-                      verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -361,9 +311,6 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
     "extractor fails" must {
       "return internal server error" in {
-
-        when(mockTrustsStoreService.is5mldEnabled()(any(), any()))
-          .thenReturn(Future.successful(true))
 
         when(mockTrustsConnector.getTrustMigrationFlag(any())(any(), any()))
           .thenReturn(Future.successful(TaxableMigrationFlag(None)))
