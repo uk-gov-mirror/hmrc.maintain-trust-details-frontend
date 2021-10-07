@@ -50,7 +50,6 @@ class IndexController @Inject()(
     implicit request =>
 
       (for {
-        is5mldEnabled <- trustsStoreService.is5mldEnabled()
         trustDetails <- connector.getTrustDetails(identifier)
         taxableMigrationFlag <- connector.getTrustMigrationFlag(identifier)
         registeredWithDeceasedSettlor <- connector.wasTrustRegisteredWithDeceasedSettlor(identifier)
@@ -76,7 +75,6 @@ class IndexController @Inject()(
         _ <- cacheRepository.set(ua)
         _ <- trustsStoreService.updateTaskStatus(identifier, InProgress)
       } yield {
-        if (is5mldEnabled) {
           if (mapper.areAnswersSubmittable(ua)) {
             Redirect(controllers.maintain.routes.CheckDetailsController.onPageLoad())
           } else {
@@ -86,10 +84,6 @@ class IndexController @Inject()(
               Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
             }
           }
-        } else {
-          warnLog("Service is not in 5MLD mode. Redirecting to task list.", Some(identifier))
-          Redirect(appConfig.maintainATrustOverviewUrl)
-        }
       }) recover {
         case e =>
           errorLog(s"Error setting up session: ${e.getMessage}", Some(identifier))

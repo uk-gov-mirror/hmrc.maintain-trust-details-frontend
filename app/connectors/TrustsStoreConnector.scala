@@ -35,9 +35,4 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config: AppConfig) {
     http.POST[TaskStatus, HttpResponse](url, taskStatus)
   }
 
-  def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FeatureResponse] = {
-    val url: String = s"$baseUrl/features/$feature"
-    http.GET[FeatureResponse](url)
-  }
-
 }
