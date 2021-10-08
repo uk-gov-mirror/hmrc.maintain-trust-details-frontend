@@ -1,7 +1,18 @@
+# Maintain trust details frontend
 
-# maintain-trust-details-frontend
+This service is responsible for updating the information held about the trust in a trust registration.
 
-This is a placeholder README.md for a new repository
+The service allows a user to update their residency, registered on another EEA register and other information in a standard maintenance joureny.
+
+The service allows a user to answer questions to make the trust taxable on a non-taxable to taxable migration.
+
+To run locally using the micro-service provided by the service manager:
+
+***sm --start TRUSTS_ALL -r***
+
+If you want to run your local copy, then stop the frontend ran by the service manager and run your local code by using the following (port number is 9838 but is defaulted to that in build.sbt).
+
+`sbt run`
 
 ### License
 
