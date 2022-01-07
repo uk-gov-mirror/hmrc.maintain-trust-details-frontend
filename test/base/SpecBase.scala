@@ -33,12 +33,14 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
   val internalId: String = "internalId"
   val identifier: String = "identifier"
+  val userSessionId: String = "sessionId"
 
   val fakeNavigator = new FakeNavigator()
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = internalId,
     identifier = identifier,
+    sessionId = userSessionId,
     migratingFromNonTaxableToTaxable = false,
     registeredWithDeceasedSettlor = true
   )

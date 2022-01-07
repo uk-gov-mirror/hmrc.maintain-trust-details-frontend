@@ -36,6 +36,7 @@ trait UserAnswersGenerator extends TryValues {
       for {
         id <- nonEmptyString
         utr <- nonEmptyString
+        sessionId <- nonEmptyString
         migratingFromNonTaxableToTaxable <- arbitrary[Boolean]
         registeredWithDeceasedSettlor <- arbitrary[Boolean]
         data <- generators match {
@@ -45,6 +46,7 @@ trait UserAnswersGenerator extends TryValues {
       } yield UserAnswers (
         internalId = id,
         identifier = utr,
+        sessionId = sessionId,
         migratingFromNonTaxableToTaxable = migratingFromNonTaxableToTaxable,
         registeredWithDeceasedSettlor = registeredWithDeceasedSettlor,
         data = data.foldLeft(Json.obj()) {

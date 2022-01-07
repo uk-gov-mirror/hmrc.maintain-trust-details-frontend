@@ -27,9 +27,9 @@ import play.api.mvc._
 import repositories.PlaybackRepository
 import services.TrustsStoreService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.SessionLogging
-
+import utils.{Session, SessionLogging}
 import javax.inject.{Inject, Singleton}
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
@@ -64,6 +64,7 @@ class IndexController @Inject()(
                 answers = UserAnswers(
                   internalId = request.user.internalId,
                   identifier = identifier,
+                  sessionId = Session.id(hc),
                   migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
                   registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                 ),

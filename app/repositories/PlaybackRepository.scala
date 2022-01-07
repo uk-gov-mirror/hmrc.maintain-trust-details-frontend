@@ -45,8 +45,8 @@ class PlaybackRepositoryImpl @Inject()(
   override val lastUpdatedIndexName: String = "user-answers-updated-at-index"
 
   override def idIndex: Aux[BSONSerializationPack.type] = Index.apply(BSONSerializationPack)(
-    key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending),
-    name = Some("internal-id-and-identifier-compound-index"),
+    key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending, "newId" -> IndexType.Ascending),
+    name = Some("internal-id-and-utr-and-newId-compound-index"),
     expireAfterSeconds = None,
     options = BSONDocument.empty,
     unique = false,
@@ -69,13 +69,14 @@ class PlaybackRepositoryImpl @Inject()(
     wildcardProjection = None
   )
 
-  private def selector(internalId: String, identifier: String): JsObject = Json.obj(
+  private def selector(internalId: String, identifier: String, sessionId: String): JsObject = Json.obj(
     "internalId" -> internalId,
-    "identifier" -> identifier
+    "identifier" -> identifier,
+    "newId" -> s"$internalId-$identifier-$sessionId"
   )
 
-  override def get(internalId: String, identifier: String): Future[Option[UserAnswers]] = {
-    findCollectionAndUpdate[UserAnswers](selector(internalId, identifier))
+  override def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]] = {
+    findCollectionAndUpdate[UserAnswers](selector(internalId, identifier, sessionId))
   }
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
@@ -86,23 +87,23 @@ class PlaybackRepositoryImpl @Inject()(
 
     for {
       col <- collection
-      r <- col.update(ordered = false).one(selector(userAnswers.internalId, userAnswers.identifier), modifier, upsert = true, multi = false)
+      r <- col.update(ordered = false).one(selector(userAnswers.internalId, userAnswers.identifier,  userAnswers.sessionId), modifier, upsert = true, multi = false)
     } yield r.ok
   }
 
-  override def resetCache(internalId: String, identifier: String): Future[Option[JsObject]] = {
+  override def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]] = {
     for {
       col <- collection
-      r <- col.findAndRemove(selector(internalId, identifier), None, None, WriteConcern.Default, None, None, Seq.empty)
+      r <- col.findAndRemove(selector(internalId, identifier,sessionId), None, None, WriteConcern.Default, None, None, Seq.empty)
     } yield r.value
   }
 }
 
 trait PlaybackRepository {
 
-  def get(internalId: String, identifier: String): Future[Option[UserAnswers]]
+  def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
 
-  def resetCache(internalId: String, identifier: String): Future[Option[JsObject]]
+  def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]]
 }

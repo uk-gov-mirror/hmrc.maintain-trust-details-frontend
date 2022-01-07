@@ -30,6 +30,7 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
   val emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = "id",
     identifier = "UTRUTRUTR",
+    sessionId = "sessionId",
     migratingFromNonTaxableToTaxable = false,
     registeredWithDeceasedSettlor = true
   )
