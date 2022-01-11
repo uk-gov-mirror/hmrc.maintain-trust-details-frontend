@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import uk.gov.hmrc.auth.core.Enrolments
 import models.{ActiveSession, OrganisationUser}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.Session
 
 import scala.concurrent.Future
 
@@ -32,6 +34,8 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
   class Harness(playbackRepository: PlaybackRepository) extends DataRetrievalActionImpl(mockSessionRepository, playbackRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "Data Retrieval Action" when {
 
@@ -64,7 +68,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(mockSessionRepository.get(internalId))
           .thenReturn(Future.successful(Some(ActiveSession(internalId, identifier))))
 
-        when(playbackRepository.get(internalId, identifier))
+        when(playbackRepository.get(internalId, identifier, Session.id(hc)))
           .thenReturn(Future(None))
 
         val action = new Harness(playbackRepository)
@@ -86,7 +90,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(mockSessionRepository.get(internalId))
           .thenReturn(Future.successful(Some(ActiveSession(internalId, identifier))))
 
-        when(playbackRepository.get(internalId, identifier))
+        when(playbackRepository.get(internalId, identifier, Session.id(hc)))
           .thenReturn(Future(Some(emptyUserAnswers)))
 
         val action = new Harness(playbackRepository)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ trait UserAnswersGenerator extends TryValues {
       for {
         id <- nonEmptyString
         utr <- nonEmptyString
+        sessionId <- nonEmptyString
         migratingFromNonTaxableToTaxable <- arbitrary[Boolean]
         registeredWithDeceasedSettlor <- arbitrary[Boolean]
         data <- generators match {
@@ -45,6 +46,7 @@ trait UserAnswersGenerator extends TryValues {
       } yield UserAnswers (
         internalId = id,
         identifier = utr,
+        sessionId = sessionId,
         migratingFromNonTaxableToTaxable = migratingFromNonTaxableToTaxable,
         registeredWithDeceasedSettlor = registeredWithDeceasedSettlor,
         data = data.foldLeft(Json.obj()) {

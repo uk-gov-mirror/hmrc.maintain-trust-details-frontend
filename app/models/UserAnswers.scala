@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import scala.util.{Failure, Success, Try}
 
 case class UserAnswers(internalId: String,
                        identifier: String,
+                       sessionId: String,
                        migratingFromNonTaxableToTaxable: Boolean,
                        registeredWithDeceasedSettlor: Boolean,
                        data: JsObject = Json.obj(),
@@ -104,6 +105,7 @@ object UserAnswers {
   implicit lazy val reads: Reads[UserAnswers] = (
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
+      (__ \ "sessionId").read[String] and
       (__ \ "migratingFromNonTaxableToTaxable").readWithDefault[Boolean](false) and
       (__ \ "registeredWithDeceasedSettlor").read[Boolean] and
       (__ \ "data").read[JsObject] and
@@ -113,6 +115,7 @@ object UserAnswers {
   implicit lazy val writes: Writes[UserAnswers] = (
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
+      (__ \ "sessionId").write[String] and
       (__ \ "migratingFromNonTaxableToTaxable").write[Boolean] and
       (__ \ "registeredWithDeceasedSettlor").write[Boolean] and
       (__ \ "data").write[JsObject] and

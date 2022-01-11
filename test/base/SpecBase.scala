@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,14 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
   val internalId: String = "internalId"
   val identifier: String = "identifier"
+  val userSessionId: String = "sessionId"
 
   val fakeNavigator = new FakeNavigator()
 
   def emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = internalId,
     identifier = identifier,
+    sessionId = userSessionId,
     migratingFromNonTaxableToTaxable = false,
     registeredWithDeceasedSettlor = true
   )

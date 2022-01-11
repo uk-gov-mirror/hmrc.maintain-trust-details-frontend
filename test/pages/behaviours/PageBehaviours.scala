@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
   val emptyUserAnswers: UserAnswers = UserAnswers(
     internalId = "id",
     identifier = "UTRUTRUTR",
+    sessionId = "sessionId",
     migratingFromNonTaxableToTaxable = false,
     registeredWithDeceasedSettlor = true
   )
