@@ -3,7 +3,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "maintain-trust-details-frontend"
 
-val silencerVersion = "1.7.0"
+val silencerVersion = "1.7.9"
 
 val excludedPackages = Seq(
   "<empty>",
@@ -29,7 +29,7 @@ lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
   Seq(
     ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageMinimumStmtTotal := 92,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -42,7 +42,7 @@ lazy val microservice = Project(appName, file("."))
     DefaultBuildSettings.scalaSettings,
     DefaultBuildSettings.defaultSettings(),
     scoverageSettings,
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.12.15",
     // ***************
     // Use the silencer plugin to suppress warnings
     // You may turn it on for `views` too to suppress warnings from unused imports in compiled twirl templates, but this will hide other warnings.
