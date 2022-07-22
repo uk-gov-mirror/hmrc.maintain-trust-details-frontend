@@ -18,7 +18,6 @@ package connectors
 
 import config.AppConfig
 import models.TaskStatus.TaskStatus
-import models.http.FeatureResponse
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 

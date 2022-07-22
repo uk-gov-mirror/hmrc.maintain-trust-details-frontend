@@ -89,7 +89,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -133,7 +133,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -255,7 +255,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -307,7 +307,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -377,7 +377,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -408,7 +408,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -444,7 +444,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 
@@ -470,7 +470,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "No Data -> Session Expired page" in {
           navigator.nextPage(page, baseAnswers)
-            .mustBe(controllers.routes.SessionExpiredController.onPageLoad())
+            .mustBe(controllers.routes.SessionExpiredController.onPageLoad)
         }
       }
 

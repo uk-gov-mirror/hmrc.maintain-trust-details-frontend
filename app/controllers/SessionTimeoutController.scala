@@ -41,7 +41,7 @@ class SessionTimeoutController @Inject()(
 
   val timeout: Action[AnyContent] = Action.async { implicit request =>
     infoLog("user remained inactive on the service, user has been signed out")
-    Future.successful(Redirect(routes.SessionExpiredController.onPageLoad().url).withNewSession)
+    Future.successful(Redirect(routes.SessionExpiredController.onPageLoad.url).withNewSession)
   }
 
 }

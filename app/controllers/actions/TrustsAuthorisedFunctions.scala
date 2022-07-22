@@ -30,6 +30,6 @@ class TrustsAuthorisedFunctions @Inject()(override val authConnector: AuthConnec
     case _: NoActiveSession =>
       Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
     case _: AuthorisationException =>
-      Redirect(routes.UnauthorisedController.onPageLoad())
+      Redirect(routes.UnauthorisedController.onPageLoad)
   }
 }

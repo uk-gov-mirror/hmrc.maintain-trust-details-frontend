@@ -113,7 +113,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       case Some(WillTrustOrIntestacyTrust) | Some(FlatManagementCompanyOrSinkingFund) | Some(HeritageMaintenanceFund) =>
         firstQuestionAfterTrustTypeQuestions
       case _ =>
-        SessionExpiredController.onPageLoad()
+        SessionExpiredController.onPageLoad
     }
   }
 
@@ -122,7 +122,7 @@ class TrustDetailsNavigator @Inject()() extends Navigator {
       case Some(AllTrusteesUkBased) => CreatedUnderScotsLawController.onPageLoad()
       case Some(NoTrusteesUkBased) => BusinessRelationshipInUkController.onPageLoad()
       case Some(InternationalAndUkBasedTrustees) => SettlorsUkBasedController.onPageLoad()
-      case _ => SessionExpiredController.onPageLoad()
+      case _ => SessionExpiredController.onPageLoad
     }
   }
 

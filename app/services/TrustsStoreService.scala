@@ -18,7 +18,6 @@ package services
 
 import connectors.TrustsStoreConnector
 import models.TaskStatus.TaskStatus
-import models.http.FeatureResponse
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import javax.inject.Inject
