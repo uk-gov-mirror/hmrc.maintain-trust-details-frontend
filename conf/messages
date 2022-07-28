@@ -52,14 +52,14 @@ beforeYouContinue.title = Information you need about trust details
 beforeYouContinue.heading = Information you need about trust details
 beforeYouContinue.caption = Trust details
 beforeYouContinue.subheading = To update the trust details, you need to tell us:
-beforeYouContinue.bullet1 = if the trust owns land or property in the UK
+beforeYouContinue.bullet1 = if the trust has acquired land or property in the UK since 6 October 2020
 beforeYouContinue.bullet2 = if the trust is listed on a European Economic Area (EEA) register
 beforeYouContinue.bullet3 = if the trust has a business relationship in the UK
 
 ownsUkLandOrPropertyYesNo.title = Has the trust acquired land or property in the UK since 6 October 2020?
-ownsUkLandOrPropertyYesNo.heading = Does the trust own UK land or property?
-ownsUkLandOrPropertyYesNo.checkYourAnswersLabel = Does the trust own UK land or property?
-ownsUkLandOrPropertyYesNo.error.required = Select yes if the trust owns UK land or property
+ownsUkLandOrPropertyYesNo.heading = Has the trust acquired land or property in the UK since 6 October 2020?
+ownsUkLandOrPropertyYesNo.checkYourAnswersLabel = Has the trust acquired land or property in the UK since 6 October 2020?
+ownsUkLandOrPropertyYesNo.error.required = Select yes if the trust has acquired land or property in the UK since 6 October 2020
 ownsUkLandOrPropertyYesNo.paragraph1 = The current rules for registering a new trust came into effect on 6 October 2020.
 ownsUkLandOrPropertyYesNo.paragraph2 = Land or property refers to plots of land or bricks and mortar buildings in the UK.
 
