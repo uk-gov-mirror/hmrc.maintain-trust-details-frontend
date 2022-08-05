@@ -63,11 +63,11 @@ ownsUkLandOrPropertyYesNo.error.required = Select yes if the trust has acquired 
 ownsUkLandOrPropertyYesNo.paragraph1 = The current rules for registering a new trust came into effect on 6 October 2020.
 ownsUkLandOrPropertyYesNo.paragraph2 = Land or property refers to plots of land or bricks and mortar buildings in the UK.
 
-recordedOnEeaRegisterYesNo.title = Is the trust registered on a trust register of any other countries within the European Economic Area (EEA)?
-recordedOnEeaRegisterYesNo.heading = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
-recordedOnEeaRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
+recordedOnEeaRegisterYesNo.title = Is the trust registered on a trust register of any countries within the European Economic Area (EEA)?
+recordedOnEeaRegisterYesNo.heading = Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?
+recordedOnEeaRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?
 recordedOnEeaRegisterYesNo.error.required = Select yes if the trust is listed on a European Economic Area (EEA) register
-recordedOnEeaRegisterYesNo.paragraph1 = You need to tell HMRC if the trust is registered on a trust register of any other countries within the EEA, as well as on the UK’s trust register.
+recordedOnEeaRegisterYesNo.paragraph1 = You need to tell HMRC if the trust is registered on a trust register of any countries within the EEA, as well as on the UK’s trust register.
 recordedOnEeaRegisterYesNo.paragraph2 = The EEA includes:
 recordedOnEeaRegisterYesNo.bullet1 = all countries within the European Union (EU)
 recordedOnEeaRegisterYesNo.bullet2 = Iceland
