@@ -32,8 +32,8 @@ import utils.SessionLogging
 import utils.print.TrustDetailsPrintHelper
 import viewmodels.AnswerSection
 import views.html.maintain.CheckDetailsView
-
 import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class CheckDetailsController @Inject()(

@@ -53,13 +53,15 @@ class TrustDetailsPrintHelper @Inject()(answerRowConverter: AnswerRowConverter) 
         bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUkYesNo", Some(BusinessRelationshipInUkController.onPageLoad().url)),
         bound.yesNoQuestion(SettlorBenefitsFromAssetsPage, "settlorBenefitsFromAssetsYesNo", Some(SettlorBenefitsFromAssetsController.onPageLoad().url)),
         bound.yesNoQuestion(ForPurposeOfSection218Page, "forPurposeOfSection218YesNo", Some(ForPurposeOfSection218Controller.onPageLoad().url)),
-        bound.yesNoQuestion(AgentCreatedTrustPage, "agentCreatedTrustYesNo", Some(AgentCreatedTrustController.onPageLoad().url))
+        bound.yesNoQuestion(AgentCreatedTrustPage, "agentCreatedTrustYesNo", Some(AgentCreatedTrustController.onPageLoad().url)),
+        bound.yesNoQuestion(Schedule3aExemptYesNoPage, "schedule3aExemptYesNo", Some(Schedule3aExemptYesNoController.onPageLoad().url))
       )
     } else {
       Seq(
         bound.yesNoQuestion(OwnsUkLandOrPropertyPage, "ownsUkLandOrPropertyYesNo", Some(OwnsUkLandOrPropertyController.onPageLoad().url)),
         bound.yesNoQuestion(RecordedOnEeaRegisterPage, "recordedOnEeaRegisterYesNo", Some(RecordedOnEeaRegisterController.onPageLoad().url)),
-        bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUkYesNo", Some(BusinessRelationshipInUkController.onPageLoad().url))
+        bound.yesNoQuestion(BusinessRelationshipInUkPage, "businessRelationshipInUkYesNo", Some(BusinessRelationshipInUkController.onPageLoad().url)),
+        bound.yesNoQuestion(Schedule3aExemptYesNoPage, "schedule3aExemptYesNo", Some(Schedule3aExemptYesNoController.onPageLoad().url))
       )
     }
 

@@ -17,14 +17,23 @@
 package navigation
 
 import base.SpecBase
+import config.AppConfig
 import models.TrusteesBased._
 import models.{DeedOfVariation, TypeOfTrust}
+import org.mockito.Mockito.when
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.maintain._
 
 class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   private val navigator: TrustDetailsNavigator = injector.instanceOf[TrustDetailsNavigator]
+
+  private class Schedule3aExemptTest(schedule3aExemptEnabled: Boolean) {
+    val appConfig: AppConfig = mock[AppConfig]
+
+    when(appConfig.schedule3aExemptEnabled).thenReturn(schedule3aExemptEnabled)
+    val navigator = new TrustDetailsNavigator(appConfig)
+  }
 
   "TrustDetailsNavigator" when {
 
@@ -39,7 +48,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
       "Recorded on EEA register page" when {
         "UK resident trust" must {
-          "-> CYA page" in {
+          "-> Check details page" in {
             val answers = baseAnswers
               .set(TrustResidentInUkPage, true).success.value
 
@@ -58,7 +67,7 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "Business relationship in UK page -> CYA page" in {
+      "Business relationship in UK page -> Check details page" in {
         navigator.nextPage(BusinessRelationshipInUkPage, baseAnswers)
           .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
       }
@@ -93,9 +102,13 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "Governing country page -> Administered in the UK page" in {
-        navigator.nextPage(GoverningCountryPage, baseAnswers)
-          .mustBe(controllers.maintain.routes.AdministeredInUkController.onPageLoad())
+      "Governing country page" when {
+        val page = GoverningCountryPage
+
+        "Governing country page -> Administered in the UK page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.maintain.routes.AdministeredInUkController.onPageLoad())
+        }
       }
 
       "Administered in the UK page" when {
@@ -387,10 +400,9 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
 
       "Previously resident offshore page" when {
-
         val page = PreviouslyResidentOffshorePage
 
-        "Yes -> Where previously based page" in {
+        "Yes -> Previously resident offshore country page" in {
           val answers = baseAnswers
             .set(page, true).success.value
 
@@ -398,12 +410,24 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .mustBe(controllers.maintain.routes.PreviouslyResidentOffshoreCountryController.onPageLoad())
         }
 
-        "No -> CYA page" in {
-          val answers = baseAnswers
-            .set(page, false).success.value
+        "Schedule3aExempt toggle is off" when {
+          "No -> Check details page" in new Schedule3aExemptTest(false) {
+            private val answers = baseAnswers
+              .set(page, false).success.value
 
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          }
+        }
+
+        "Schedule3aExempt toggle is on" when {
+          "No -> Schedule3aExemptYesNo page" in new Schedule3aExemptTest(true) {
+            private val answers = baseAnswers
+              .set(page, false).success.value
+
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.Schedule3aExemptYesNoController.onPageLoad())
+          }
         }
 
         "No Data -> Session Expired page" in {
@@ -412,9 +436,22 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "Where previously based page -> CYA page" in {
-        navigator.nextPage(PreviouslyResidentOffshoreCountryPage, baseAnswers)
-          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      "Previously resident offshore country page" when {
+        val page = PreviouslyResidentOffshoreCountryPage
+
+        "Schedule3aExempt toggle is off" when {
+          "Previously resident offshore country page -> Check details page" in new Schedule3aExemptTest(false) {
+            navigator.nextPage(page, baseAnswers)
+              .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          }
+        }
+
+        "Schedule3aExempt toggle is on" when {
+          "Previously resident offshore country page -> Schedule3aExemptYesNo page" in new Schedule3aExemptTest(true) {
+            navigator.nextPage(page, baseAnswers)
+              .mustBe(controllers.maintain.routes.Schedule3aExemptYesNoController.onPageLoad())
+          }
+        }
       }
 
       "Business relationship in UK page -> Settlor benefits from assets page" in {
@@ -423,15 +460,26 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
 
       "Settlor benefits from assets page" when {
-
         val page = SettlorBenefitsFromAssetsPage
 
-        "Yes -> CYA page" in {
-          val answers = baseAnswers
-            .set(page, true).success.value
+        "Schedule3aExempt toggle is off" when {
+          "Yes -> Check details page" in new Schedule3aExemptTest(false) {
+            private val answers = baseAnswers
+              .set(page, true).success.value
 
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          }
+        }
+
+        "Schedule3aExempt toggle is on" when {
+          "Yes -> Schedule3aExemptYesNo page" in new Schedule3aExemptTest(true) {
+            private val answers = baseAnswers
+              .set(page, true).success.value
+
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.Schedule3aExemptYesNoController.onPageLoad())
+          }
         }
 
         "No -> For purpose of section 218 page" in {
@@ -449,7 +497,6 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
 
       "For purpose of section 218 page" when {
-
         val page = ForPurposeOfSection218Page
 
         "Yes -> Agent created trust page" in {
@@ -460,12 +507,24 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             .mustBe(controllers.maintain.routes.AgentCreatedTrustController.onPageLoad())
         }
 
-        "No -> CYA page" in {
-          val answers = baseAnswers
-            .set(page, false).success.value
+        "Schedule3aExempt toggle is off" when {
+          "No -> Check details page" in new Schedule3aExemptTest(false) {
+            private val answers = baseAnswers
+              .set(page, false).success.value
 
-          navigator.nextPage(page, answers)
-            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          }
+        }
+
+        "Schedule3aExempt toggle is on" when {
+          "No -> Schedule3aExemptYesNo page" in new Schedule3aExemptTest(true) {
+            private val answers = baseAnswers
+              .set(page, false).success.value
+
+            navigator.nextPage(page, answers)
+              .mustBe(controllers.maintain.routes.Schedule3aExemptYesNoController.onPageLoad())
+          }
         }
 
         "No Data -> Session Expired page" in {
@@ -474,9 +533,31 @@ class TrustDetailsNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
       }
 
-      "Agent created trust page -> CYA page" in {
-        navigator.nextPage(AgentCreatedTrustPage, baseAnswers)
-          .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+      "Agent created trust page" when {
+        val page = AgentCreatedTrustPage
+
+        "Schedule3aExempt toggle is off" when {
+          "Agent created trust page -> Check details page" in new Schedule3aExemptTest(false) {
+            navigator.nextPage(page, baseAnswers)
+              .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+          }
+        }
+
+        "Schedule3aExempt toggle is on" when {
+          "Agent created trust page -> Schedule3aExemptYesNo page" in new Schedule3aExemptTest(true) {
+            navigator.nextPage(page, baseAnswers)
+              .mustBe(controllers.maintain.routes.Schedule3aExemptYesNoController.onPageLoad())
+          }
+        }
+      }
+
+      "Schedule3aExemptYesNo page" when {
+        val page = Schedule3aExemptYesNoPage
+
+        "Schedule3aExemptYesNo page -> Check details page" in {
+          navigator.nextPage(page, baseAnswers)
+            .mustBe(controllers.maintain.routes.CheckDetailsController.onPageLoad())
+        }
       }
     }
   }

@@ -87,4 +87,7 @@ POST       /for-inheritance-tax                 controllers.maintain.ForPurposeO
 GET        /agent-created-trust                 controllers.maintain.AgentCreatedTrustController.onPageLoad()
 POST       /agent-created-trust                 controllers.maintain.AgentCreatedTrustController.onSubmit()
 
+GET        /has-schedule-3a-exemption           controllers.maintain.Schedule3aExemptYesNoController.onPageLoad()
+POST       /has-schedule-3a-exemption           controllers.maintain.Schedule3aExemptYesNoController.onSubmit()
+
 GET        /:identifier                         controllers.IndexController.onPageLoad(identifier: String)

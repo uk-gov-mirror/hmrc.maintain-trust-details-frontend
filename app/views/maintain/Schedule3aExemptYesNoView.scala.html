@@ -15,7 +15,7 @@
  *@
 
 @import controllers.maintain.routes._
-@import views.html.components.{Heading, ErrorSummary, BulletList, InputYesNo, SubmitButton}
+@import views.html.components.{ErrorSummary, InputYesNo, Heading, BulletList, SubmitButton}
 
 @this(
     mainTemplate: MainTemplate,
@@ -30,32 +30,37 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @mainTemplate(
-    title = s"${errorPrefix(form)} ${messages("businessRelationshipInUkYesNo.title")}",
+    title = s"${errorPrefix(form)} ${messages("schedule3aExemptYesNo.title")}",
     showBackLink = true
 ) {
 
-    @formHelper(action = BusinessRelationshipInUkController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = Schedule3aExemptYesNoController.onSubmit(), 'autoComplete -> "off") {
 
         @errorSummary(form.errors)
 
-        @heading("businessRelationshipInUkYesNo.heading")
+        @heading("schedule3aExemptYesNo.heading")
 
-        <p>@messages("businessRelationshipInUkYesNo.paragraph1")</p>
+        <p>@messages("schedule3aExemptYesNo.p1")</p>
+
+        <p>@messages("schedule3aExemptYesNo.p2")</p>
+
+        <p>@messages("schedule3aExemptYesNo.p3")</p>
 
         @bulletList(
-            "businessRelationshipInUkYesNo",
+            "schedule3aExemptYesNo",
             Seq(
-                "bullet1",
-                "bullet2",
-                "bullet3"
+                "bullet1", "bullet2", "bullet3", "bullet4",
+                "bullet5", "bullet6", "bullet7", "bullet8",
+                "bullet9", "bullet10", "bullet11", "bullet12",
+                "bullet13", "bullet14", "bullet15", "bullet16"
             )
         )
 
-        <p>@messages("businessRelationshipInUkYesNo.paragraph2")</p>
+        <h2 class="govuk-heading-m">@messages("schedule3aExemptYesNo.subheading")</h2>
 
         @inputYesNo(
             field = form("value"),
-            label = messages("businessRelationshipInUkYesNo.heading"),
+            label = messages("schedule3aExemptYesNo.subheading"),
             legendClass = Some("govuk-visually-hidden"),
             legendAsHeading = false
         )

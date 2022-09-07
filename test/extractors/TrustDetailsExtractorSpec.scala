@@ -48,7 +48,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName).success.value
@@ -72,7 +73,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName).success.value
@@ -98,7 +100,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName).success.value
@@ -125,7 +128,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName).success.value
@@ -154,7 +158,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName).success.value
@@ -181,7 +186,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName).success.value
@@ -210,7 +216,8 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
           typeOfTrust = None,
           deedOfVariation = None,
           interVivos = None,
-          efrbsStartDate = None
+          efrbsStartDate = None,
+          schedule3aExempt = None
         )
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName)

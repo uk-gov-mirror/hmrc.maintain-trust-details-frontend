@@ -105,7 +105,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
     typeOfTrust = Some(typeOfTrust),
     deedOfVariation = None,
     interVivos = None,
-    efrbsStartDate = None
+    efrbsStartDate = None,
+    schedule3aExempt = None
   )
 
   "CheckDetails Controller" when {

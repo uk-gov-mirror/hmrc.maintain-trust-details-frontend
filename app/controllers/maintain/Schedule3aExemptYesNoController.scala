@@ -18,34 +18,36 @@ package controllers.maintain
 
 import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
+
+import javax.inject.Inject
+
 import navigation.Navigator
-import pages.maintain.BusinessRelationshipInUkPage
+import pages.maintain.Schedule3aExemptYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.maintain.BusinessRelationshipInUkView
-import javax.inject.Inject
+
+import views.html.maintain.Schedule3aExemptYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BusinessRelationshipInUkController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    repository: PlaybackRepository,
-                                                    yesNoFormProvider: YesNoFormProvider,
-                                                    navigator: Navigator,
-                                                    actions: StandardActionSets,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: BusinessRelationshipInUkView
-                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class Schedule3aExemptYesNoController @Inject()(override val messagesApi: MessagesApi,
+                                                yesNoFormProvider: YesNoFormProvider,
+                                                repository: PlaybackRepository,
+                                                navigator: Navigator,
+                                                actions: StandardActionSets,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: Schedule3aExemptYesNoView
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("businessRelationshipInUkYesNo")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("schedule3aExemptYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.identifiedUserWithData {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(BusinessRelationshipInUkPage) match {
+      val preparedForm = request.userAnswers.get(Schedule3aExemptYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -62,9 +64,9 @@ class BusinessRelationshipInUkController @Inject()(
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(BusinessRelationshipInUkPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(Schedule3aExemptYesNoPage, value))
             _ <- repository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(BusinessRelationshipInUkPage, updatedAnswers))
+          } yield Redirect(navigator.nextPage(Schedule3aExemptYesNoPage, updatedAnswers))
         }
       )
   }

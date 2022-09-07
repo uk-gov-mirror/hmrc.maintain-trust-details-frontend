@@ -49,7 +49,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
   val onPageLoad: String = routes.IndexController.onPageLoad(identifier).url
 
   val fakeTrustDetails: TrustDetailsType =
-    TrustDetailsType(LocalDate.parse("2020-01-01"), None, None, None, None, None, None, None, None, None, None, None)
+    TrustDetailsType(LocalDate.parse("2020-01-01"), None, None, None, None, None, None, None, None, None, None, None, None)
 
   val fakeTrustName: String = "Trust Name"
 

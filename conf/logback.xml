@@ -49,6 +49,10 @@
 
     <logger name="application" level="DEBUG"/>
 
+    <logger name="uk.gov.hmrc.play.bootstrap.filters.DefaultLoggingFilter" level="WARN"/>
+    <logger name="com.codahale.metrics.graphite.GraphiteReporter" level="ERROR"/>
+    <logger name="uk.gov.hmrc.audit.handler.DatastreamHandler" level="ERROR"/>
+
     <logger name="connector" level="TRACE">
         <appender-ref ref="STDOUT"/>
     </logger>

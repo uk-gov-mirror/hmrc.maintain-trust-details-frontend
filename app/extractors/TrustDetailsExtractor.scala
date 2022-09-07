@@ -31,6 +31,7 @@ class TrustDetailsExtractor {
       .flatMap(_.set(RecordedOnEeaRegisterPage, trustDetails.trustRecorded))
       .flatMap(ua => extractTrustUKResident(trustDetails, ua))
       .flatMap(_.set(BusinessRelationshipInUkPage, trustDetails.trustUKRelation))
+      .flatMap(_.set(Schedule3aExemptYesNoPage, trustDetails.schedule3aExempt))
 
   private def extractTrustUKResident(trustDetails: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
     (trustDetails.trustUKResident, trustDetails.residentialStatus) match {

@@ -86,7 +86,8 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
           | },
           | "typeOfTrust": "Will Trust or Intestacy Trust",
           | "deedOfVariation": "Previously there was only an absolute interest under the will",
-          | "interVivos": false
+          | "interVivos": false,
+          | "schedule3aExempt": true
           |}
           |""".stripMargin)
 
@@ -121,7 +122,8 @@ class TrustsConnectorSpec extends SpecBase with ScalaFutures
             typeOfTrust = Some(WillTrustOrIntestacyTrust),
             deedOfVariation = Some(PreviouslyAbsoluteInterestUnderWill),
             interVivos = Some(false),
-            efrbsStartDate = None
+            efrbsStartDate = None,
+            schedule3aExempt = Some(true)
           )
       }
     }
