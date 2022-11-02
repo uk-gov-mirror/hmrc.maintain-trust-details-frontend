@@ -47,6 +47,7 @@ trait UserAnswersGenerator extends TryValues {
         internalId = id,
         identifier = utr,
         sessionId = sessionId,
+        newId = s"$id-$utr-$sessionId",
         migratingFromNonTaxableToTaxable = migratingFromNonTaxableToTaxable,
         registeredWithDeceasedSettlor = registeredWithDeceasedSettlor,
         data = data.foldLeft(Json.obj()) {

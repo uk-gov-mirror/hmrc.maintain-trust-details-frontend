@@ -17,7 +17,7 @@
 package models
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{OWrites, Reads, __}
+import play.api.libs.json.{Format, OWrites, Reads, __}
 
 import java.time.LocalDateTime
 
@@ -26,6 +26,8 @@ case class ActiveSession(internalId: String,
                          updatedAt: LocalDateTime = LocalDateTime.now)
 
 object ActiveSession {
+
+  implicit lazy val formats: Format[ActiveSession] = Format(reads, writes)
 
   implicit lazy val reads: Reads[ActiveSession] = (
     (__ \ "internalId").read[String] and

@@ -65,6 +65,7 @@ class IndexController @Inject()(
                   internalId = request.user.internalId,
                   identifier = identifier,
                   sessionId = Session.id(hc),
+                  newId = s"${request.user.internalId}-$identifier-${Session.id(hc)}",
                   migratingFromNonTaxableToTaxable = taxableMigrationFlag.migratingFromNonTaxableToTaxable,
                   registeredWithDeceasedSettlor = registeredWithDeceasedSettlor
                 ),

@@ -29,6 +29,7 @@ import scala.util.{Failure, Success, Try}
 case class UserAnswers(internalId: String,
                        identifier: String,
                        sessionId: String,
+                       newId: String,
                        migratingFromNonTaxableToTaxable: Boolean,
                        registeredWithDeceasedSettlor: Boolean,
                        data: JsObject = Json.obj(),
@@ -102,10 +103,13 @@ case class UserAnswers(internalId: String,
 
 object UserAnswers {
 
+  implicit lazy val formats: Format[UserAnswers] = Format(reads, writes)
+
   implicit lazy val reads: Reads[UserAnswers] = (
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
       (__ \ "sessionId").read[String] and
+      (__ \ "newId").read[String] and
       (__ \ "migratingFromNonTaxableToTaxable").readWithDefault[Boolean](false) and
       (__ \ "registeredWithDeceasedSettlor").read[Boolean] and
       (__ \ "data").read[JsObject] and
@@ -116,6 +120,7 @@ object UserAnswers {
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
       (__ \ "sessionId").write[String] and
+      (__ \ "newId").write[String] and
       (__ \ "migratingFromNonTaxableToTaxable").write[Boolean] and
       (__ \ "registeredWithDeceasedSettlor").write[Boolean] and
       (__ \ "data").write[JsObject] and

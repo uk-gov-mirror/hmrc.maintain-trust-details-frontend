@@ -3,7 +3,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "maintain-trust-details-frontend"
 
-val silencerVersion = "1.7.9"
+val silencerVersion = "1.7.12"
 
 val excludedPackages = Seq(
   "<empty>",
@@ -21,8 +21,7 @@ val excludedPackages = Seq(
   "com.kenshoo.play.metrics*.*",
   ".*LocalDateService.*",
   ".*LocalDateTimeService.*",
-  ".*RichJsValue.*",
-  ".*Repository.*"
+  ".*RichJsValue.*"
 )
 
 lazy val scoverageSettings = {

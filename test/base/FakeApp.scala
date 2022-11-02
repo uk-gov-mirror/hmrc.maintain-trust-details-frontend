@@ -21,6 +21,7 @@ import org.scalatest.TestSuite
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 import scala.concurrent.ExecutionContext
@@ -32,7 +33,7 @@ trait FakeApp extends GuiceOneAppPerSuite {
 
   def frontendAppConfig: AppConfig = injector.instanceOf[AppConfig]
 
-  def fakeRequest: FakeRequest[_] = FakeRequest("", "")
+  def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")
 
   implicit def executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
 

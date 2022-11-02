@@ -19,7 +19,7 @@ package controllers.maintain
 import base.SpecBase
 import forms.YesNoFormProvider
 import navigation.Navigator
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import pages.maintain.SetUpAfterSettlorDiedPage
 import play.api.data.Form
 import play.api.inject.bind

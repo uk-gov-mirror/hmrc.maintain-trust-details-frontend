@@ -33,6 +33,7 @@ trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
     internalId = "id",
     identifier = "UTRUTRUTR",
     sessionId = "sessionId",
+    newId = "id-UTRUTRUTR-sessionId",
     migratingFromNonTaxableToTaxable = false,
     registeredWithDeceasedSettlor = true
   )

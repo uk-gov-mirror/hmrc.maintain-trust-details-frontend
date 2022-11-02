@@ -28,7 +28,7 @@ class CountryFormProvider @Inject() extends Mappings {
       "value" -> text(s"$prefix.error.required")
         .verifying(
           firstError(
-            maxLength(100, s"$prefix.error.length"),
+            maxLength(maximum = 100, errorKey = s"$prefix.error.length"),
             regexp(Validation.countryRegex, s"$prefix.error.invalidCharacters"),
             nonEmptyString("value", s"$prefix.error.required")
           )

@@ -41,6 +41,7 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
     internalId = internalId,
     identifier = identifier,
     sessionId = userSessionId,
+    newId = s"$internalId-$identifier-$userSessionId",
     migratingFromNonTaxableToTaxable = false,
     registeredWithDeceasedSettlor = true
   )

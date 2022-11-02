@@ -17,16 +17,10 @@
 package connectors
 
 import base.{SpecBase, WireMockHelper}
-import com.github.tomakehurst.wiremock.client.WireMock.{urlEqualTo, _}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import models.TaskStatus.Completed
-import models.http.FeatureResponse
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import play.api.http.Status
-import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 class TrustsStoreConnectorSpec extends SpecBase
   with ScalaFutures

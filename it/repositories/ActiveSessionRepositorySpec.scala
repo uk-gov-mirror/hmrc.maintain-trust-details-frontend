@@ -19,29 +19,34 @@ package repositories
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import models.ActiveSession
-import org.scalatest.freespec.AsyncFreeSpec
+import org.mongodb.scala.bson.BsonDocument
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import uk.gov.hmrc.mongo.test.MongoSupport
 
-class ActiveSessionRepositorySpec extends AsyncFreeSpec with Matchers
-  with ScalaFutures with OptionValues with MongoSuite {
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
-  "a session repository" - {
+class ActiveSessionRepositorySpec extends AnyWordSpec with Matchers
+  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach {
 
-    "must return None when no cache exists" in assertMongoTest(application) {
-      (app, _) =>
+  override def beforeEach(): Unit =
+    Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(), Duration.Inf)
+
+  val repository: ActiveSessionRepository = application.injector.instanceOf[ActiveSessionRepository]
+
+  "a session repository" must {
+
+    "return None when no cache exists" in {
 
         val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
 
-        val repository = app.injector.instanceOf[ActiveSessionRepository]
         repository.get(internalId).futureValue mustBe None
     }
 
-    "must return a ActiveSession when one exists" in assertMongoTest(application) {
-      (app, _) =>
+    "return a ActiveSession when one exists" in {
 
         val internalId = "Int-328969d0-557e-2559-96ba-074d0597107e"
-
-        val repository = app.injector.instanceOf[ActiveSessionRepository]
 
         val session = ActiveSession(internalId, "identifier")
 
@@ -52,12 +57,9 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with Matchers
         repository.get(internalId).futureValue.value.identifier mustBe "identifier"
     }
 
-    "must override an existing session for an internalId" in assertMongoTest(application) {
-      (app, _) =>
+    "override an existing session for an internalId" in {
 
         val internalId = "Int-328969d0-557e-4559-96ba-0d4d0597107e"
-
-        val repository = app.injector.instanceOf[ActiveSessionRepository]
 
         val session = ActiveSession(internalId, "identifier")
 

@@ -16,92 +16,67 @@
 
 package repositories
 
-import play.api.Configuration
-import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.WriteConcern
-import reactivemongo.api.bson.BSONDocument
-import reactivemongo.api.bson.collection.BSONSerializationPack
-import reactivemongo.api.indexes.Index.Aux
-import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.play.json.collection.Helpers.idWrites
+import com.mongodb.client.model.Indexes.ascending
+import com.mongodb.client.model.ReturnDocument
+import config.AppConfig
 import models.UserAnswers
+import org.mongodb.scala.bson.conversions.Bson
+import org.mongodb.scala.model._
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.SECONDS
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PlaybackRepositoryImpl @Inject()(
-                                        override val mongo: ReactiveMongoApi,
-                                        override val config: Configuration
-                                      )(override implicit val ec: ExecutionContext)
-  extends IndexesManager with PlaybackRepository {
+class PlaybackRepository @Inject()(
+                                    val mongo: MongoComponent,
+                                    val config: AppConfig,
+                                    implicit val ec: ExecutionContext
+                                  )
+  extends PlayMongoRepository[UserAnswers](
+    mongoComponent = mongo,
+    collectionName = "user-answers",
+    domainFormat = UserAnswers.formats,
+    indexes = Seq(
+      IndexModel(
+        ascending("updatedAt"),
+        IndexOptions()
+          .unique(false)
+          .name("user-answers-updated-at-index")
+          .expireAfter(config.mongoPlaybackTTL, SECONDS)
+      ),
+      IndexModel(
+        ascending("newId"),
+        IndexOptions()
+          .unique(false)
+          .name("internal-id-and-utr-and-sessionId-compound-index")
+      )
+    ),
+    replaceIndexes = config.mongoReplaceIndexes
+  ){
 
-  override val collectionName: String = "user-answers"
+  private def selector(internalId: String, identifier: String, sessionId: String): Bson = Filters.eq("newId", s"$internalId-$identifier-$sessionId")
 
-  override val cacheTtl: Int = config.get[Int]("mongodb.playback.ttlSeconds")
+  def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]] = {
+    val modifier = Updates.set("updatedAt", LocalDateTime.now())
 
-  override val lastUpdatedIndexName: String = "user-answers-updated-at-index"
+    val updateOption = new FindOneAndUpdateOptions()
+      .upsert(false)
+      .returnDocument(ReturnDocument.AFTER)
 
-  override def idIndex: Aux[BSONSerializationPack.type] = Index.apply(BSONSerializationPack)(
-    key = Seq("newId" -> IndexType.Ascending),
-    name = Some("internal-id-and-utr-and-sessionId-compound-index"),
-    expireAfterSeconds = None,
-    options = BSONDocument.empty,
-    unique = false,
-    background = false,
-    dropDups = false,
-    sparse = false,
-    version = None,
-    partialFilter = None,
-    storageEngine = None,
-    weights = None,
-    defaultLanguage = None,
-    languageOverride = None,
-    textIndexVersion = None,
-    sphereIndexVersion = None,
-    bits = None,
-    min = None,
-    max = None,
-    bucketSize = None,
-    collation = None,
-    wildcardProjection = None
-  )
-
-  private def selector(internalId: String, identifier: String, sessionId: String): JsObject = Json.obj(
-    "newId" -> s"$internalId-$identifier-$sessionId"
-  )
-
-  override def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]] = {
-    findCollectionAndUpdate[UserAnswers](selector(internalId, identifier, sessionId))
+    collection.findOneAndUpdate(selector(internalId, identifier, sessionId), modifier, updateOption).toFutureOption()
   }
 
-  override def set(userAnswers: UserAnswers): Future[Boolean] = {
+  def set(userAnswers: UserAnswers): Future[Boolean] = {
+    val updatedObject = userAnswers.copy(updatedAt = LocalDateTime.now)
 
-    val modifier = Json.obj(
-      "$set" -> userAnswers.copy(updatedAt = LocalDateTime.now)
-    )
-
-    for {
-      col <- collection
-      r <- col.update(ordered = false).one(selector(userAnswers.internalId, userAnswers.identifier,  userAnswers.sessionId), modifier, upsert = true, multi = false)
-    } yield r.ok
+    val updateOptions = ReplaceOptions().upsert(true)
+    collection.replaceOne(selector(userAnswers.internalId, userAnswers.identifier,  userAnswers.sessionId),
+      updatedObject,
+      updateOptions
+    ).headOption().map(_.exists(_.wasAcknowledged()))
   }
-
-  override def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]] = {
-    for {
-      col <- collection
-      r <- col.findAndRemove(selector(internalId, identifier,sessionId), None, None, WriteConcern.Default, None, None, Seq.empty)
-    } yield r.value
-  }
-}
-
-trait PlaybackRepository {
-
-  def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]]
-
-  def set(userAnswers: UserAnswers): Future[Boolean]
-
-  def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]]
 }

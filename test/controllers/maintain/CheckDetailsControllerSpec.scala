@@ -23,8 +23,7 @@ import mappers.TrustDetailsMapper
 import models.TaskStatus.Completed
 import models.TypeOfTrust.{EmploymentRelated, HeritageMaintenanceFund, WillTrustOrIntestacyTrust}
 import models._
-import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{never, reset, verify, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -166,7 +165,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
           redirectLocation(result).value mustEqual onwardRoute
 
-          verify(mockTrustsConnector, never()).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
+          verify(mockTrustsConnector, never).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
           verify(mockTrustsConnector).setNonMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
           verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
@@ -276,7 +275,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
               redirectLocation(result).value mustEqual onwardRoute
 
-              verify(mockTrustsConnector, never()).removeTrustTypeDependentTransformFields(any())(any(), any())
+              verify(mockTrustsConnector, never).removeTrustTypeDependentTransformFields(any())(any(), any())
               verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
               verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 
@@ -308,7 +307,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
           redirectLocation(result).value mustEqual onwardRoute
 
-          verify(mockTrustsConnector, never()).removeTrustTypeDependentTransformFields(any())(any(), any())
+          verify(mockTrustsConnector, never).removeTrustTypeDependentTransformFields(any())(any(), any())
           verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
           verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
 

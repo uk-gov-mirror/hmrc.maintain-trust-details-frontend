@@ -25,8 +25,7 @@ import models.TaskStatus.InProgress
 import models.http.TaxableMigrationFlag
 import models.{TrustDetailsType, UserAnswers}
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{never, reset, verify, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -193,7 +192,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                   redirectLocation(result).value mustBe controllers.maintain.routes.CheckDetailsController.onPageLoad().url
 
-                  verify(mockExtractor, never()).apply(any(), any(), any())
+                  verify(mockExtractor, never).apply(any(), any(), any())
 
                   val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
                   verify(playbackRepository).set(uaCaptor.capture)
@@ -244,7 +243,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                     redirectLocation(result).value mustBe controllers.maintain.routes.GovernedByUkLawController.onPageLoad().url
 
-                    verify(mockExtractor, never()).apply(any(), any(), any())
+                    verify(mockExtractor, never).apply(any(), any(), any())
 
                     val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
                     verify(playbackRepository).set(uaCaptor.capture)
@@ -293,7 +292,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
                     redirectLocation(result).value mustBe controllers.maintain.routes.BeforeYouContinueController.onPageLoad().url
 
-                    verify(mockExtractor, never()).apply(any(), any(), any())
+                    verify(mockExtractor, never).apply(any(), any(), any())
 
                     val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
                     verify(playbackRepository).set(uaCaptor.capture)
