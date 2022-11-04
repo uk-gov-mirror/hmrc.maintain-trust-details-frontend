@@ -19,7 +19,6 @@ package config
 import com.google.inject.AbstractModule
 import controllers.actions._
 import navigation.{Navigator, TrustDetailsNavigator}
-import repositories._
 import services._
 
 class Module extends AbstractModule {
@@ -28,8 +27,6 @@ class Module extends AbstractModule {
 
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
-
-    bind(classOf[PlaybackRepository]).to(classOf[PlaybackRepositoryImpl]).asEagerSingleton()
 
     bind(classOf[Navigator]).to(classOf[TrustDetailsNavigator]).asEagerSingleton()
 

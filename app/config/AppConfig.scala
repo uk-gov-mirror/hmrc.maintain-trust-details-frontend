@@ -20,8 +20,8 @@ import controllers.routes
 import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
@@ -64,6 +64,11 @@ class AppConfig @Inject()(config: Configuration,
 
   lazy val countdownLength: Int = config.get[Int]("timeout.countdown")
   lazy val timeoutLength: Int = config.get[Int]("timeout.length")
+
+  lazy val mongoReplaceIndexes: Boolean = config.get[Boolean]("features.mongo.dropIndexes")
+  lazy val mongoSessionTTL: Long = config.get[Int]("mongodb.session.ttlSeconds")
+  lazy val mongoPlaybackTTL: Long = config.get[Int]("mongodb.playback.ttlSeconds")
+
 
   private def getDate(entry: String): LocalDate = {
 

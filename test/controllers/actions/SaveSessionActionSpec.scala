@@ -17,10 +17,9 @@
 package controllers.actions
 
 import base.SpecBase
-import org.mockito.Matchers.any
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import play.api.mvc.Result
 import uk.gov.hmrc.auth.core.Enrolments
 import models.OrganisationUser

@@ -14,6 +14,11 @@ If you want to run your local copy, then stop the frontend ran by the service ma
 
 `sbt run`
 
+### To Test
+To run the local tests run the below script
+
+`./run_all_tests.sh`
+
 ### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
