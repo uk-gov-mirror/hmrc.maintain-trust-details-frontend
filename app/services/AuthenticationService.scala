@@ -26,13 +26,12 @@ import models.http.{TrustsAuthAgentAllowed, TrustsAuthAllowed, TrustsAuthDenied}
 import models.requests.DataRequest
 import utils.SessionLogging
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticationServiceImpl @Inject()(
                                            trustAuthConnector: TrustsAuthConnector,
                                            errorHandler: ErrorHandler
-                                         ) extends AuthenticationService with SessionLogging {
+                                         )(implicit ec:ExecutionContext) extends AuthenticationService with SessionLogging {
 
   override def authenticateAgent[A]()
                                    (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]] = {
