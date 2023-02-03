@@ -45,6 +45,8 @@ class AppConfig @Inject()(config: Configuration,
   def routeToSwitchLanguage: String => Call =
     (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
+  val appName: String = config.get[String]("appName")
+
   lazy val trustsStoreUrl: String = servicesConfig.baseUrl("trusts-store")
 
   lazy val loginUrl: String = config.get[String]("urls.login")
