@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 class CountryOptions @Inject()(environment: Environment, config: AppConfig) {
 
   def allOptions(implicit messages: Messages): Seq[InputOption] = {
-    getCountriesForFileName(fileName)
+    getCountriesForFileName(fileName())
   }
 
   def nonUkOptions(implicit messages: Messages): Seq[InputOption] = {

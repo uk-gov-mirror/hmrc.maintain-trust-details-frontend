@@ -33,7 +33,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = TypeOfTrustController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = TypeOfTrustController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors, TypeOfTrust.options)
 

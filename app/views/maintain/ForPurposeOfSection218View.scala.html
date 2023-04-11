@@ -32,7 +32,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = ForPurposeOfSection218Controller.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ForPurposeOfSection218Controller.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 

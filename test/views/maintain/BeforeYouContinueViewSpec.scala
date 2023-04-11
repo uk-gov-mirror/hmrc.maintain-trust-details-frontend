@@ -32,7 +32,7 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
       view.apply()(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(
-      view = applyView,
+      view = applyView(),
       messageKeyPrefix = messageKeyPrefix,
       messageKeyParam = "",
       captionParam = "",
@@ -41,6 +41,6 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
 
     behave like pageWithBackLink(applyView())
 
-    behave like pageWithASubmitButton(applyView)
+    behave like pageWithASubmitButton(applyView())
   }
 }

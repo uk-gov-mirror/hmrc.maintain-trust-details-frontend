@@ -47,7 +47,7 @@
         )
     )
 
-    @formHelper(action = OwnsUkLandOrPropertyController.onPageLoad(), 'autoComplete -> "off") {
+    @formHelper(action = OwnsUkLandOrPropertyController.onPageLoad(), Symbol("autoComplete") -> "off") {
         @submitButton(Some(messages("site.continue")))
     }
 
