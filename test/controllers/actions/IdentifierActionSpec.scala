@@ -18,7 +18,6 @@ package controllers.actions
 
 import base.SpecBase
 import org.mockito.ArgumentMatchers.any
-import play.api.Play.materializer
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.Helpers._

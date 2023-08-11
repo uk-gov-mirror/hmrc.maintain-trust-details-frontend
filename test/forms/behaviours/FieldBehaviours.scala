@@ -26,7 +26,7 @@ import generators.Generators
 
 trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 
-  def frontendAppConfig: AppConfig = injector.instanceOf[AppConfig]
+  def frontendAppConfig: AppConfig = injector().instanceOf[AppConfig]
 
   def fieldThatBindsValidData(form: Form[_],
                               fieldName: String,

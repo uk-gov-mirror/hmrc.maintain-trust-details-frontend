@@ -23,7 +23,7 @@ import play.api.data.Form
 
 class EnumFormProvider @Inject() extends Mappings {
 
-  def apply[T](prefix: String)(implicit enum: Enumerable[T]): Form[T] =
+  def apply[T](prefix: String)(implicit enumerated: Enumerable[T]): Form[T] =
     Form(
       "value" -> enumerable[T](s"$prefix.error.required")
     )

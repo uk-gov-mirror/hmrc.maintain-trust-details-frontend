@@ -51,7 +51,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
   override def beforeEach(): Unit = {
     reset(mockTrustsConnector, mockTrustsStoreConnector)
-    
+
     when(mockTrustsConnector.getTrustDetails(any())(any(), any()))
       .thenReturn(Future.successful(oldTrustDetails()))
 
@@ -66,7 +66,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
     when(mockTrustsConnector.setNonMigratingTrustDetails(any(), any())(any(), any()))
       .thenReturn(Future.successful(HttpResponse(OK, "")))
-    
+
     when(mockTrustsStoreConnector.updateTaskStatus(any(), any())(any(), any()))
       .thenReturn(Future.successful(HttpResponse(OK, "")))
   }
@@ -91,7 +91,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
     trustUKRelation = None,
     trustUKResident = true
   )
-  
+
   private def oldTrustDetails(typeOfTrust: TypeOfTrust = EmploymentRelated) = TrustDetailsType(
     startDate = LocalDate.parse("2000-01-01"),
     lawCountry = None,
@@ -144,7 +144,7 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
         "not migrating" in {
 
           val userAnswers = emptyUserAnswers
-          
+
           val mockMapper = mock[TrustDetailsMapper]
 
           val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)

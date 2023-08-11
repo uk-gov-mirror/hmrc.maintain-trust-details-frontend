@@ -39,7 +39,7 @@ lazy val microservice = Project(appName, file("."))
     DefaultBuildSettings.scalaSettings,
     DefaultBuildSettings.defaultSettings(),
     scoverageSettings,
-    scalaVersion := "2.13.10",
+    scalaVersion := "2.13.11",
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     inConfig(Test)(testSettings),
@@ -80,9 +80,9 @@ lazy val microservice = Project(appName, file("."))
     )
   )
   .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
+  .settings(integrationTestSettings())
 
-lazy val testSettings: Seq[Def.Setting[_]] = Seq(
+lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   fork := true,
   javaOptions ++= Seq(
     "-Dlogger.resource=logback-test.xml",
@@ -90,4 +90,4 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   )
 )
 
-addCommandAlias("scalastyleAll", "all scalastyle test:scalastyle it:scalastyle")
+addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle IntegrationTest/scalastyle")

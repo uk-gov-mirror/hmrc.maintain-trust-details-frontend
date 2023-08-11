@@ -222,7 +222,7 @@ class TrustDetailsExtractorSpec extends SpecBase with ScalaCheckPropertyChecks w
 
         val result = extractor(emptyUserAnswers, trustDetails, trustName)
 
-        result mustBe 'failure
+        result mustBe Symbol("failure")
       }
     }
   }
