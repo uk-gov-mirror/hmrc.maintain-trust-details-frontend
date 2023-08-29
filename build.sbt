@@ -1,36 +1,8 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.DefaultBuildSettings
+import scoverage.ScoverageKeys
 
 val appName = "maintain-trust-details-frontend"
-
-val excludedPackages = Seq(
-  "<empty>",
-  ".*Reverse.*",
-  ".*Routes.*",
-  ".*standardError*.*",
-  ".*main_template*.*",
-  "uk.gov.hmrc.BuildInfo",
-  "app.*",
-  "prod.*",
-  "config.*",
-  "testOnlyDoNotUseInAppConf.*",
-  "views.html.*",
-  "testOnly.*",
-  "com.kenshoo.play.metrics*.*",
-  ".*LocalDateService.*",
-  ".*LocalDateTimeService.*",
-  ".*RichJsValue.*"
-)
-
-lazy val scoverageSettings = {
-  import scoverage.ScoverageKeys
-  Seq(
-    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 92,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true
-  )
-}
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
@@ -38,7 +10,11 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     DefaultBuildSettings.scalaSettings,
     DefaultBuildSettings.defaultSettings(),
-    scoverageSettings,
+    ScoverageKeys.coverageExcludedPackages := "<empty>;.*Reverse.*;.*Routes.*;uk.gov.hmrc.BuildInfo;" +
+      "config.*;testOnlyDoNotUseInAppConf.*;views.html.*;.*RichJsValue.*",
+    ScoverageKeys.coverageMinimumStmtTotal := 92,
+    ScoverageKeys.coverageFailOnMinimum := true,
+    ScoverageKeys.coverageHighlighting := true,
     scalaVersion := "2.13.11",
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
@@ -55,7 +31,7 @@ lazy val microservice = Project(appName, file("."))
       "controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 9838,
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    libraryDependencies ++= AppDependencies(),
     // concatenate js
     Concat.groups := Seq(
       "javascripts/maintaintrustdetailsfrontend-app.js" ->
@@ -63,8 +39,7 @@ lazy val microservice = Project(appName, file("."))
           "javascripts/maintaintrustdetailsfrontend.js",
           "javascripts/autocomplete.js",
           "javascripts/libraries/location-autocomplete.min.js",
-          "javascripts/iebacklink.js",
-          "javascripts/print.js"
+          "javascripts/iebacklink.js"
         ))
     ),
     // prevent removal of unused code which generates warning errors due to use of third-party libs
