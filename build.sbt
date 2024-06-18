@@ -4,6 +4,9 @@ import scoverage.ScoverageKeys
 
 val appName = "maintain-trust-details-frontend"
 
+ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / majorVersion := 0
+
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
@@ -15,9 +18,7 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageMinimumStmtTotal := 92,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
-    scalaVersion := "2.13.13",
     inConfig(Test)(testSettings),
-    majorVersion := 0,
     name := appName,
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
