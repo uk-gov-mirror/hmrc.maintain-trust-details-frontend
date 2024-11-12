@@ -16,13 +16,14 @@
 
 @import viewmodels.AnswerSection
 @import controllers.maintain.routes._
-@import views.html.components.{Heading, CheckDetailsList, SubmitButton}
+@import views.html.components.{Heading, SubmitButton}
+@import utils.SectionFormatter.formatAnswerSection
 
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF,
     heading: Heading,
-    checkDetailsList: CheckDetailsList,
+    govukSummaryList: GovukSummaryList,
     submitButton: SubmitButton
 )
 
@@ -37,7 +38,7 @@
 
         @heading("checkDetails.heading")
 
-        @checkDetailsList(answersSection = answersSection)
+        @govukSummaryList(SummaryList(rows = formatAnswerSection(answersSection)))
 
         @submitButton()
     }
