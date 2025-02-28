@@ -40,7 +40,7 @@ class AuthenticationServiceImpl @Inject()(
       case TrustsAuthDenied(redirectUrl) => Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         warnLog("Unable to authenticate agent with trusts-auth")
-        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
+        errorHandler.internalServerErrorTemplate.map(html => Left(InternalServerError(html)))
     }  }
 
   override def authenticateForIdentifier[A](identifier: String)
@@ -50,7 +50,7 @@ class AuthenticationServiceImpl @Inject()(
       case TrustsAuthDenied(redirectUrl) => Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         warnLog("Unable to authenticate with trusts-auth", Some(identifier))
-        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
+        errorHandler.internalServerErrorTemplate.map(html => Left(InternalServerError(html)))
     }
   }
 

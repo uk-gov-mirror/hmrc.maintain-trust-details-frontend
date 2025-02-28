@@ -86,10 +86,10 @@ class IndexController @Inject()(
               Redirect(controllers.maintain.routes.BeforeYouContinueController.onPageLoad())
             }
           }
-      }) recover {
+      }) recoverWith {
         case e =>
           errorLog(s"Error setting up session: ${e.getMessage}", Some(identifier))
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
       }
   }
 

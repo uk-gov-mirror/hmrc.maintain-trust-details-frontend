@@ -71,14 +71,14 @@ class CheckDetailsController @Inject()(
             _ <- trustsStoreConnector.updateTaskStatus(request.userAnswers.identifier, Completed)
           } yield {
             Redirect(appConfig.maintainATrustOverviewUrl)
-          }).recover {
+          }).recoverWith {
             case e =>
               errorLog(s"Error setting transforms: ${e.getMessage}", Some(identifier))
-              InternalServerError(errorHandler.internalServerErrorTemplate)
+              errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
           }
         case JsError(errors) =>
           errorLog(s"Failed to map user answers: $errors", Some(identifier))
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
       }
   }
 
