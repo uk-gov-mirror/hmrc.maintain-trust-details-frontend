@@ -23,7 +23,9 @@ import mappers.TrustDetailsMapper
 import models.TaskStatus.Completed
 import models.TypeOfTrust.{EmploymentRelated, HeritageMaintenanceFund, WillTrustOrIntestacyTrust}
 import models._
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -165,9 +167,9 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
           redirectLocation(result).value mustEqual onwardRoute
 
-          verify(mockTrustsConnector, never).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
-          verify(mockTrustsConnector).setNonMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
-          verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
+          verify(mockTrustsConnector, never).removeOptionalTrustDetailTransforms(ArgumentMatchers.eq(userAnswers.identifier))(any(), any())
+          verify(mockTrustsConnector).setNonMigratingTrustDetails(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(trustDetails))(any(), any())
+          verify(mockTrustsStoreConnector).updateTaskStatus(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(Completed))(any(), any())
 
           application.stop()
         }
@@ -196,9 +198,9 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
 
           redirectLocation(result).value mustEqual onwardRoute
 
-          verify(mockTrustsConnector).removeOptionalTrustDetailTransforms(eqTo(userAnswers.identifier))(any(), any())
-          verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(trustDetails))(any(), any())
-          verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
+          verify(mockTrustsConnector).removeOptionalTrustDetailTransforms(ArgumentMatchers.eq(userAnswers.identifier))(any(), any())
+          verify(mockTrustsConnector).setMigratingTrustDetails(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(trustDetails))(any(), any())
+          verify(mockTrustsStoreConnector).updateTaskStatus(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(Completed))(any(), any())
 
           application.stop()
         }
@@ -234,8 +236,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
               redirectLocation(result).value mustEqual onwardRoute
 
               verify(mockTrustsConnector).removeTrustTypeDependentTransformFields(any())(any(), any())
-              verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
-              verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
+              verify(mockTrustsConnector).setMigratingTrustDetails(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(newTrustDetails))(any(), any())
+              verify(mockTrustsStoreConnector).updateTaskStatus(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(Completed))(any(), any())
 
               application.stop()
           }
@@ -276,8 +278,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
               redirectLocation(result).value mustEqual onwardRoute
 
               verify(mockTrustsConnector, never).removeTrustTypeDependentTransformFields(any())(any(), any())
-              verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
-              verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
+              verify(mockTrustsConnector).setMigratingTrustDetails(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(newTrustDetails))(any(), any())
+              verify(mockTrustsStoreConnector).updateTaskStatus(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(Completed))(any(), any())
 
               application.stop()
           }
@@ -308,8 +310,8 @@ class CheckDetailsControllerSpec extends SpecBase with BeforeAndAfterEach with S
           redirectLocation(result).value mustEqual onwardRoute
 
           verify(mockTrustsConnector, never).removeTrustTypeDependentTransformFields(any())(any(), any())
-          verify(mockTrustsConnector).setMigratingTrustDetails(eqTo(userAnswers.identifier), eqTo(newTrustDetails))(any(), any())
-          verify(mockTrustsStoreConnector).updateTaskStatus(eqTo(userAnswers.identifier), eqTo(Completed))(any(), any())
+          verify(mockTrustsConnector).setMigratingTrustDetails(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(newTrustDetails))(any(), any())
+          verify(mockTrustsStoreConnector).updateTaskStatus(ArgumentMatchers.eq(userAnswers.identifier), ArgumentMatchers.eq(Completed))(any(), any())
 
           application.stop()
         }

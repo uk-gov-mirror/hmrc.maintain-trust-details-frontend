@@ -22,7 +22,7 @@ import models.AgentUser
 import models.http.{TrustsAuthAgentAllowed, TrustsAuthAllowed, TrustsAuthDenied, TrustsAuthInternalServerError}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
-
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
 import play.api.inject.bind

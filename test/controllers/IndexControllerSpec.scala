@@ -24,8 +24,9 @@ import mappers.TrustDetailsMapper
 import models.TaskStatus.InProgress
 import models.http.TaxableMigrationFlag
 import models.{TrustDetailsType, UserAnswers}
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -98,11 +99,11 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
             status(result) mustEqual SEE_OTHER
 
             val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
+            verify(mockExtractor).apply(uaCaptor.capture, ArgumentMatchers.eq(fakeTrustDetails), ArgumentMatchers.eq(fakeTrustName))
             uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
             uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
 
-            verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+            verify(mockTrustsStoreService).updateTaskStatus(any(), ArgumentMatchers.eq(InProgress))(any(), any())
         }
       }
     }
@@ -141,11 +142,11 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
               status(result) mustEqual SEE_OTHER
 
               val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-              verify(mockExtractor).apply(uaCaptor.capture, eqTo(fakeTrustDetails), eqTo(fakeTrustName))
+              verify(mockExtractor).apply(uaCaptor.capture, ArgumentMatchers.eq(fakeTrustDetails), ArgumentMatchers.eq(fakeTrustName))
               uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
               uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
 
-              verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+              verify(mockTrustsStoreService).updateTaskStatus(any(), ArgumentMatchers.eq(InProgress))(any(), any())
           }
         }
       }
@@ -199,7 +200,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                   uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                   uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
 
-                  verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+                  verify(mockTrustsStoreService).updateTaskStatus(any(), ArgumentMatchers.eq(InProgress))(any(), any())
               }
             }
           }
@@ -250,7 +251,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                     uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe true
                     uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
 
-                    verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+                    verify(mockTrustsStoreService).updateTaskStatus(any(), ArgumentMatchers.eq(InProgress))(any(), any())
                 }
               }
             }
@@ -299,7 +300,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
                     uaCaptor.getValue.migratingFromNonTaxableToTaxable mustBe taxableMigrationFlag.migratingFromNonTaxableToTaxable
                     uaCaptor.getValue.registeredWithDeceasedSettlor mustBe registeredWithDeceasedSettlor
 
-                    verify(mockTrustsStoreService).updateTaskStatus(any(), eqTo(InProgress))(any(), any())
+                    verify(mockTrustsStoreService).updateTaskStatus(any(), ArgumentMatchers.eq(InProgress))(any(), any())
                 }
               }
             }
@@ -332,7 +333,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaChe
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
 
-        verify(mockExtractor).apply(any(), eqTo(fakeTrustDetails), eqTo(fakeTrustName))
+        verify(mockExtractor).apply(any(), ArgumentMatchers.eq(fakeTrustDetails), ArgumentMatchers.eq(fakeTrustName))
       }
     }
   }

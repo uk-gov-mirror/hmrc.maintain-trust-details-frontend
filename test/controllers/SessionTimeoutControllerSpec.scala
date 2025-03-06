@@ -20,7 +20,7 @@ import base.SpecBase
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
+import play.api.Configuration
 import config.AppConfig
 
 class SessionTimeoutControllerSpec extends SpecBase {

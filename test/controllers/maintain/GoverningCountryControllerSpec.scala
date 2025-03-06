@@ -19,7 +19,7 @@ package controllers.maintain
 import base.SpecBase
 import forms.CountryFormProvider
 import navigation.Navigator
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import pages.maintain.GoverningCountryPage
 import play.api.data.Form
 import play.api.inject.bind

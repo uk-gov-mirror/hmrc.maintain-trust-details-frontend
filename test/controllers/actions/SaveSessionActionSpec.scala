@@ -19,11 +19,12 @@ package controllers.actions
 import base.SpecBase
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.concurrent.ScalaFutures
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.Result
 import uk.gov.hmrc.auth.core.Enrolments
 import models.OrganisationUser
 import models.requests.IdentifierRequest
+import org.mockito.Mockito.when
 
 import scala.concurrent.Future
 

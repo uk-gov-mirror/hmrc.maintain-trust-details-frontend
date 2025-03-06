@@ -19,7 +19,9 @@ package services
 import base.SpecBase
 import connectors.TrustsStoreConnector
 import models.TaskStatus.Completed
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures.whenReady
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -44,7 +46,7 @@ class TrustsStoreServiceSpec extends SpecBase {
 
       whenReady(result) { res =>
         res.status mustBe OK
-        verify(mockConnector).updateTaskStatus(eqTo("identifier"), eqTo(Completed))(any(), any())
+        verify(mockConnector).updateTaskStatus(ArgumentMatchers.eq("identifier"), ArgumentMatchers.eq(Completed))(any(), any())
       }
     }
   }

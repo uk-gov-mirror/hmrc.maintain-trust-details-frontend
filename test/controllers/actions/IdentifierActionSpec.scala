@@ -25,6 +25,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import config.AppConfig
 import controllers.routes
+import org.mockito.Mockito.when
 import services.{AuthenticationService, FakeAuthenticationService}
 
 import scala.concurrent.Future

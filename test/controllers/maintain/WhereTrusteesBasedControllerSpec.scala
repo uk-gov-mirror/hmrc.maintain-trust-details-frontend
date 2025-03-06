@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.EnumFormProvider
 import models.TrusteesBased
 import navigation.Navigator
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import pages.maintain.WhereTrusteesBasedPage
 import play.api.data.Form
 import play.api.inject.bind

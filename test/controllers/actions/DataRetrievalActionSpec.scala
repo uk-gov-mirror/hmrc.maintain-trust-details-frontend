@@ -18,10 +18,11 @@ package controllers.actions
 
 import base.SpecBase
 import org.scalatest.concurrent.ScalaFutures
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.auth.core.Enrolments
 import models.{ActiveSession, OrganisationUser}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import org.mockito.Mockito.when
 import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session

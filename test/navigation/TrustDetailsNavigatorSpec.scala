@@ -20,7 +20,7 @@ import base.SpecBase
 import config.AppConfig
 import models.TrusteesBased._
 import models.{DeedOfVariation, TypeOfTrust}
-
+import org.mockito.Mockito.when
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.maintain._
 
