@@ -1,18 +1,15 @@
+  import scoverage.ScoverageKeys
   import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-import uk.gov.hmrc.DefaultBuildSettings
-import scoverage.ScoverageKeys
 
 val appName = "maintain-trust-details-frontend"
 
-ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 0
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    DefaultBuildSettings.scalaSettings,
-    DefaultBuildSettings.defaultSettings(),
     ScoverageKeys.coverageExcludedPackages := "<empty>;.*Reverse.*;.*Routes.*;uk.gov.hmrc.BuildInfo;" +
       "config.*;testOnlyDoNotUseInAppConf.*;views.html.*;.*RichJsValue.*",
     ScoverageKeys.coverageMinimumStmtTotal := 92,

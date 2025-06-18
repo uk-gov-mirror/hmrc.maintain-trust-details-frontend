@@ -1,5 +1,5 @@
-service.name=Cofrestru Ymddiriedolaeth a’i Chynnal
-site.service_name=Cofrestru Ymddiriedolaeth a’i Chynnal
+service.name=Rheoli ymddiriedolaeth
+site.service_name=Rheoli ymddiriedolaeth
 site.service_section=Manylion yr Ymddiriedolaeth
 site.sign_out=Allgofnodi
 site.sign_in=Mewngofnodi
@@ -17,7 +17,7 @@ error.summary.title=Mae problem wedi codi
 session_expired.title=Er eich diogelwch, gwnaethom eich allgofnodi
 session_expired.heading=Er eich diogelwch, gwnaethom eich allgofnodi
 session_expired.guidance=Mae hyn oherwydd eich bod wedi bod yn segur yn y gwasanaeth ers 15 munud.
-session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i gynnal yr ymddiriedolaeth.
+session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i reoli’r ymddiriedolaeth.
 
 pageNotFound.title = Heb ddod o hyd i’r dudalen
 pageNotFound.heading = Heb ddod o hyd i’r dudalen
