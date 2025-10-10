@@ -1,5 +1,21 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +43,7 @@ import config.AppConfig
 import controllers.routes
 import org.mockito.Mockito.when
 import services.{AuthenticationService, FakeAuthenticationService}
+import uk.gov.hmrc.http.UnauthorizedException
 
 import scala.concurrent.Future
 
@@ -51,6 +68,9 @@ class IdentifierActionSpec extends SpecBase {
 
   private def authRetrievals(affinityGroup: AffinityGroup, enrolment: Enrolments): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments] =
     Future.successful(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment))
+
+  private def authRetrievalsNoInternalId(affinityGroup: AffinityGroup, enrolment: Enrolments): Future[Option[String] ~ Option[AffinityGroup] ~ Enrolments] =
+    Future.successful(new ~(new ~(None, Some(affinityGroup)), enrolment))
 
   private val agentEnrolment = Enrolments(Set(Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None)))
 
@@ -258,6 +278,23 @@ class IdentifierActionSpec extends SpecBase {
         status(result) mustBe SEE_OTHER
 
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
+        application.stop()
+      }
+    }
+
+    "internalId cannot be retrieved" must {
+      "throw UnauthorizedException" in {
+
+        val application = applicationBuilder().build()
+
+        when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
+          .thenReturn(authRetrievalsNoInternalId(AffinityGroup.Organisation, noEnrolment))
+
+        val action = actionToTest()
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
+
+        assertThrows[UnauthorizedException](status(result))
         application.stop()
       }
     }
