@@ -1,5 +1,4 @@
-  import scoverage.ScoverageKeys
-  import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
+import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "maintain-trust-details-frontend"
 
@@ -10,11 +9,7 @@ lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    ScoverageKeys.coverageExcludedPackages := "<empty>;.*Reverse.*;.*Routes.*;uk.gov.hmrc.BuildInfo;" +
-      "config.*;testOnlyDoNotUseInAppConf.*;views.html.*;.*RichJsValue.*",
-    ScoverageKeys.coverageMinimumStmtTotal := 92,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
+    CodeCoverageSettings(),
     inConfig(Test)(testSettings),
     name := appName,
     TwirlKeys.templateImports ++= Seq(
@@ -51,8 +46,6 @@ lazy val microservice = Project(appName, file("."))
       "-Wconf:cat=unused-imports&src=views/.*:s"
     )
   )
-  .configs(IntegrationTest)
-  .settings(integrationTestSettings())
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   fork := true,
@@ -62,4 +55,7 @@ lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   )
 )
 
-addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle IntegrationTest/scalastyle")
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test")
+  .settings(DefaultBuildSettings.itSettings())
