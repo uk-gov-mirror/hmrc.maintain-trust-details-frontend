@@ -73,6 +73,9 @@ recordedOnEeaRegisterYesNo.bullet3 = Liechtenstein
 recordedOnEeaRegisterYesNo.bullet4 = Norway
 recordedOnEeaRegisterYesNo.question = Is the trust registered on the trust register of any countries within the EEA?
 
+recordedOnEeaRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?
+recordedOnEeaRegisterYesNo.error.required = Select yes if the trust is listed on a European Economic Area (EEA) register
+
 businessRelationshipInUkYesNo.title = Does the trust have an ongoing business relationship in the UK?
 businessRelationshipInUkYesNo.heading = Does the trust have an ongoing business relationship in the UK?
 businessRelationshipInUkYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?

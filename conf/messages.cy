@@ -60,6 +60,9 @@ recordedOnEeaRegisterYesNo.bullet3=Liechtenstein
 recordedOnEeaRegisterYesNo.bullet4=Norwy
 recordedOnEeaRegisterYesNo.question =A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaethau unrhyw wlad o fewn yr AEE?
 
+recordedOnEeaRegisterYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd o fewn yr Ardal Economaidd Ewropeaidd (AEE)?
+recordedOnEeaRegisterYesNo.error.required=Dewiswch ‘Iawn’ os yw’r ymddiriedolaeth wedi’i rhestru ar gofrestr Ardal Economaidd Ewropeaidd (AEE)
+
 businessRelationshipInUkYesNo.title=A oes gan yr ymddiriedolaeth berthynas fusnes barhaol yn y DU?
 businessRelationshipInUkYesNo.heading=A oes gan yr ymddiriedolaeth berthynas fusnes barhaol yn y DU?
 businessRelationshipInUkYesNo.checkYourAnswersLabel=A oes gan yr ymddiriedolaeth berthynas fusnes barhaol yn y DU?
